@@ -1,5 +1,6 @@
 using MySqlConnector;
 using Dapper;
+using Bikamp;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient(_ =>  new MySqlConnection(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddTransient(_ =>  new Dac());
 
 var app = builder.Build();
 
@@ -20,7 +22,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/bicicletario/{id}/pontos-disponiveis", (int id,  MySqlConnection connection) =>
+app.MapGet("/bicicletarios/{id}/pontos-disponiveis", (int id,  MySqlConnection connection) =>
 {
 
     var query = @"
@@ -38,9 +40,57 @@ app.MapGet("/bicicletario/{id}/pontos-disponiveis", (int id,  MySqlConnection co
         bicicletario_id = id 
     });
     return resultados;
-})
-.WithOpenApi();
+});
+
+
+app.MapGet("/emprestimos", () => {
+
+    return new List<RespostaSolicitacaoEmprestimo>() { 
+        new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.RaInvalido, 0),
+        new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Indisponivel, 1),
+        new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Liberado, 2),
+        new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, 5) 
+    };
+});
+
+
+app.MapGet("/aluno/{ra}", (int ra, Dac dac ) => {
+    return dac.ObterAluno(ra);
+});
+
+app.MapGet("/mantenedores", () => {
+
+    return new List<Mantenedor>() {
+        new Mantenedor(5,6, "Carlinhos mil gra") 
+    };
+});
+
+app.MapPost("/emprestimos", (SolicitacaoEmprestimo solicitacao) => {
+
+    return Results.Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Indisponivel, 0));
+});
+
+
+app.MapPost("/penalidades", (Penalidade penalidade) => {
+
+    return Results.Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Indisponivel, 0));
+});
+
+app.MapGet("/ciclista/{id}/permitido", (int id) => {
+    return 0;
+});
  
+
 app.Run();
 
+public record Mantenedor(int mantenedor_id, int cargo_id, string nome);
+public record Penalidade(int id_penalidade, int id_mantenedor, int id_emprestimo);
 public record PontosDisponiveis(int ponto, int bicicleta, int bicicletario);
+public record SolicitacaoEmprestimo(int bicicletario, int id_card);
+public record RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo status, int bicicleta);
+public enum  StatusSolicitacoaEmprestimo {
+    Liberado,
+    Indisponivel,
+    NaoPermitido,
+    RaInvalido
+}
