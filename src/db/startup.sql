@@ -48,6 +48,7 @@ CREATE TABLE emprestimo (
 	bicicletario_id_tirado INT NOT NULL,
 	bicicletario_id_devolvido INT NULL,
 	bicicleta_id INT NOT NULL,
+	cancelado INT NOT NULL,
 	PRIMARY KEY (ciclista_ra, emprestimo_inicio),
 	FOREIGN KEY (ciclista_ra) REFERENCES ciclista(ciclista_ra),
 	FOREIGN KEY (bicicletario_id_tirado) REFERENCES bicicletario(bicicletario_id),
