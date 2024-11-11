@@ -1,3 +1,6 @@
+using System.Transactions;
+using Bikamp;
+using Dapper.Transaction;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bikamp.Controllers;
@@ -9,27 +12,45 @@ namespace bikamp.Controllers;
 
 public class EmprestimosController : ControllerBase
 {
-    private readonly MySqlConnection _conn;
+    private readonly IDbConnection _conn;
+    private readonly Dac _dac;
 
-    public EmprestimosController(MySqlConnection conn)
+    public EmprestimosController(IDbConnection conn, Dac dac)
     {
         _conn = conn;
+        _dac = dac;
     }
-    public record RequestEmprestimo(int bicicletario, int id_card);
-    public record RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo status, int bicicleta);
+    public record RequesicaoEmprestimo(int bicicletario, int id_card);
+    public enum  StatusSolicitacoaEmprestimo {
+        Liberado,
+        Indisponivel,
+        NaoPermitido,
+        RaInvalido
+    }
+    public record RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo status, int? bicicleta);
 
     [HttpPost("")]
-    public async Task<ActionResult<RespostaSolicitacaoEmprestimo>> PostEmprestimos(RequestEmprestimo solicitacao) {
-		throw new NotImplementedException();
+    public async Task<ActionResult<RespostaSolicitacaoEmprestimo>> PostEmprestimos(RequesicaoEmprestimo solicitacao) {
+        _conn.Open();
+        using IDbTransaction tran = _conn.BeginTransaction(); 
+
+        int? n_ra = _dac.ObterRaAlunoCartao(solicitacao.id_card);
+        if(n_ra is null){
+            return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.RaInvalido, null);
+        }
+        int ra = n_ra.Value;
+        var count_bicicletario = await tran.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;", 
+            new { solicitacao.bicicletario });
+        if(count_bicicletario < 1){
+            return BadRequest();
+        }
+
+
+        throw new NotImplementedException();
     }
     [HttpGet("")]
     public async Task<ActionResult<List<RespostaSolicitacaoEmprestimo>>> GetEmprestimos() {
-        return new List<RespostaSolicitacaoEmprestimo>() { 
-            new(StatusSolicitacoaEmprestimo.RaInvalido, 0),
-            new(StatusSolicitacoaEmprestimo.Indisponivel, 1),
-            new(StatusSolicitacoaEmprestimo.Liberado, 2),
-            new(StatusSolicitacoaEmprestimo.NaoPermitido, 5) 
-        };
+        throw new NotImplementedException();
     }
  
 }
