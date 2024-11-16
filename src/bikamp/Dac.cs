@@ -1,12 +1,11 @@
 namespace Bikamp;
-public record DadosAluno (string Nome);
 public class Dac {
-	public DadosAluno ObterAluno(int ra){
+	public int? ObterRaAlunoCartao(int ra){
 		if(ra  < 0 ){
 			return null;
 		}
 		if(ra  == 9999999){
-			return new DadosAluno("Carlos");
+			return 3;
 		}
 		return null;
 

@@ -1,4 +1,5 @@
 using Bikamp;
+using Microsoft.Data.Sqlite;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,8 +8,19 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient(_ =>  new MySqlConnection(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddTransient(_ =>  new Dac());
+builder.Services.AddScoped<IDbConnection>(_ => {
+    IDbConnection conn;
+    if(builder.Configuration.GetValue<string>("DB") == "SQLLITE"){
+        conn = new SqliteConnection("Data Source=hello.db");
+    } else {
+        conn = new MySqlConnection(builder.Configuration.GetConnectionString("Default"));
+
+    }
+    conn.Open();
+    return conn;
+});
+builder.Services.AddScoped(_ =>  new Dac());
+
 
 var app = builder.Build();
 
