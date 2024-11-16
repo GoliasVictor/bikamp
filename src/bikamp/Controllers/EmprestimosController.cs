@@ -48,9 +48,25 @@ public class EmprestimosController : ControllerBase
 
         throw new NotImplementedException();
     }
+ 
     [HttpGet("")]
-    public async Task<ActionResult<List<RespostaSolicitacaoEmprestimo>>> GetEmprestimos() {
-        throw new NotImplementedException();
+    public async Task<ActionResult<List<Emprestimo>>> GetEmprestimos([FromQuery]bool? aberto) {
+        using IDbTransaction tran = _conn.BeginTransaction();
+        var result = await tran.QueryAsync<Emprestimo>(@"select 
+                ciclista_ra, 
+                emprestimo_inicio, 
+                emprestimo_fim,
+                bicicletario_id_devolvido,
+                bicicletario_id_tirado,
+                bicicleta_id,
+                cancelado
+            from emprestimo
+            where  @aberto is null or not (emprestimo_fim is null xor @aberto) ;
+        ", new{
+            aberto = aberto
+        });
+        tran.Commit();
+        return Ok(result);  
     }
  
 }
