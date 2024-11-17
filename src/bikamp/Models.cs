@@ -9,7 +9,6 @@ public record Emprestimo(
 	int? bicicletario_id_devolvido ,
 	int bicicletario_id_tirado,
 	int bicicleta_id,
-	Boolean cancelado
+	bool cancelado
 );
-
-	
+  

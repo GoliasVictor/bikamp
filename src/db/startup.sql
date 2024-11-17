@@ -37,6 +37,7 @@ CREATE TABLE ponto (
 	bicicletario_id INT NOT NULL,
 	status VARCHAR(45) NOT NULL,
 	bicicleta_id INT,
+	UNIQUE(bicicleta_id),
 	PRIMARY KEY(ponto_id, bicicletario_id),
 	FOREIGN KEY (bicicletario_id) REFERENCES bicicletario(bicicletario_id),
 	FOREIGN KEY (bicicleta_id) REFERENCES bicicleta(bicicleta_id)
