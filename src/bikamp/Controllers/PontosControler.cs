@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using System.Transactions;
 using Dapper.Transaction;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,13 @@ namespace bikamp.Controllers;
 public class PontosController(IDbConnection conn) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
-	public record PontoInfo(int bicicletario, int ponto, string status_ponto, int? bicicleta, string status_bicicleta  );
+    public record PontoInfo(int bicicletario, int ponto, string status_ponto, int? bicicleta, string status_bicicleta );
 
     [HttpGet("")]
     public async Task<ActionResult<List<PontoInfo>>> Get([FromQuery] int? id_bicicletario)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-		var pontos = await tran.QueryAsync<PontoInfo>(@"SELECT 
+        var pontos = await tran.QueryAsync<PontoInfo>(@"SELECT 
                 ponto.bicicletario_id as bicicletario,
                 ponto.ponto_id as ponto,
 				ponto.status as status_ponto, 
@@ -26,7 +27,7 @@ public class PontosController(IDbConnection conn) : ControllerBase
 				bicicleta.status as status_bicicleta
             from ponto
             left join bicicleta on bicicleta.bicicleta_id = ponto.bicicleta_id
-			where @id_bicicletario is null or ponto.bicicletario_id = @id_bicicletario", new {id_bicicletario});
+			where @id_bicicletario is null or ponto.bicicletario_id = @id_bicicletario", new { id_bicicletario });
         tran.Commit();
         return Ok(pontos);
     }
@@ -36,7 +37,7 @@ public class PontosController(IDbConnection conn) : ControllerBase
     public async Task<ActionResult<PontoInfo>> Get(int bicicletario_id, int ponto_id)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-		var result = await tran.QueryFirstOrDefaultAsync<PontoInfo>(@"SELECT 
+        var result = await tran.QueryFirstOrDefaultAsync<PontoInfo>(@"SELECT 
                 ponto.bicicletario_id as bicicletario,
                 ponto.ponto_id as ponto,
 				ponto.status as status_ponto, 
@@ -44,41 +45,73 @@ public class PontosController(IDbConnection conn) : ControllerBase
 				bicicleta.status as status_bicicleta
             from ponto
             left join bicicleta on bicicleta.bicicleta_id = ponto.bicicleta_id
-			where  ponto.bicicletario_id = @id_bicicletario and ponto.ponto_id = @id_ponto", new {bicicletario_id, ponto_id});
+			where  ponto.bicicletario_id = @bicicletario_id and ponto.ponto_id = @ponto_id", new { bicicletario_id, ponto_id });
         tran.Commit();
         if (result == null)
             return NotFound();
         return Ok(result);
     }
-	public record NovoPonto(int bicicletario_id, int ponto_id, string status);
+    public record NovoPonto(int bicicletario_id, int ponto_id, string status);
     [HttpPost("")]
     public async Task<ActionResult> Post(NovoPonto ponto)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
         await tran.ExecuteAsync(
-			@"INSERT INTO ponto (bicicletario_id, ponto_id, status) 
-			VALUES  (@bicicletario_id, @ponto_id, @status)", 
-			ponto
-		);
+            @"INSERT INTO ponto (bicicletario_id, ponto_id, status) 
+			VALUES  (@bicicletario_id, @ponto_id, @status)",
+            ponto
+        );
         tran.Commit();
         return Ok();
-    } 
-	public record AtualizacaoPonto(int bicicletario_id, int ponto_id, string status);
+    }
+    public record AtualizacaoPonto(int bicicletario_id, int ponto_id, string status);
 
     [HttpPut("")]
     public async Task<ActionResult> Put(AtualizacaoPonto ponto)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
         await tran.ExecuteAsync(
-			@"UPDATE ponto 
+            @"UPDATE ponto 
 			SET 
 			  	status = @status 
-			WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;", 
-			ponto );
+			WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;",
+            ponto);
         tran.Commit();
         return Ok();
     }
 
+ 
+    public record AtualizacaoPontoBicicleta(int bicicletario_id, int ponto_id, int bicicleta_id);
+
+    [HttpPut("bicicleta")]
+    public async Task<ActionResult> PutBicicleta(AtualizacaoPontoBicicleta request)
+    {
+        using IDbTransaction tran = _conn.BeginTransaction();
+
+        var (jaPossuiBicicleta, bicicletaEstaOutroPonto) = await tran.QueryFirstOrDefaultAsync<(bool, bool)>(
+            @"select 
+                exists(select * from ponto where bicicletario_id = @bicicletario_id and ponto_id = @ponto_id and bicicleta_id is not null), 
+                exists(select * from ponto where bicicleta_id = @bicicleta_id)",
+            request
+        );
+ 
+        if(jaPossuiBicicleta) 
+            return Conflict("Ponto já possui uma bicicleta registrada");
+        
+        if (bicicletaEstaOutroPonto)
+            return Conflict("Bicicleta já está em outro bicicletario ");
+        
+        await tran.ExecuteAsync(
+            @"UPDATE ponto 
+            SET 
+                bicicleta_id = @bicicleta_id 
+            WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;",
+            request
+        );
+
+        tran.Commit();
+        return Ok();
+    }
 
 
     [HttpDelete("{bicicletario_id}/{ponto_id}")]
@@ -87,13 +120,12 @@ public class PontosController(IDbConnection conn) : ControllerBase
         using IDbTransaction tran = _conn.BeginTransaction();
 
         int rows_affected = await tran.ExecuteAsync(
-			@"DELETE FROM ponto 
-			WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;", 
-			new {bicicletario_id, ponto_id} );
+            @"DELETE FROM ponto 
+			WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;",
+            new { bicicletario_id, ponto_id });
         tran.Commit();
-		if (rows_affected == 0){
-			return NotFound();
-		}
+        if (rows_affected == 0)
+            return NotFound();
         return Ok();
     }
 
