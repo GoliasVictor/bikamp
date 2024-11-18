@@ -24,7 +24,7 @@ public class bicicletarioController(IDbConnection conn) : ControllerBase
 			VALUES  (@next_id, @latitude, @longitude)", new {
 				next_id, 
 				request.latitude,
-				request	.longitude
+				request.longitude
 
 			});
         tran.Commit();
