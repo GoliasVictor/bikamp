@@ -8,7 +8,7 @@ namespace bikamp.Controllers;
 
 
 [ApiController]
-[Route("Pontos/")]
+[Route("pontos/")]
 
 public class PontosController(IDbConnection conn) : ControllerBase
 {
