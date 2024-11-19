@@ -44,15 +44,38 @@ public class EmprestimosController : ControllerBase
         }
         int ra = solicitacao.ra_aluno;
 
-        (bool estaNoBanco, bool permitido) = await tran.QuerySingleAsync<(bool, bool)>(
-            @"select 
-                (select exists(select ciclista_ra from ciclista where ciclista_ra = @ra)) = 1 as ra_existe,
-                (SELECT EXISTS(select * from penalidade where ciclista_ra = @ra and (penalidade_fim is null or now() < penalidade_fim))
-	                 or EXISTS(select * from emprestimo where ciclista_ra = @ra and emprestimo_fim is null ))",
-            new { ra }
+        (bool estaNoBanco, bool proibido) = await tran.QuerySingleAsync<(bool, bool)>(
+            @"SELECT 
+                EXISTS (
+                    SELECT ciclista_ra
+                    FROM   ciclista
+                    WHERE  ciclista_ra = @ra
+                ),
+                (
+                    EXISTS (
+                        SELECT *
+                        FROM penalidade
+                        WHERE ciclista_ra = @ra
+                        AND (penalidade_fim IS NULL OR Now() < penalidade_fim)
+                    )
+                    OR EXISTS(
+                        SELECT * 
+                        FROM emprestimo 
+                        WHERE ciclista_ra = @ra
+                        AND (
+                            emprestimo_fim IS NULL
+                            OR Now() > Timestampadd(minute, @MINUTOS_TEMPO_MAXIMO_EMPRESTIMO, emprestimo_inicio)
+                        )
+                    ) 
+                )",
+            new
+            {
+                MINUTOS_TEMPO_MAXIMO_EMPRESTIMO = MINUTOS_TEMPO_MAXIMO_EMPRESTIMO,
+                ra
+            }
         );
 
-        if (permitido)
+        if (proibido)
         {
             return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
         }
@@ -77,10 +100,14 @@ public class EmprestimosController : ControllerBase
                     ponto.bicicleta_id AS bicicleta
             FROM ponto
             JOIN bicicleta ON ponto.bicicleta_id = bicicleta.bicicleta_id
-            WHERE ponto.bicicletario_id = 1 and
+            WHERE ponto.bicicletario_id = @bicicletario_id and
                 ponto.status = 'online' and
                 ponto.bicicleta_id is not null and 
-                bicicleta.status = 'ativada';"
+                bicicleta.status = 'ativada';",
+            new
+            {
+                bicicletario_id = solicitacao.bicicletario
+            }
         )).ToList();
         (int ponto, int bicicleta) = posibles_points[Random.Shared.Next(posibles_points.Count)];
         await tran.ExecuteAsync(
@@ -124,8 +151,6 @@ public class EmprestimosController : ControllerBase
         return Ok(result);
     }
     public record RequestDevolucao(int bicicleta_id, int bicicletario_id, int ponto_id);
-    const int TEMPO_MAXIMO_EMPRESTIMO_HORAS = 8;
-    const int DIAS_DURACAO_PENALIDADE_ATRASO = 7;
     [HttpPut("devolver")]
     public async Task<ActionResult> Devolver(RequestDevolucao request)
     {
@@ -141,14 +166,15 @@ public class EmprestimosController : ControllerBase
         if (n_emprestimo is  (int ciclista_ra, DateTime emprestimo_inicio))
         {
             var duration = emprestimo_inicio - DateTime.Now;
-            if (duration.TotalHours > TEMPO_MAXIMO_EMPRESTIMO_HORAS)
+            if (duration.TotalHours > MINUTOS_TEMPO_MAXIMO_EMPRESTIMO)
             {
-                var penalidade_fim = DateTime.Now.AddDays(DIAS_DURACAO_PENALIDADE_ATRASO);
+                DateTime? penalidade_fim = DateTime.Now.AddDays(DIAS_DURACAO_PENALIDADE_ATRASO);
                 await tran.ExecuteAsync(
                     @"insert into penalidade (penalidade_inicio, ciclista_ra, emprestimo_inicio, tipo_penalidade_id, penalidade_automatica, penalidade_fim) 
-                    value (now(), @ciclista_ra, @emprestimo_inicio, 1, true, @penalidade_fim)",
+                        value (now(), @ciclista_ra, @emprestimo_inicio, @ID_TIPO_PENALIDADE_ATRASO, true, @penalidade_fim)",
                     new
                     {
+                        ID_TIPO_PENALIDADE_ATRASO = ID_TIPO_PENALIDADE_ATRASO,
                         ciclista_ra,
                         emprestimo_inicio,
                         penalidade_fim
@@ -164,7 +190,7 @@ public class EmprestimosController : ControllerBase
                 {
                     bicicletario_id_devolvido = request.bicicletario_id,
                     ciclista_ra,
-                    emprestimo_inicio 
+                    emprestimo_inicio
                 }
             );
         }
