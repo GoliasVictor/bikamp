@@ -2,3 +2,4 @@
 
 # IDE0037: Use inferred member name
 dotnet_style_prefer_inferred_anonymous_type_member_names = false
+indent_style = space
