@@ -1,26 +1,13 @@
-using System.Transactions;
-using Bikamp;
-using Dapper.Transaction;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
-
-namespace bikamp.Controllers;
-
-
+namespace Bikamp.Controllers;
 
 [ApiController]
 [Route("emprestimos/")]
 
-public class EmprestimosController : ControllerBase
+public class EmprestimosController(IDbConnection conn, Dac dac) : ControllerBase
 {
-    private readonly IDbConnection _conn;
-    private readonly Dac _dac;
+    private readonly IDbConnection _conn = conn;
+    private readonly Dac _dac = dac;
 
-    public EmprestimosController(IDbConnection conn, Dac dac)
-    {
-        _conn = conn;
-        _dac = dac;
-    }
     public record RequesicaoEmprestimo(int bicicletario, int ra_aluno);
     public enum StatusSolicitacoaEmprestimo
     {

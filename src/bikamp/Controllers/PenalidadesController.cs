@@ -1,9 +1,4 @@
-using Dapper.Transaction;
-using Microsoft.AspNetCore.Mvc;
-
-namespace bikamp.Controllers;
-
-
+namespace Bikamp.Controllers;
 
 [ApiController]
 [Route("penalidades/")]
@@ -149,7 +144,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
 
         if (cargo_id is null)
             return Conflict("Aplicador da penalidade não existe");
-        
+
         if ((Cargo)cargo_id! is not Cargo.Supervisor and not Cargo.Administrador)
             return Conflict("Aplicador da pendalidade precisa possuir o cargo de Supervisor ou Administrador");
 

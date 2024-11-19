@@ -1,10 +1,4 @@
-using System.Security.Cryptography.X509Certificates;
-using Dapper.Transaction;
-using Microsoft.AspNetCore.Mvc;
-
-namespace bikamp.Controllers;
-
-
+namespace Bikamp.Controllers;
 
 [ApiController]
 [Route("bicicletas/")]
@@ -55,7 +49,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
         await tran.ExecuteAsync("INSERT INTO bicicleta (bicicleta_id, status) VALUES  (@id, @status)", bicicleta);
         tran.Commit();
         return Ok();
-    } 
+    }
 
     [HttpPut("")]
     public async Task<ActionResult> Put(Bicicleta bicicleta)
