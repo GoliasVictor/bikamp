@@ -8,14 +8,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IDbConnection>(_ => {
-    IDbConnection conn;
-    if(builder.Configuration.GetValue<string>("DB") == "SQLLITE"){
-        conn = new SqliteConnection("Data Source=hello.db");
-    } else {
-        conn = new MySqlConnection(builder.Configuration.GetConnectionString("Default"));
 
-    }
+builder.Services.AddScoped<IDbConnection>(_ => {
+    IDbConnection conn = new MySqlConnection(builder.Configuration.GetConnectionString("Default"));
     conn.Open();
     return conn;
 });
