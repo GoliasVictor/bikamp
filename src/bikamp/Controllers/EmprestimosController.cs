@@ -3,10 +3,9 @@ namespace Bikamp.Controllers;
 [ApiController]
 [Route("emprestimos/")]
 
-public class EmprestimosController(IDbConnection conn, Dac dac) : ControllerBase
+public class EmprestimosController(IDbConnection conn) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
-    private readonly Dac _dac = dac;
 
 
     [HttpGet()]
@@ -35,6 +34,26 @@ public class EmprestimosController(IDbConnection conn, Dac dac) : ControllerBase
     public async Task<ActionResult<List<Emprestimo>>> Fechar(RequestFecharEmprestimo request)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
+        var emprestimo_info = await tran.QueryFirstOrDefaultAsync<(int, bool)?>(
+                @"select 
+                    bicicleta_id
+                    emprestimo_fim is not null 
+                from emprestimo 
+                where ciclista_ra =  @ciclista_ra 
+                and emprestimo_inicio = @emprestimo_inicio", 
+            new {
+                ciclista_ra = request.ciclista_ra, 
+                emprestimo_inicio = request.emprestimo_inicio
+            }
+        );
+        if(emprestimo_info is null){
+            return NotFound("Emprestimo não existe");
+        }
+        (int bicicleta_id, bool fechado) = emprestimo_info.Value;
+        if (fechado){
+            return Conflict("Emprestimo já está fechado");
+        }
+        
         if(request.perda_bicicleta){
             await tran.ExecuteAsync(
                 @"INSERT INTO penalidade(
@@ -52,9 +71,16 @@ public class EmprestimosController(IDbConnection conn, Dac dac) : ControllerBase
                     @TIPO_PENALIDADE_ID_PERDA_BICICLETA,
                     True,
                     Null
-                )",
+                );
+                UPDATE bicicleta 
+                SET status = 'perdida' 
+                WHERE bicicleta_id = @id;
+                ",
                 new
                 {
+                    bicicleta_id = bicicleta_id,
+                    ciclista_ra = request.ciclista_ra, 
+                    emprestimo_inicio = request.emprestimo_inicio,
                     TIPO_PENALIDADE_ID_PERDA_BICICLETA = TIPO_PENALIDADE_ID_PERDA_BICICLETA,
                 }
             );
@@ -63,7 +89,5 @@ public class EmprestimosController(IDbConnection conn, Dac dac) : ControllerBase
         tran.Commit();
         return Ok();
     }
-    public record RequestPerdoarEmprestimo(int ciclista_ra, DateTime emprestimo_inicio, int mantenedor_id);
-
- 
+    
 }

@@ -124,6 +124,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
     }
     public record RequestPerdoarPenalidade(
         int ciclista_ra,
+        DateTime emprestimo_inicio,
         DateTime penalidade_inicio,
         int mantenedor_id_perdoador,
         string motivacao_perdao
@@ -153,10 +154,13 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
             SET 
                 mantenedor_id_perdoador = @mantenedor_id_perdoador,
                 motivacao_perdao = @motivacao_perdao 
-            WHERE ciclista_ra = @ciclista_ra and penalidade_inicio = @penalidade_inicio;",
+            WHERE ciclista_ra = @ciclista_ra 
+              and penalidade_inicio = @penalidade_inicio
+              and emprestimo_inicio = @penalidade_inicio;",
             new
             {
                 ciclista_ra = request.ciclista_ra,
+                emprestimo_inicio = request.emprestimo_inicio,
                 penalidade_inicio = request.penalidade_inicio,
                 mantenedor_id_perdoador = request.mantenedor_id_perdoador,
                 motivacao_perdao = request.motivacao_perdao
@@ -165,6 +169,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
         tran.Commit();
         return Ok();
     }
+    
 }
 
 
