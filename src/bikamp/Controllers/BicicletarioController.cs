@@ -26,7 +26,7 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
         return Ok(next_id);
     }
 
-    public record BicicletarioPonto(int ponto, String status_ponto, int? bicicleta);
+    public record BicicletarioPonto(int ponto, StatusPontoId status_ponto_id, int? bicicleta);
     public record class Bicicletario(
         int id,
         double localizacao_latitude,
@@ -46,10 +46,10 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
         foreach (var b in bicicletarios)
             result[b.Item1] = new Bicicletario(b.Item1, b.Item2, b.Item3, detalhado? new() : null);
         if(detalhado){
-            var pontos = await tran.QueryAsync<(int, int, String, int?)>(@"SELECT 
+            var pontos = await tran.QueryAsync<(int, int, StatusPontoId, int?)>(@"SELECT 
                     ponto.bicicletario_id as bicicletario,
                     ponto.ponto_id as ponto,
-                    ponto.status as status, 
+                    ponto.status_ponto_id as status_ponto_id, 
                     bicicleta.bicicleta_id as bicicleta
                 from ponto
                 left join bicicleta on bicicleta.bicicleta_id = ponto.bicicleta_id");

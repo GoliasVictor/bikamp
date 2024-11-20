@@ -17,7 +17,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
             result = await tran.QueryAsync<BicicletaPonto>(
                 @"select 
                     bicicleta.bicicleta_id as id,
-                    bicicleta.status as status, 
+                    bicicleta.status_bicicleta_id as status, 
                     ponto.bicicletario_id as bicicletario,
                     ponto.ponto_id as ponto 
                 from bicicleta
@@ -26,13 +26,16 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
                     and emprestimo.emprestimo_fim is null
                 where ponto.ponto_id is null 
                   and emprestimo.ciclista_ra is null 
-                  and bicicleta.status != 'manutencao'"
+                  and bicicleta.status_bicicleta_id = @STATUS_BICICLETA_ID_ATIVADA",
+                  new {
+                    STATUS_BICICLETA_ID_ATIVADA = StatusBicicletaId.Ativada
+                  }
             );
             
         } else {
             result = await tran.QueryAsync<BicicletaPonto>(@"SELECT 
                     bicicleta.bicicleta_id as id,
-                    bicicleta.status as status, 
+                    bicicleta.status_bicicleta_id as status, 
                     ponto.bicicletario_id as bicicletario,
                     ponto.ponto_id as ponto 
                 from bicicleta
@@ -50,7 +53,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
         using IDbTransaction tran = _conn.BeginTransaction();
         var result = await tran.QueryFirstOrDefaultAsync<BicicletaPonto>(@"SELECT 
                 bicicleta.bicicleta_id as id,
-                bicicleta.status as status, 
+                bicicleta.status_bicicleta_id as status, 
                 ponto.bicicletario_id as bicicletario,
                 ponto.ponto_id as ponto 
             from bicicleta
@@ -66,8 +69,10 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     [HttpPost()]
     public async Task<ActionResult> Post(Bicicleta bicicleta)
     {
+        if (!Enum.IsDefined(bicicleta.status))
+            return UnprocessableEntity();
         using IDbTransaction tran = _conn.BeginTransaction();
-        await tran.ExecuteAsync("INSERT INTO bicicleta (bicicleta_id, status) VALUES  (@id, @status)", bicicleta);
+        await tran.ExecuteAsync("INSERT INTO bicicleta (bicicleta_id, status_bicicleta_id) VALUES  (@id, @status)", bicicleta);
         tran.Commit();
         return Ok();
     }
@@ -76,7 +81,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     public async Task<ActionResult> Put(Bicicleta bicicleta)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        await tran.ExecuteAsync("UPDATE bicicleta SET status = @status WHERE bicicleta_id = @id;", bicicleta);
+        await tran.ExecuteAsync("UPDATE bicicleta SET status_bicicleta_id = @status WHERE bicicleta_id = @id;", bicicleta);
         tran.Commit();
         return Ok();
     }

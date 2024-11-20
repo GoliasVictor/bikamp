@@ -73,7 +73,7 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
                     Null
                 );
                 UPDATE bicicleta 
-                SET status = 'perdida' 
+                SET status_bicicleta_id = @STATUS_BICICLETA_ID_PERDIDA 
                 WHERE bicicleta_id = @id;
                 ",
                 new
@@ -82,6 +82,7 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
                     ciclista_ra = request.ciclista_ra, 
                     emprestimo_inicio = request.emprestimo_inicio,
                     TIPO_PENALIDADE_ID_PERDA_BICICLETA = TIPO_PENALIDADE_ID_PERDA_BICICLETA,
+                    STATUS_BICICLETA_ID_PERDIDA = StatusBicicletaId.Perdida
                 }
             );
         }   

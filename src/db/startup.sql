@@ -27,18 +27,29 @@ CREATE TABLE bicicletario (
 	localizacao_latitude DOUBLE NOT NULL,
 	localizacao_longitude DOUBLE NOT NULL
 );
+
+CREATE TABLE status_bicicleta (
+    status_bicicleta_id INT NOT NULL PRIMARY KEY,
+	nome VARCHAR(45) NOT NULL
+);
 CREATE TABLE bicicleta (
 	bicicleta_id INT NOT NULL PRIMARY KEY,
-	status VARCHAR(45) NOT NULL
+	status_bicicleta_id INT NOT NULL,
+	FOREIGN KEY (status_bicicleta_id ) REFERENCES status_bicicleta(status_bicicleta_id)
 );
 
+CREATE TABLE status_ponto (
+    status_ponto_id INT NOT NULL PRIMARY KEY,
+	nome VARCHAR(45) NOT NULL
+);
 CREATE TABLE ponto (
 	ponto_id INT NOT NULL,
 	bicicletario_id INT NOT NULL,
-	status VARCHAR(45) NOT NULL,
+	status_ponto_id INT NOT NULL,
 	bicicleta_id INT,
 	UNIQUE(bicicleta_id),
 	PRIMARY KEY(ponto_id, bicicletario_id),
+    FOREIGN KEY (status_ponto_id) REFERENCES status_ponto(status_ponto_id),
 	FOREIGN KEY (bicicletario_id) REFERENCES bicicletario(bicicletario_id),
 	FOREIGN KEY (bicicleta_id) REFERENCES bicicleta(bicicleta_id)
 );

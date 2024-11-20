@@ -1,3 +1,4 @@
+namespace Bikamp;
 public enum CargoId {
     Supervisor = 1, 
     Reparador = 2,
@@ -5,9 +6,24 @@ public enum CargoId {
     Demitido = 4
 }
 
+public enum StatusPontoId {
+	Online = 1,
+	Offline = 2,
+	Manutencao = 3,
+	Removido = 4
+}
+
+public enum StatusBicicletaId {
+    Ativada = 1,
+	Desativada = 2,
+	Manutencao = 3,
+	Perdida = 4,
+	Removida = 5
+}
+
 public record Mantenedor(int mantenedor_id, CargoId cargo, string nome);
-public record Bicicleta(int id, string status);
-public record BicicletaPonto(int id, string status, int? bicicletario, int? ponto);
+public record Bicicleta(int id, StatusBicicletaId status);
+public record BicicletaPonto(int id, StatusBicicletaId status, int? bicicletario, int? ponto);
 public record Emprestimo(
     int ciclista_ra,
     DateTime emprestimo_inicio,

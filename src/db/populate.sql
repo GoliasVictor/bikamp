@@ -133,107 +133,107 @@ INSERT INTO bicicletario(bicicletario_id, localizacao_latitude, localizacao_long
 	(8, -22.816675924445583, -47.07149291244727),
 	(9, -22.815289772859778, -47.069309609117404);
 
--- Bicicleta
-INSERT INTO bicicleta (bicicleta_id, status)
+INSERT INTO bicicleta (bicicleta_id, status_bicicleta_id)
 VALUES 
-(1, 'ativada'),
-(2, 'ativada'),
-(3, 'desativada'),
-(4, 'manutencao'),
-(5, 'ativada'),
-(6, 'ativada'),
-(7, 'desativada'),
-(8, 'ativada'),
-(9, 'ativada'),
-(10, 'ativada'),
-(11, 'desativada'),
-(12, 'ativada'),
-(13, 'ativada'),
-(14, 'ativada'),
-(15, 'desativada'),
-(16, 'ativada'),
-(17, 'ativada'),
-(18, 'ativada'),
-(19, 'manutencao'),
-(20, 'ativada'),
-(21, 'ativada'),
-(22, 'ativada'),
-(23, 'ativada'),
-(24, 'desativada'),
-(25, 'ativada'),
-(26, 'ativada'),
-(27, 'desativada'),
-(28, 'ativada'),
-(29, 'ativada'),
-(30, 'manutencao');
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 3),
+(5, 1),
+(6, 1),
+(7, 2),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 2),
+(12, 1),
+(13, 1),
+(14, 1),
+(15, 2),
+(16, 1),
+(17, 1),
+(18, 1),
+(19, 3),
+(20, 1),
+(21, 1),
+(22, 1),
+(23, 1),
+(24, 2),
+(25, 1),
+(26, 1),
+(27, 2),
+(28, 1),
+(29, 1),
+(30, 3);
+
 
 -- Ponto
-INSERT INTO ponto (ponto_id, bicicletario_id, status, bicicleta_id)
+INSERT INTO ponto (ponto_id, bicicletario_id, status_ponto_id, bicicleta_id)
 VALUES 
 	-- Bicicletário 1 (10 pontos)
-	(1, 1, 'online', 15),
-	(2, 1, 'offline', NULL),
-	(3, 1, 'manutencao', NULL),
-	(4, 1, 'online', 2),
-	(5, 1, 'offline', NULL),
-	(6, 1, 'online', 17),
-	(7, 1, 'manutencao', NULL),
-	(8, 1, 'offline', NULL),
-	(9, 1, 'online', 22),
-	(10, 1, 'offline', NULL),
+	(1, 1, 1, 15),
+	(2, 1, 2, NULL),
+	(3, 1, 3, NULL),
+	(4, 1, 1, 2),
+	(5, 1, 2, NULL),
+	(6, 1, 1, 17),
+	(7, 1, 3, NULL),
+	(8, 1, 2, NULL),
+	(9, 1, 1, 22),
+	(10, 1, 2, NULL),
 
 	-- Bicicletário 2 (4 pontos)
-	(1, 2, 'online', 19),
-	(2, 2, 'manutencao', NULL),
-	(3, 2, 'online', 10),
-	(4, 2, 'offline', NULL),
+	(1, 2, 1, 19),
+	(2, 2, 3, NULL),
+	(3, 2, 1, 10),
+	(4, 2, 2, NULL),
 
 	-- Bicicletário 3 (5 pontos)
-	(1, 3, 'online', 9),
-	(2, 3, 'offline', NULL),
-	(3, 3, 'manutencao', NULL),
-	(4, 3, 'online', 24),
-	(5, 3, 'offline', NULL),
+	(1, 3, 1, 9),
+	(2, 3, 2, NULL),
+	(3, 3, 3, NULL),
+	(4, 3, 1, 24),
+	(5, 3, 2, NULL),
 
 	-- Bicicletário 4 (5 pontos)
-	(1, 4, 'manutencao', NULL),
-	(2, 4, 'online', 12),
-	(3, 4, 'offline', NULL),
-	(4, 4, 'online', 3),
-	(5, 4, 'offline', NULL),
+	(1, 4, 3, NULL),
+	(2, 4, 1, 12),
+	(3, 4, 2, NULL),
+	(4, 4, 1, 3),
+	(5, 4, 2, NULL),
 
 	-- Bicicletário 5 (3 pontos)
-	(1, 5, 'online', 8),
-	(2, 5, 'manutencao', NULL),
-	(3, 5, 'offline', NULL),
+	(1, 5, 1, 8),
+	(2, 5, 3, NULL),
+	(3, 5, 2, NULL),
 
 	-- Bicicletário 6 (5 pontos)
-	(1, 6, 'online', 21),
-	(2, 6, 'manutencao', NULL),
-	(3, 6, 'online', 7),
-	(4, 6, 'offline', NULL),
-	(5, 6, 'manutencao', NULL),
+	(1, 6, 1, 21),
+	(2, 6, 3, NULL),
+	(3, 6, 1, 7),
+	(4, 6, 2, NULL),
+	(5, 6, 3, NULL),
 
 	-- Bicicletário 7 (5 pontos)
-	(1, 7, 'online', 1),
-	(2, 7, 'offline', NULL),
-	(3, 7, 'online', 5),
-	(4, 7, 'offline', NULL),
-	(5, 7, 'manutencao', NULL),
+	(1, 7, 1, 1),
+	(2, 7, 2, NULL),
+	(3, 7, 1, 5),
+	(4, 7, 2, NULL),
+	(5, 7, 3, NULL),
 
 	-- Bicicletário 8 (5 pontos)
-	(1, 8, 'online', 13),
-	(2, 8, 'manutencao', NULL),
-	(3, 8, 'offline', NULL),
-	(4, 8, 'online', 18),
-	(5, 8, 'offline', NULL),
+	(1, 8, 1, 13),
+	(2, 8, 3, NULL),
+	(3, 8, 2, NULL),
+	(4, 8, 1, 18),
+	(5, 8, 2, NULL),
 
 	-- Bicicletário 9 (5 pontos)
-	(1, 9, 'manutencao', NULL),
-	(2, 9, 'online', 25),
-	(3, 9, 'offline', NULL),
-	(4, 9, 'online', 16),
-	(5, 9, 'offline', NULL);
+	(1, 9, 3, NULL),
+	(2, 9, 1, 25),
+	(3, 9, 2, NULL),
+	(4, 9, 1, 16),
+	(5, 9, 2, NULL);
 
 -- emprestimo
 INSERT INTO emprestimo (ciclista_ra, emprestimo_inicio, emprestimo_fim, bicicletario_id_tirado, bicicletario_id_devolvido, bicicleta_id)
