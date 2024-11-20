@@ -54,10 +54,8 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
                 from ponto
                 left join bicicleta on bicicleta.bicicleta_id = ponto.bicicleta_id");
             foreach (var ponto in pontos)
-                result[ponto.Item1].pontos.Add(new BicicletarioPonto(ponto.Item2, ponto.Item3, ponto.Item4));
+                result[ponto.Item1].pontos!.Add(new BicicletarioPonto(ponto.Item2, ponto.Item3, ponto.Item4));
         }
-        
-
         tran.Commit();
         return Ok(result.Values);
     }

@@ -7,17 +7,38 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
     [HttpGet()]
-    public async Task<ActionResult<List<BicicletaPonto>>> GetAll()
+    public async Task<ActionResult<List<BicicletaPonto>>> GetAll([FromQuery] bool? perdidas)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        var result = await tran.QueryAsync<BicicletaPonto>(@"SELECT 
-                bicicleta.bicicleta_id as id,
-                bicicleta.status as status, 
-                ponto.bicicletario_id as bicicletario,
-                ponto.ponto_id as ponto 
-            from bicicleta
-            left join ponto on ponto.bicicleta_id = bicicleta.bicicleta_id;
-        ");
+
+        IEnumerable<BicicletaPonto> result;
+        if (perdidas == true)
+        {
+            result = await tran.QueryAsync<BicicletaPonto>(
+                @"select 
+                    bicicleta.bicicleta_id as id,
+                    bicicleta.status as status, 
+                    ponto.bicicletario_id as bicicletario,
+                    ponto.ponto_id as ponto 
+                from bicicleta
+                left join ponto on ponto.bicicleta_id = bicicleta.bicicleta_id
+                left join emprestimo on emprestimo.bicicleta_id = bicicleta.bicicleta_id 
+                    and emprestimo.emprestimo_fim is null
+                where ponto.ponto_id is null 
+                  and emprestimo.ciclista_ra is null 
+                  and bicicleta.status != 'manutencao'"
+            );
+            
+        } else {
+            result = await tran.QueryAsync<BicicletaPonto>(@"SELECT 
+                    bicicleta.bicicleta_id as id,
+                    bicicleta.status as status, 
+                    ponto.bicicletario_id as bicicletario,
+                    ponto.ponto_id as ponto 
+                from bicicleta
+                left join ponto on ponto.bicicleta_id = bicicleta.bicicleta_id;"
+            );
+        }
         tran.Commit();
         return Ok(result);
     }

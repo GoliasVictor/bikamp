@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4E3327DD-D3D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bikamp", "src\bikamp\bikamp.csproj", "{85FCD233-2BA4-475C-BD58-10BB0B9ACCA7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "src\test\test.csproj", "{567D5F1F-F387-45FD-B835-B9FE93CB1A02}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,17 +17,12 @@ Global
 		{85FCD233-2BA4-475C-BD58-10BB0B9ACCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85FCD233-2BA4-475C-BD58-10BB0B9ACCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85FCD233-2BA4-475C-BD58-10BB0B9ACCA7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{567D5F1F-F387-45FD-B835-B9FE93CB1A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{567D5F1F-F387-45FD-B835-B9FE93CB1A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{567D5F1F-F387-45FD-B835-B9FE93CB1A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{567D5F1F-F387-45FD-B835-B9FE93CB1A02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{85FCD233-2BA4-475C-BD58-10BB0B9ACCA7} = {4E3327DD-D3D8-4C41-B7A4-2925B7F36E6C}
-		{567D5F1F-F387-45FD-B835-B9FE93CB1A02} = {4E3327DD-D3D8-4C41-B7A4-2925B7F36E6C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C52CA972-8DDB-4ED1-B448-6E0DF2F9E84D}
