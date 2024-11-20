@@ -55,7 +55,7 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         return Ok();
     }
 
-    public record AtualizarMantenedor(int id, string? nome, Cargo? cargo_id);
+    public record AtualizarMantenedor(int id, string? nome, CargoId? cargo_id);
     [HttpPut()]
     public async Task<ActionResult> Put(AtualizarMantenedor request)
     {
@@ -66,7 +66,7 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
             { cargo_id: not null } => @"cargo_id = @cargo_id",
             _ => null
         };
-        if (request.cargo_id is Cargo cargo && !Enum.IsDefined(cargo))
+        if (request.cargo_id is CargoId cargo && !Enum.IsDefined(cargo))
             return UnprocessableEntity();
 
         if (camposParaAtualizar is null)

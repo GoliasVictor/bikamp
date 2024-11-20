@@ -81,7 +81,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
         );
         if (cargo_id is null)
             return Conflict("Aplicador da penalidade não existe");
-        if ((Cargo)cargo_id! is not Cargo.Supervisor and not Cargo.Administrador)
+        if ((CargoId)cargo_id! is not CargoId.Supervisor and not CargoId.Administrador)
             return Conflict("Aplicador da pendalidade precisa possuir o cargo de Supervisor ou Administrador");
         if (!emprestimoExiste)
             return Conflict("Emprestimo indicado não existe");
@@ -146,7 +146,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
         if (cargo_id is null)
             return Conflict("Aplicador da penalidade não existe");
 
-        if ((Cargo)cargo_id! is not Cargo.Supervisor and not Cargo.Administrador)
+        if ((CargoId)cargo_id! is not CargoId.Supervisor and not CargoId.Administrador)
             return Conflict("Aplicador da pendalidade precisa possuir o cargo de Supervisor ou Administrador");
 
         await tran.ExecuteAsync(
@@ -169,7 +169,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
         tran.Commit();
         return Ok();
     }
-    
+
 }
 
 

@@ -1,11 +1,11 @@
-public enum Cargo {
+public enum CargoId {
     Supervisor = 1, 
     Reparador = 2,
     Administrador = 3, 
     Demitido = 4
 }
 
-public record Mantenedor(int mantenedor_id, Cargo cargo, string nome);
+public record Mantenedor(int mantenedor_id, CargoId cargo, string nome);
 public record Bicicleta(int id, string status);
 public record BicicletaPonto(int id, string status, int? bicicletario, int? ponto);
 public record Emprestimo(
