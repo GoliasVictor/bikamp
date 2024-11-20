@@ -25,28 +25,16 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
         tran.Commit();
         return Ok(next_id);
     }
-    public record Bicicletario(int id, double localizacao_latitude, double localizacao_longitude);
-    [HttpGet()]
-    public async Task<ActionResult<List<Bicicletario>>> GetAll()
-    {
-        using IDbTransaction tran = _conn.BeginTransaction();
-        var result = await tran.QueryAsync<Bicicletario>(@"SELECT 
-            bicicletario_id as id, 
-            localizacao_latitude, 
-            localizacao_longitude 
-        from bicicletario");
-        tran.Commit();
-        return Ok(result);
-    }
-    public record class BicicletarioDetalhado(
+
+    public record BicicletarioPonto(int ponto, String status_ponto, int? bicicleta);
+    public record class Bicicletario(
         int id,
         double localizacao_latitude,
         double localizacao_longitude,
-        List<BicicletarioDetalhadoPonto> pontos
+        List<BicicletarioPonto>? pontos
     );
-    public record BicicletarioDetalhadoPonto(int ponto, String status_ponto, int? bicicleta);
-    [HttpGet("detalhado")]
-    public async Task<ActionResult<List<BicicletarioDetalhado>>> GetDetalhado()
+    [HttpGet()]
+    public async Task<ActionResult<List<Bicicletario>>> GetAll([FromQuery] bool detalhado)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
         var bicicletarios = await tran.QueryAsync<(int, double, double)>(@"SELECT 
@@ -54,19 +42,21 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
             localizacao_latitude, 
             localizacao_longitude 
         from bicicletario");
-        var result = new Dictionary<int, BicicletarioDetalhado>();
+        var result = new Dictionary<int, Bicicletario>();
         foreach (var b in bicicletarios)
-            result[b.Item1] = new BicicletarioDetalhado(b.Item1, b.Item2, b.Item3, new());
-
-        var pontos = await tran.QueryAsync<(int, int, String, int?)>(@"SELECT 
-                ponto.bicicletario_id as bicicletario,
-                ponto.ponto_id as ponto,
-                ponto.status as status, 
-                bicicleta.bicicleta_id as bicicleta
-            from ponto
-            left join bicicleta on bicicleta.bicicleta_id = ponto.bicicleta_id");
-        foreach (var ponto in pontos)
-            result[ponto.Item1].pontos.Add(new BicicletarioDetalhadoPonto(ponto.Item2, ponto.Item3, ponto.Item4));
+            result[b.Item1] = new Bicicletario(b.Item1, b.Item2, b.Item3, detalhado? new() : null);
+        if(detalhado){
+            var pontos = await tran.QueryAsync<(int, int, String, int?)>(@"SELECT 
+                    ponto.bicicletario_id as bicicletario,
+                    ponto.ponto_id as ponto,
+                    ponto.status as status, 
+                    bicicleta.bicicleta_id as bicicleta
+                from ponto
+                left join bicicleta on bicicleta.bicicleta_id = ponto.bicicleta_id");
+            foreach (var ponto in pontos)
+                result[ponto.Item1].pontos.Add(new BicicletarioPonto(ponto.Item2, ponto.Item3, ponto.Item4));
+        }
+        
 
         tran.Commit();
         return Ok(result.Values);

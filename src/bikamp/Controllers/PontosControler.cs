@@ -75,38 +75,7 @@ public class PontosController(IDbConnection conn) : ControllerBase
         return Ok();
     }
 
-
-    public record AtualizacaoPontoBicicleta(int bicicletario_id, int ponto_id, int bicicleta_id);
-
-    [HttpPut("bicicleta")]
-    public async Task<ActionResult> PutBicicleta(AtualizacaoPontoBicicleta request)
-    {
-        using IDbTransaction tran = _conn.BeginTransaction();
-
-        var (jaPossuiBicicleta, bicicletaEstaOutroPonto) = await tran.QueryFirstOrDefaultAsync<(bool, bool)>(
-            @"select 
-                exists(select * from ponto where bicicletario_id = @bicicletario_id and ponto_id = @ponto_id and bicicleta_id is not null), 
-                exists(select * from ponto where bicicleta_id = @bicicleta_id)",
-            request
-        );
-
-        if (jaPossuiBicicleta)
-            return Conflict("Ponto já possui uma bicicleta registrada");
-
-        if (bicicletaEstaOutroPonto)
-            return Conflict("Bicicleta já está em outro bicicletario ");
-
-        await tran.ExecuteAsync(
-            @"UPDATE ponto 
-            SET 
-                bicicleta_id = @bicicleta_id 
-            WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;",
-            request
-        );
-
-        tran.Commit();
-        return Ok();
-    }
+ 
 
 
     [HttpDelete("{bicicletario_id}/{ponto_id}")]

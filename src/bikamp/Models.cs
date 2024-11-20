@@ -2,9 +2,9 @@ public enum Cargo {
     Supervisor = 1, 
     Reparador = 2,
     Administrador = 3, 
-    Demitido = 4, 
-
+    Demitido = 4
 }
+
 public record Mantenedor(int mantenedor_id, Cargo cargo, string nome);
 public record Bicicleta(int id, string status);
 public record BicicletaPonto(int id, string status, int? bicicletario, int? ponto);
