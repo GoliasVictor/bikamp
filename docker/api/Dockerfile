@@ -15,4 +15,4 @@ WORKDIR /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "bikamp.dll"]
+ENTRYPOINT ["dotnet", "bikamp.dll", "--environment", "Development"]

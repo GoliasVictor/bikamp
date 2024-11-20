@@ -63,7 +63,19 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
     public async Task<ActionResult> Delete(int id)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        await tran.ExecuteAsync("delete from bicicletario where bicicletario_id = @id", new { id });
+        await tran.ExecuteAsync(
+            @"update bicicletario 
+            set desativado = true 
+            where bicicletario_id = @id;
+            
+            update ponto
+            set status_ponto_id = @STATUS_PONTO_ID_REMOVIDO
+            where  bicicletario_id = @id",
+            new { 
+                STATUS_PONTO_ID_REMOVIDO = StatusPontoId.Removido,
+                id 
+            }
+        );
         tran.Commit();
         return Ok();
     }

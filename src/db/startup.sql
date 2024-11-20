@@ -25,7 +25,9 @@ CREATE TABLE ciclista (
 CREATE TABLE bicicletario (
 	bicicletario_id INT NOT NULL PRIMARY KEY,
 	localizacao_latitude DOUBLE NOT NULL,
-	localizacao_longitude DOUBLE NOT NULL
+	localizacao_longitude DOUBLE NOT NULL,
+	desativado BOOL NOT NULL DEFAULT FALSE
+
 );
 
 CREATE TABLE status_bicicleta (
@@ -61,7 +63,6 @@ CREATE TABLE emprestimo (
 	bicicletario_id_tirado INT NOT NULL,
 	bicicletario_id_devolvido INT NULL,
 	bicicleta_id INT NOT NULL,
-	cancelado BOOL NOT NULL DEFAULT FALSE,
 	PRIMARY KEY (ciclista_ra, emprestimo_inicio),
 	FOREIGN KEY (ciclista_ra) REFERENCES ciclista(ciclista_ra),
 	FOREIGN KEY (bicicletario_id_tirado) REFERENCES bicicletario(bicicletario_id),
