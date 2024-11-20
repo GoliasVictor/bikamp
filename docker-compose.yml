@@ -1,8 +1,7 @@
 services:
   api: 
     container_name: "bikamp_api"
-    image: api
-    profiles: [test, api]
+    image: api 
     build:
       context: .
       dockerfile: ./docker/api/Dockerfile
@@ -11,19 +10,6 @@ services:
         condition: service_healthy
     ports:
       - 5259:5259
-  test: 
-    container_name: "bikamp_test"
-    image: test
-    profiles: [test]
-    build:
-      context: .
-      dockerfile: ./docker/test/Dockerfile
-    depends_on:
-      db:
-        condition: service_healthy
-      api: 
-        condition: service_started
-
   db:
     container_name: "bikamp_bd"
     image: mysql
