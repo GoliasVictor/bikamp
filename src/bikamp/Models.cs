@@ -2,6 +2,7 @@ public enum Cargo {
     Supervisor = 1, 
     Reparador = 2,
     Administrador = 3, 
+    Demitido = 4, 
 
 }
 public record Mantenedor(int mantenedor_id, Cargo cargo, string nome);
