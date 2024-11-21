@@ -9,10 +9,10 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
     private readonly IDbConnection _conn = conn;
     public record RequestCreateBicicletario(double latitude, double longitude);
     [HttpPost("")]
-    public async Task<ActionResult<int>> CreateBicicletario(RequestCreateBicicletario request)
+    public async Task<ActionResult<int>> Post(RequestCreateBicicletario request)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        var next_id = await tran.QuerySingleAsync<int>(@"select max(bicicletario_id) + 1 from bicicletario");
+        var next_id = await tran.QuerySingleAsync<int>(@"select COALESCE(max(bicicletario_id) + 1, 0) from bicicletario");
         await tran.ExecuteAsync(
             @"INSERT INTO bicicletario (bicicletario_id, localizacao_latitude, localizacao_longitude) 
             VALUES  (@next_id, @latitude, @longitude)", new

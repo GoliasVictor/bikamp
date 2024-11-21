@@ -71,7 +71,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     {
         if (!Enum.IsDefined(bicicleta.status))
             return UnprocessableEntity();
-        using IDbTransaction tran = _conn.BeginTransaction();
+        using IDbTransaction tran = _conn.BeginTransaction();  
         await tran.ExecuteAsync("INSERT INTO bicicleta (bicicleta_id, status_bicicleta_id) VALUES  (@id, @status)", bicicleta);
         tran.Commit();
         return Ok();
@@ -80,9 +80,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     [HttpPut("")]
     public async Task<ActionResult> Put(Bicicleta bicicleta)
     {
-        using IDbTransaction tran = _conn.BeginTransaction();
-        await tran.ExecuteAsync("UPDATE bicicleta SET status_bicicleta_id = @status WHERE bicicleta_id = @id;", bicicleta);
-        tran.Commit();
+        await _conn.ExecuteAsync("UPDATE bicicleta SET status_bicicleta_id = @status WHERE bicicleta_id = @id;", bicicleta);
         return Ok();
     }
 

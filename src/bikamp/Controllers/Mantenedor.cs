@@ -44,20 +44,18 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
     [HttpPost()]
     public async Task<ActionResult> Post(Mantenedor mantenedor)
     {
-        using IDbTransaction tran = _conn.BeginTransaction();
         if (!Enum.IsDefined(mantenedor.cargo))
             return UnprocessableEntity();
-        await tran.ExecuteAsync(
+        await _conn.ExecuteAsync(
             @"INSERT INTO mantenedor (mantenedor_id, cargo_id, nome) 
               VALUES (@mantenedor_id, @cargo, @nome)",
             mantenedor);
-        tran.Commit();
         return Ok();
     }
 
     public record AtualizarMantenedor(int id, string? nome, CargoId? cargo_id);
-    [HttpPut()]
-    public async Task<ActionResult> Put(AtualizarMantenedor request)
+    [HttpPatch()]
+    public async Task<ActionResult> Patch(AtualizarMantenedor request)
     {
         string? camposParaAtualizar = request switch
         {
@@ -72,19 +70,16 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         if (camposParaAtualizar is null)
             return UnprocessableEntity();
 
-        using IDbTransaction tran = _conn.BeginTransaction();
-        int rows_affected = await tran.ExecuteAsync(
+        int rows_affected = await _conn.ExecuteAsync(
             @$"UPDATE mantenedor 
             SET 
                 {camposParaAtualizar} 
             WHERE mantenedor_id = @id;",
             request
         );
-        tran.Commit();
+
         if (rows_affected == 0)
-        {
             return NotFound();
-        }
         return Ok();
     }
 
