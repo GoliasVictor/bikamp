@@ -18,8 +18,7 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
                 emprestimo_fim,
                 bicicletario_id_devolvido,
                 bicicletario_id_tirado,
-                bicicleta_id,
-                cancelado
+                bicicleta_id
             from emprestimo
             where  @aberto is null or not (emprestimo_fim is null xor @aberto) ;
         ", new

@@ -30,7 +30,6 @@ public record Emprestimo(
     DateTime? emprestimo_fim,
     int? bicicletario_id_devolvido ,
     int bicicletario_id_tirado,
-    int bicicleta_id,
-    bool cancelado
+    int bicicleta_id
 );
   
