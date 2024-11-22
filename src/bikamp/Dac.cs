@@ -1,17 +1,29 @@
+using System.Text.Json;
+
 namespace Bikamp;
+
+public record Aluno(int ra, int cartao);
+public class DadosDac {
+
+    public Aluno[] alunos { get; set; } = [];
+}
 public class Dac {
-    public bool EhAlunoRegulamenteMatriculado(int ra){
-        return ra % 3 == 0;
+    DadosDac dados;
+
+    public Dac()
+    {
+        dados = JsonSerializer.Deserialize<DadosDac>(File.ReadAllText("dac.json")) 
+            ?? throw new Exception("Não foi possivel ler arquivo dac.json");
+        Console.WriteLine(JsonSerializer.Serialize<DadosDac>(dados));
     }
 
-    public int? ObterRaAlunoCartao(int ra){
-        if(ra  < 0 ){
-            return null;
-        }
-        if(ra  == 9999999){
-            return 3;
-        }
-        return null;
+
+    public int? ObterRaAlunoCartao(int cartao){
+
+        return dados.alunos
+            .Where(a => a.cartao == cartao)
+            .FirstOrDefault()?
+            .ra;
 
     }
 }

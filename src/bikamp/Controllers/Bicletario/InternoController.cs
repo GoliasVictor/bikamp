@@ -8,7 +8,7 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
     private readonly IDbConnection _conn = conn;
     private readonly Dac _dac = dac;
 
-    public record RequesicaoEmprestimo(int bicicletario, int ra_aluno);
+    public record RequesicaoEmprestimo(int bicicletario, int cartao_ciclista);
 
     public enum StatusSolicitacoaEmprestimo
     {
@@ -24,13 +24,12 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
     [HttpPost("emprestimos")]
     public async Task<ActionResult<RespostaSolicitacaoEmprestimo>> PostEmprestimos(RequesicaoEmprestimo solicitacao)
     {
+        int? nulable_ra = _dac.ObterRaAlunoCartao(solicitacao.cartao_ciclista) ;
+        if (nulable_ra is null)
+            return Conflict();
+        int ra = nulable_ra.Value;
         using IDbTransaction tran = _conn.BeginTransaction();
 
-        bool matriculado = _dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno);
-        if (!matriculado)
-            return Conflict();
-
-        int ra = solicitacao.ra_aluno;
 
         (bool estaNoBanco, bool proibido) = await tran.QuerySingleAsync<(bool, bool)>(
             @"SELECT 

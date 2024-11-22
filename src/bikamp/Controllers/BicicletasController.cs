@@ -72,7 +72,14 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
         if (!Enum.IsDefined(bicicleta.status))
             return UnprocessableEntity();
         using IDbTransaction tran = _conn.BeginTransaction();  
-        await tran.ExecuteAsync("INSERT INTO bicicleta (bicicleta_id, status_bicicleta_id) VALUES  (@id, @status)", bicicleta);
+        await tran.ExecuteAsync(
+            @"INSERT INTO bicicleta (
+            bicicleta_id,
+            status_bicicleta_id
+        ) VALUES (
+            @id,
+            @status
+        )", bicicleta);
         tran.Commit();
         return Ok();
     }
