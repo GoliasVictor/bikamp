@@ -35,7 +35,7 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
         using IDbTransaction tran = _conn.BeginTransaction();
         var emprestimo_info = await tran.QueryFirstOrDefaultAsync<(int, bool)?>(
                 @"select 
-                    bicicleta_id
+                    bicicleta_id,
                     emprestimo_fim is not null 
                 from emprestimo 
                 where ciclista_ra =  @ciclista_ra 
