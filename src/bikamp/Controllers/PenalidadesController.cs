@@ -52,7 +52,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
     {
         DateTime penalidade_inicio = DateTime.Now;
         if (penalidade.penalidade_fim < penalidade_inicio)
-            return UnprocessableEntity("Não e possivem o fim da penalidade ser no passado");
+            return UnprocessableEntity("Não e possive o fim da penalidade ser no passado");
 
 
         using IDbTransaction tran = _conn.BeginTransaction();

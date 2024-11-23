@@ -31,20 +31,22 @@ public class BicicletarioController(IDbConnection conn) : ControllerBase
         int id,
         double localizacao_latitude,
         double localizacao_longitude,
+        bool desativado,
         List<BicicletarioPonto>? pontos
     );
     [HttpGet()]
     public async Task<ActionResult<List<Bicicletario>>> GetAll([FromQuery] bool detalhado)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        var bicicletarios = await tran.QueryAsync<(int, double, double)>(@"SELECT 
+        var bicicletarios = await tran.QueryAsync<(int, double, double, bool)>(@"SELECT 
             bicicletario_id as id, 
             localizacao_latitude, 
-            localizacao_longitude 
+            localizacao_longitude,
+            desativado
         from bicicletario");
         var result = new Dictionary<int, Bicicletario>();
         foreach (var b in bicicletarios)
-            result[b.Item1] = new Bicicletario(b.Item1, b.Item2, b.Item3, detalhado? new() : null);
+            result[b.Item1] = new Bicicletario(b.Item1, b.Item2, b.Item3, b.Item4, detalhado? new() : null);
         if(detalhado){
             var pontos = await tran.QueryAsync<(int, int, StatusPontoId, int?)>(@"SELECT 
                     ponto.bicicletario_id as bicicletario,

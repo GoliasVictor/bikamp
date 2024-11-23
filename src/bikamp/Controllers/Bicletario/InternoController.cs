@@ -99,8 +99,8 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
             SET bicicleta_id = null
             WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;
 
-            INSERT INTO emprestimo (ciclista_ra, emprestimo_inicio, bicicletario_id_tirado, bicicleta_id, cancelado) 
-            VALUES (@ciclista_ra, now(), @bicicletario_id, @bicicleta_id, false) ;",
+            INSERT INTO emprestimo (ciclista_ra, emprestimo_inicio, bicicletario_id_tirado, bicicleta_id) 
+            VALUES (@ciclista_ra, now(), @bicicletario_id, @bicicleta_id) ;",
             new
             {
                 ciclista_ra = ra,
