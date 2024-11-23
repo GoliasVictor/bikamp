@@ -71,8 +71,29 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     {
         if (!Enum.IsDefined(bicicleta.status))
             return UnprocessableEntity();
-        using IDbTransaction tran = _conn.BeginTransaction();  
-        await tran.ExecuteAsync("INSERT INTO bicicleta (bicicleta_id, status_bicicleta_id) VALUES  (@id, @status)", bicicleta);
+        using IDbTransaction tran = _conn.BeginTransaction();
+
+        var bicicleta_existe = await tran.QuerySingleAsync<bool>(
+            @"select exists(
+                select * 
+                from bicicleta 
+                where bicicleta_id = @id
+            )",
+            new { id = bicicleta.id }
+        );
+        if (bicicleta_existe)
+            return Conflict("Bicicleta com o id indicado já existe");
+        
+
+        await tran.ExecuteAsync(
+            @"INSERT INTO bicicleta (
+                bicicleta_id,
+                status_bicicleta_id
+            ) 
+            VALUES (
+                @id,
+                @status
+            )", bicicleta);
         tran.Commit();
         return Ok();
     }
