@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/api/Dockerfile
+    profiles: ["server"]
     depends_on:
       db:
         condition: service_healthy
@@ -13,6 +14,7 @@ services:
   db:
     container_name: "bikamp_bd"
     image: mysql
+    profiles: ["server", "test", "db"]
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: bikamp    
@@ -31,7 +33,18 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
+  test: 
+    container_name: "bikamp_test"
+    image: test 
+    build:
+      context: .
+      dockerfile: ./docker/test/Dockerfile
+    profiles: ["test"]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 5259:5259
 
 volumes:
   bikamp-mysql-volume:
