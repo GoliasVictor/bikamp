@@ -1,0 +1,22 @@
+graph LR;
+    ciclista[Ciclista]
+    man[Mantenedor]
+    subgraph uni[Unicamp Serviços]
+
+    subgraph Front End
+        bic[Bicicletario]
+        ui[Interface Mantenedor]
+    end
+
+    subgraph Back End
+        DAC
+        API 
+        DB[(Banco de Dados)]
+        API --> DB
+        API --> DAC
+    end
+    end
+    ciclista --> bic 
+    man --> ui
+    ui --> API
+    bic --> API
