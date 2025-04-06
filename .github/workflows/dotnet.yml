@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env: 
+      MYSQL_CONNECTION: "server=localhost;port=42333;database=bikamp;user=api;password=api;"
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -15,5 +17,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Up Db
+      run:  docker compose up -d --wait db
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger GitHubActions

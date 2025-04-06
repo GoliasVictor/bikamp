@@ -42,7 +42,6 @@ public class MantenedoresControllerTest : IDisposable
     public async void PatchSucess(int id)
     {
         var expected = bd.Get(new Mantenedor.PK(id))!;
-        var expected = bd.Get(id)!;
         expected = expected with { nome  = "carlitos" };
 
         await controller.Patch(new(id, "carlitos", null));
