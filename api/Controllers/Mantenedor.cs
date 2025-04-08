@@ -14,7 +14,8 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
             @"SELECT 
                 mantenedor_id,
                 cargo_id as cargo, 
-                nome
+                nome,
+                senha
             from mantenedor
         ");
         tran.Commit();
@@ -30,7 +31,8 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
             @"SELECT 
                 mantenedor_id,
                 cargo_id as cargo, 
-                nome
+                nome,
+                senha
             from mantenedor
             where mantenedor_id = @id",
             new { id }
@@ -47,21 +49,25 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         if (!Enum.IsDefined(mantenedor.cargo))
             return UnprocessableEntity();
         await _conn.ExecuteAsync(
-            @"INSERT INTO mantenedor (mantenedor_id, cargo_id, nome) 
-              VALUES (@mantenedor_id, @cargo, @nome)",
+            @"INSERT INTO mantenedor (mantenedor_id, cargo_id, nome, senha) 
+              VALUES (@mantenedor_id, @cargo, @nome, @senha)",
             mantenedor);
         return Ok();
     }
 
-    public record AtualizarMantenedor(int id, string? nome, CargoId? cargo_id);
+    public record AtualizarMantenedor(int id, string? nome, string? senha, CargoId? cargo_id);
     [HttpPatch()]
     public async Task<ActionResult> Patch(AtualizarMantenedor request)
     {
         string? camposParaAtualizar = request switch
         {
+            { nome: not null, cargo_id: not null, senha: not null } => @"nome = @nome, cargo_id = @cargo_id, senha = @senha",
             { nome: not null, cargo_id: not null } => @"nome = @nome, cargo_id = @cargo_id",
+            { nome: not null, senha: not null } => @"nome = @nome, senha = @senha",
+            { cargo_id: not null, senha: not null } => @"cargo_id = @cargo_id, senha = @senha",
             { nome: not null } => @"nome = @nome",
             { cargo_id: not null } => @"cargo_id = @cargo_id",
+            { senha: not null } => @"senha = @senha",
             _ => null
         };
         if (request.cargo_id is CargoId cargo && !Enum.IsDefined(cargo))
