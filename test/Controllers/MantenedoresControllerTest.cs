@@ -14,8 +14,8 @@ public class MantenedoresControllerTest : IDisposable
         bd.Resetar();
         bd.CarregarDados(
             mantenedores: [
-                new(1, 1, "carlos"),
-                new(2, 1, "joão")
+                new(1, 1, "carlos", "8888"),
+                new(2, 1, "joão", "8888")
             ]
         );
     }
@@ -28,9 +28,9 @@ public class MantenedoresControllerTest : IDisposable
     public async void PostSucess()
     {
         var id = 4;
-        var expected = new Mantenedor(id, 1, "alfredo");
+        var expected = new Mantenedor(id, 1, "alfredo", "8888");
 
-        await controller.Post(new(id, (Api::CargoId)1, "alfredo"));
+        await controller.Post(new(id, (Api::CargoId)1, "alfredo", "8888"));
   
         var actual = bd.Get(new Mantenedor.PK(id));
         Assert.Equal(expected, actual);
