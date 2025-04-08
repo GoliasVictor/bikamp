@@ -1,4 +1,5 @@
 drop schema if exists bikamp;
+-- drop schema if exists bikamp cascade;
 create schema bikamp;
 use bikamp;
 CREATE TABLE cargo (
@@ -10,6 +11,7 @@ CREATE TABLE mantenedor (
 	mantenedor_id INT NOT NULL PRIMARY KEY,
 	cargo_id INT NOT NULL,
 	nome VARCHAR(150) NOT NULL,
+	senha VARCHAR(10) NOT NULL,
 	FOREIGN KEY (cargo_id) REFERENCES cargo(cargo_id)
 );
 

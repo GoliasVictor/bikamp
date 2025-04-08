@@ -1,20 +1,20 @@
 -- Mantenedores
-INSERT INTO mantenedor (mantenedor_id, cargo_id, nome) VALUES
-	(101, 1, "Carlos da Silva Santos"),
-	(102, 2, "Artur Enzo Souza Andares"),
-	(103, 2, "Rogério Camões"),
-	(105, 2, "Izumi Kawatani"),
-	(104, 2, "Abelardo Pontafina"),
-	(106, 3, "Reginaldo Vanio"),
-	(107, 3, "Romeu de Castro Ferreira"),
-	(108, 3, "Monica Eduarda Hortensia"),
-	(109, 3, "Marcio Silva Abreu"),
-	(110, 3, "Maria Carla Ferreira"),
-	(111, 3, "João Silva"),
-	(112, 2, "Mariana Naja"),
-	(113, 1, "Ana Julia Gomes"),
-	(115, 1, "Caio Faria"),
-	(116, 1, "Rosimeire Dias");
+INSERT INTO mantenedor (mantenedor_id, cargo_id, nome, senha) VALUES
+	(101, 1, "Carlos da Silva Santos", "8888"),
+	(102, 2, "Artur Enzo Souza Andares", "8888"),
+	(103, 2, "Rogério Camões", "8888"),
+	(105, 2, "Izumi Kawatani", "8888"),
+	(104, 2, "Abelardo Pontafina", "8888"),
+	(106, 3, "Reginaldo Vanio", "8888"),
+	(107, 3, "Romeu de Castro Ferreira", "8888"),
+	(108, 3, "Monica Eduarda Hortensia", "8888"),
+	(109, 3, "Marcio Silva Abreu", "8888"),
+	(110, 3, "Maria Carla Ferreira", "8888"),
+	(111, 3, "João Silva", "8888"),
+	(112, 2, "Mariana Naja", "8888"),
+	(113, 1, "Ana Julia Gomes", "8888"),
+	(115, 1, "Caio Faria", "8888"),
+	(116, 1, "Rosimeire Dias", "8888");
 
 -- Ciclistas
 INSERT INTO ciclista (ciclista_ra)

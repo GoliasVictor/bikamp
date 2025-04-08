@@ -21,7 +21,7 @@ public enum StatusBicicletaId {
 	Removida = 5
 }
 
-public record Mantenedor(int mantenedor_id, CargoId cargo, string nome);
+public record Mantenedor(int mantenedor_id, CargoId cargo, string nome, string senha);
 public record Bicicleta(uint id, StatusBicicletaId status);
 public record BicicletaPonto(int id, StatusBicicletaId status, int? bicicletario, int? ponto);
 public record Emprestimo(
