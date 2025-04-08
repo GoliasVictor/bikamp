@@ -44,7 +44,7 @@ public class MantenedoresControllerTest : IDisposable
         var expected = bd.Get(new Mantenedor.PK(id))!;
         expected = expected with { nome  = "carlitos" };
 
-        await controller.Patch(new(id, "carlitos", null));
+        await controller.Patch(new(id, "carlitos", null, null));
         
         var actual = bd.Get(new Mantenedor.PK(id));
         Assert.Equal(expected, actual);
@@ -55,7 +55,7 @@ public class MantenedoresControllerTest : IDisposable
     {
         var id = 234;
 
-        var result = await controller.Patch(new(id, "carlitos", null));
+        var result = await controller.Patch(new(id, "carlitos", null, null));
 
         Assert.IsType<NotFoundResult>(result);
     }
