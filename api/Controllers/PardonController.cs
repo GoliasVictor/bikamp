@@ -14,8 +14,8 @@ public class PardonController(IDbConnection conn) : ControllerBase
 
         var pardonMe_existe = await tran.QuerySingleAsync<bool>(
             @"SELECT EXISTS (
-                SELECT * FROM solicitacao_perdao 
-                WHERE ciclista_ra = @Ciclista_ra AND pardon_inicio = @pardon_inicio
+                SELECT * FROM pardon_request
+                WHERE ciclista_ra = @ciclista_ra AND pardon_inicio = @pardon_inicio
             )", pardonMe
         );
 
@@ -23,8 +23,8 @@ public class PardonController(IDbConnection conn) : ControllerBase
             return Conflict("Solicitação de perdão com o id indicado já existe");
         
         await tran.ExecuteAsync(
-            @"INSERT INTO solicitacao_perdao (ciclista_ra, pardon_inicio, justificativa)
-                VALUES (@Ciclista_ra, @Pardon_inicio, @Justificativa)", pardonMe);
+            @"INSERT INTO pardon_request (ciclista_ra, pardon_inicio, justificativa)
+                VALUES (@ciclista_ra, @pardon_inicio, @justificativa)", pardonMe);
         
         tran.Commit();
         return Ok(new { mensagem = "Solicitação registrada com sucesso" });
@@ -33,7 +33,7 @@ public class PardonController(IDbConnection conn) : ControllerBase
     [HttpGet()]
     public async Task<ActionResult<List<PardonRequest>>> Get(){
         using IDbTransaction tran = _conn.BeginTransaction();
-        var querry = @"SELECT ciclista_ra, padon_inicio, justificativa FROM solicitacao_perdao";
+        var querry = @"SELECT ciclista_ra, pardon_inicio, justificativa FROM pardon_request";
         var pardons = await tran.QueryAsync(querry);     
         tran.Commit();
         return Ok(pardons);       

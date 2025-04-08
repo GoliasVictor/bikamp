@@ -386,7 +386,3 @@ INSERT INTO penalidade (penalidade_inicio, ciclista_ra, emprestimo_inicio, tipo_
 ('2023-11-13 17:05:00', 229091, '2023-11-13 14:05:00', 1, TRUE, NULL, 'Devolução atrasada em 1h 30min.', NULL, NULL, NULL),
 ('2023-11-16 17:57:00', 241901, '2023-11-16 12:35:00', 4, FALSE, NULL, 'Uso para transporte não autorizado.', 109, NULL, NULL);
 
-INSERT INTO pardon_request (pardon_inicio, ciclista_ra, justificativa) VALUES 
-(223234, '2023-12-24 11:50:00', 'Decurpe'),
-(241901, '2023-11-16 12:35:00', 'Fui assaltado'),
-(229091, '2023-11-16 12:35:00', 'Eu perdi a bicileta'); 

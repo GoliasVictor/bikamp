@@ -1,7 +1,6 @@
 using System.Data;
 using Bikamp.Controllers;
 using Api = Bikamp ;
-using Bikamp;
 
 namespace Test.Controllers;
 public class PardonControllerTest : IDisposable 
@@ -12,7 +11,7 @@ public class PardonControllerTest : IDisposable
 
         bd = new BDManager();
         controller = new PardonController(bd.conn);
-        bd.Resetar();
+        
     }
 
     public void Dispose(){
@@ -22,10 +21,17 @@ public class PardonControllerTest : IDisposable
     [Fact]
     public async void PostSucess()
     {
-        var ra = 1;
-        var date = new DateTime(2025, 4, 7);
         
+        var ra = 223234;
+        var date = new DateTime(2025, 4, 7);
         var expected = new PardonRequest(ra,  date, "DESCURPE");
+        
+        bd.Resetar();
+        bd.CarregarDados(
+            ciclistas: [
+                new(ra)
+            ]
+        );
 
         await controller.Post(new(ra,  date, "DESCURPE"));
   

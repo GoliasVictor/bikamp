@@ -94,9 +94,9 @@ CREATE TABLE penalidade (
 );
 
 CREATE TABLE pardon_request(
-	pardon_inicio DATETIME NOT NULL, 
 	ciclista_ra INT NOT NULL,
+	pardon_inicio DATETIME NOT NULL, 
 	justificativa TEXT NULL, 
-	PRIMARY KEY (ciclista_ra, perdon_inicio),
+	PRIMARY KEY (ciclista_ra, pardon_inicio),
 	FOREIGN KEY (ciclista_ra) REFERENCES ciclista(ciclista_ra)
 );
