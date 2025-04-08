@@ -22,7 +22,11 @@ public class PardonControllerTest : IDisposable
     public async void PostSucess()
     {
         var ra = 1;
+<<<<<<< HEAD
         var date = DateTime.Now();
+=======
+        var date = DateTime.Now()
+>>>>>>> 8073702 (Add PardonControllerTest.cs)
         
         var expected = new PardonRequest(ra,  date, "DESCURPE");
 
