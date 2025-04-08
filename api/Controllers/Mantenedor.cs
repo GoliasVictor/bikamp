@@ -55,7 +55,7 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         return Ok();
     }
 
-    public record AtualizarMantenedor(int id, string? nome, CargoId? cargo_id);
+    public record AtualizarMantenedor(int id, string? nome, string? senha, CargoId? cargo_id);
     [HttpPatch()]
     public async Task<ActionResult> Patch(AtualizarMantenedor request)
     {
