@@ -32,4 +32,5 @@ public record Emprestimo(
     int bicicletario_id_tirado,
     int bicicleta_id
 );
-  
+
+public record PardonRequest (int ciclista_ra, DateTime pardon_inicio, string justificativa);
