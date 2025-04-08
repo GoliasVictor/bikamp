@@ -7,6 +7,13 @@ interface IPrimaryKey<T> : IPrimaryKey{};
 interface Tabela {
     IPrimaryKey getPk();
 }
+
+record PardonRequest (int ciclista_ra, DateTime pardon_inicio, string justificativa
+) : Tabela {
+    public record PK (int ciclista_ra, DateTime pardon_inicio) : IPrimaryKey<PardonRequest>;
+    public IPrimaryKey getPk() => new PK(ciclista_ra, pardon_inicio);
+};
+
 record Mantenedor (
     int mantenedor_id, 
     int cargo_id, 
