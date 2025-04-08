@@ -10,7 +10,8 @@ interface Tabela {
 record Mantenedor (
     int mantenedor_id, 
     int cargo_id, 
-    string nome
+    string nome,
+    string senha
 ) : Tabela {
     public record PK (int id) : IPrimaryKey<Mantenedor>;
     public IPrimaryKey getPk() => new PK(mantenedor_id);
