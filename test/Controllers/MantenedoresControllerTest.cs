@@ -3,6 +3,7 @@ using Bikamp.Controllers;
 using Api = Bikamp ;
 
 namespace Test.Controllers;
+[Collection("Sequential")]
 public class MantenedoresControllerTest : IDisposable 
 {
     BDManager bd;

@@ -45,6 +45,12 @@ services:
         condition: service_healthy
     ports:
       - 5259:5259
+  whodb:
+    image: clidey/whodb
+    environment:
+      WHODB_MYSQL: '[{"host":"db","user":"api","password":"api","database":"mysql"}]' 
+    ports:
+      - "8080:8080"
 
 volumes:
   bikamp-mysql-volume:

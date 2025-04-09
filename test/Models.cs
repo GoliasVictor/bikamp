@@ -8,9 +8,9 @@ interface Tabela {
     IPrimaryKey getPk();
 }
 
-record PardonRequest (int ciclista_ra, DateTime pardon_inicio, string justificativa
+record Pardon_Request (int ciclista_ra, DateTime pardon_inicio, string justificativa
 ) : Tabela {
-    public record PK (int ciclista_ra, DateTime pardon_inicio) : IPrimaryKey<PardonRequest>;
+    public record PK (int ciclista_ra, DateTime pardon_inicio) : IPrimaryKey<Pardon_Request>;
     public IPrimaryKey getPk() => new PK(ciclista_ra, pardon_inicio);
 };
 

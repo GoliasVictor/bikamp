@@ -3,6 +3,8 @@ using Bikamp.Controllers;
 using Api = Bikamp ;
 
 namespace Test.Controllers;
+
+[Collection("Sequential")]
 public class PardonControllerTest : IDisposable 
 {
     BDManager bd;
@@ -24,7 +26,7 @@ public class PardonControllerTest : IDisposable
         
         var ra = 223234;
         var date = new DateTime(2025, 4, 7);
-        var expected = new PardonRequest(ra,  date, "DESCURPE");
+        var expected = new Pardon_Request(ra,  date, "DESCURPE");
         
         bd.Resetar();
         bd.CarregarDados(
@@ -35,7 +37,7 @@ public class PardonControllerTest : IDisposable
 
         await controller.Post(new(ra,  date, "DESCURPE"));
   
-        var actual = bd.Get(new PardonRequest.PK(ra, date));
+        var actual = bd.Get(new Pardon_Request.PK(ra, date));
         Assert.Equal(expected, actual);
     }
 }
