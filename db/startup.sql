@@ -24,6 +24,7 @@ CREATE TABLE tipo_penalidade (
 CREATE TABLE ciclista (
 	ciclista_ra INT NOT NULL PRIMARY KEY
 );
+
 CREATE TABLE bicicletario (
 	bicicletario_id INT NOT NULL PRIMARY KEY,
 	localizacao_latitude DOUBLE NOT NULL,
@@ -36,6 +37,7 @@ CREATE TABLE status_bicicleta (
     status_bicicleta_id INT NOT NULL PRIMARY KEY,
 	nome VARCHAR(45) NOT NULL
 );
+
 CREATE TABLE bicicleta (
 	bicicleta_id INT NOT NULL PRIMARY KEY,
 	status_bicicleta_id INT NOT NULL,
@@ -89,4 +91,12 @@ CREATE TABLE penalidade (
 	FOREIGN KEY (tipo_penalidade_id) REFERENCES tipo_penalidade(tipo_penalidade_id),
 	FOREIGN KEY (mantenedor_id_aplicador) REFERENCES mantenedor(mantenedor_id),
 	FOREIGN KEY (mantenedor_id_perdoador) REFERENCES mantenedor(mantenedor_id)
+);
+
+CREATE TABLE pardon_request(
+	ciclista_ra INT NOT NULL,
+	pardon_inicio DATETIME NOT NULL, 
+	justificativa TEXT NULL, 
+	PRIMARY KEY (ciclista_ra, pardon_inicio),
+	FOREIGN KEY (ciclista_ra) REFERENCES ciclista(ciclista_ra)
 );

@@ -385,3 +385,4 @@ INSERT INTO penalidade (penalidade_inicio, ciclista_ra, emprestimo_inicio, tipo_
 ('2023-12-21 07:00:00', 292580, '2023-12-20 10:25:00', 2, FALSE, NULL, 'Não devolução da bicicleta.', 106, NULL, NULL),
 ('2023-11-13 17:05:00', 229091, '2023-11-13 14:05:00', 1, TRUE, NULL, 'Devolução atrasada em 1h 30min.', NULL, NULL, NULL),
 ('2023-11-16 17:57:00', 241901, '2023-11-16 12:35:00', 4, FALSE, NULL, 'Uso para transporte não autorizado.', 109, NULL, NULL);
+

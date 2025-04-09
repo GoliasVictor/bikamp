@@ -53,6 +53,7 @@ class BDManager
             DELETE FROM ponto;
             DELETE FROM bicicleta;
             DELETE FROM bicicletario;
+            DELETE FROM pardon_request; 
             DELETE FROM ciclista;
             DELETE FROM mantenedor;"
         );
