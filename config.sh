@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 export BIKAMP_PATH=$(pwd)
 check_dependency() {

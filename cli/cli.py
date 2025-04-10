@@ -19,9 +19,7 @@ def add_meta_to_cli(cli):
                 cmd = click.Group(name=name)
                 parent.add_command(cmd)
                 add_commands(cmd, config)
-            else:
-                click.echo(f"Execuando {config}")
-    
+            else:    
                 cmd = click.Command(
                     name=name,
                     callback=call(config),
