@@ -49,11 +49,13 @@ services:
       context: .
       dockerfile: ./docker/test/Dockerfile
     profiles: ["test"]
+    environment:
+      BIKAMP_TEST_PATH_APP_SETTINGS_JSON: /test/appsettings.json
+    volumes:
+      - ./docker/test/appsettings.json:/test/appsettings.json
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - 5259:5259
   whodb:
     image: clidey/whodb
     environment:

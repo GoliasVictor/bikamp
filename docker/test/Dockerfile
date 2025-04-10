@@ -5,6 +5,5 @@ COPY test/test.csproj test/test.csproj
 COPY api/api.csproj api/api.csproj
 RUN dotnet restore 
 COPY . .
-RUN dotnet build --no-restore
-COPY docker/test/appsettings.json /source/appsettings.json
+RUN dotnet build --no-restore 
 ENTRYPOINT ["dotnet", "test", "--no-build"]
