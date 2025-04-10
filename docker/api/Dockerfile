@@ -16,4 +16,4 @@ WORKDIR /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .	
-ENTRYPOINT ["dotnet", "api.dll", "--environment", "Development"]
+CMD ["dotnet", "api.dll", "--environment", "Development"]

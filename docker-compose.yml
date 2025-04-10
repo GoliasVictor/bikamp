@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/api/Dockerfile
-    profiles: ["server"]
+    profiles: [all, server]
     depends_on:
       db:
         condition: service_healthy
@@ -15,7 +15,7 @@ services:
       - ./docker/api/appsettings.json:/app/appsettings.json
     healthcheck:
       test: curl --fail http://localhost:5259/healthz || exit
-      start_period: 5s
+      start_period: 1s
       interval: 30s
       timeout: 30s
       retries: 3
@@ -23,7 +23,7 @@ services:
   db:
     container_name: "bikamp_bd"
     image: mysql
-    profiles: ["server", "test", "db"]
+    profiles: [all, server, test, db]
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: bikamp    
@@ -48,7 +48,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/test/Dockerfile
-    profiles: ["test"]
+    profiles: [all, test]
     environment:
       BIKAMP_TEST_PATH_APP_SETTINGS_JSON: /test/appsettings.json
     volumes:
@@ -58,10 +58,14 @@ services:
         condition: service_healthy
   whodb:
     image: clidey/whodb
+    profiles: [all, db]
     environment:
-      WHODB_MYSQL: '[{"host":"db","user":"api","password":"api","database":"mysql"}]' 
+      WHODB_MYSQL: '[{"host":"db","user":"api","password":"api","database":"bikamp"}]' 
     ports:
       - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   bikamp-mysql-volume:

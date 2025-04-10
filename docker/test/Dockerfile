@@ -6,4 +6,4 @@ COPY api/api.csproj api/api.csproj
 RUN dotnet restore 
 COPY . .
 RUN dotnet build --no-restore 
-ENTRYPOINT ["dotnet", "test", "--no-build"]
+CMD ["dotnet", "test", "--no-build"]
