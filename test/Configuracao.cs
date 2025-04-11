@@ -11,7 +11,7 @@ public static class Configuracao
         AppSettingsJsonPath ??= "./appsettings.json";
         IConfigurationRoot config = new ConfigurationBuilder()
             .AddEnvironmentVariables()
-            .AddJsonFile(AppSettingsJsonPath)
+            .AddJsonFile(AppSettingsJsonPath, optional: true)
             .Build();
         StrConexaoMySQL = config["MySqlConnection"]
                             ?? Environment.GetEnvironmentVariable("BIKAMP_TEST_MYSQL_CONNECTION")

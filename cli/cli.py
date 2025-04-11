@@ -59,13 +59,16 @@ def stats(ctx):
         click.echo(f"{s:>{max_r}} {estado}")
 
 def call(command):
-    return lambda: subprocess.run(
-        command,
-        shell=True,
-        cwd=prj_src,
-        check=True
-    )
-
+    def aux():
+        
+        process = subprocess.run(
+            command,
+            shell=True,
+            cwd=prj_src,
+        )
+        if process.returncode != 0:
+            exit(process.returncode)
+    return aux
 @click.group()
 def cli():
     pass
