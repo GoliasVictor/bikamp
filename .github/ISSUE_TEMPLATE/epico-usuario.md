@@ -1,5 +1,5 @@
 ---
-name: Épico Usuário
+name: Épico - Usuário
 about: Descreve o épico de um usuário e associa uma ou mais histórias a ele
 title: ''
 labels: Epico

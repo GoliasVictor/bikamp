@@ -1,8 +1,8 @@
 ---
-name: Historia Usuario
-about: Descreve uma historia de usuario
+name: História - Usuário
+about: Descreve uma história de usuário
 title: ''
-labels: historia-usuario
+labels: Historia
 assignees: ''
 
 ---
@@ -17,3 +17,9 @@ assignees: ''
 - [ ] **Critério 1:** Descreva o primeiro critério de aceitação aqui.  
 - [ ] **Critério 2:** Descreva o segundo critério de aceitação aqui.  
 - [ ] **Critério 3:** Descreva critérios adicionais conforme necessário.
+
+---
+
+**Épico associado:**
+
+- **Épico 1:** Descreva um resumo do Épico 1 e linka ele.
