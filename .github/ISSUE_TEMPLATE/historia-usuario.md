@@ -2,7 +2,7 @@
 name: Historia Usuario
 about: Descreve uma historia de usuario
 title: ''
-labels: ''
+labels: historia-usuario
 assignees: ''
 
 ---
