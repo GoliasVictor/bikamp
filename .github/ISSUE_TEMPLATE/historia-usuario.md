@@ -7,9 +7,9 @@ assignees: ''
 
 ---
 
-**Como [papel],**  
-**Eu gostaria de [uma ação ou funcionalidade],**  
-**De forma que [um motivo ou benefício].**  
+Eu, como **[papel],**  
+gostaria de **[uma ação ou funcionalidade],**  
+de forma que **[um motivo ou benefício].**  
 
 ---
 
@@ -22,4 +22,4 @@ assignees: ''
 
 **Épico associado:**
 
-- **Épico 1:** Descreva um resumo do Épico 1 e linka ele.
+- **[Épico 1 ou #issue]**
