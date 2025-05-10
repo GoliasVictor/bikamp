@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: ./docker/client/Dockerfile
     environment:
-     - VITE_API_URL=http://api:5259/api
+     - VITE_API_URL=http://localhost:5259/
     ports:
       - 5173:5173
 #    depends_on:
