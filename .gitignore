@@ -5,6 +5,8 @@
 
 # dotenv files
 .env
+.env.*
+!.env*.model
 
 # User-specific files
 *.rsuser
@@ -483,3 +485,4 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 appsettings.json
+!docker/**/appsettings.json

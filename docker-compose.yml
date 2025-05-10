@@ -13,10 +13,11 @@ services:
       - 5259:5259
   client: 
     container_name: "bikamp_client"
-    image: client 
+    image: client
     build:
       context: .
       dockerfile: ./docker/client/Dockerfile
+    profiles: ["client"]
     environment:
      - VITE_API_URL=http://localhost:5259/
     ports:
@@ -28,7 +29,7 @@ services:
 
   db:
     container_name: "bikamp_bd"
-    image: mysql
+    image: mysql:9.3.0
     profiles: ["server", "test", "db"]
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -62,6 +63,7 @@ services:
       - 5259:5259
   whodb:
     image: clidey/whodb
+    profiles: ["debug"]
     environment:
       WHODB_MYSQL: '[{"host":"db","user":"api","password":"api","database":"mysql"}]' 
     ports:
