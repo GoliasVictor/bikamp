@@ -7,12 +7,13 @@ RUN dotnet build --no-restore
 
 FROM build AS publish
 RUN	dotnet publish api.csproj -o /app/publish
-COPY docker/api/appsettings.json /app/publish/appsettings.json
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+RUN apt-get update \
+    && apt-get install -y curl
 WORKDIR /app
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "api.dll", "--environment", "Development"]
+COPY --from=publish /app/publish .	
+CMD ["dotnet", "api.dll", "--environment", "Development"]

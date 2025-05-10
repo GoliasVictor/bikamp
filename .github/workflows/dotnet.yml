@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env: 
-      MYSQL_CONNECTION: "server=localhost;port=42333;database=bikamp;user=api;password=api;"
+      BIKAMP_TEST_MYSQL_CONNECTION: "server=localhost;port=42333;database=bikamp;user=api;password=api;"
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET

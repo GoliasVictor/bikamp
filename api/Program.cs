@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IDbConnection>(_ => {
     IDbConnection conn = new MySqlConnection(builder.Configuration.GetConnectionString("Default"));
@@ -18,6 +19,7 @@ builder.Services.AddScoped(_ =>  new Dac());
 
 var app = builder.Build();
 
+app.MapHealthChecks("/healthz");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

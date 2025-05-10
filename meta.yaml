@@ -1,0 +1,26 @@
+name: bikamp 
+subprojects:
+  api: 
+    link: http://localhost:5259/swagger
+  db:
+    link: http://localhost:8080
+scripts:
+  test: dotnet test 
+  api: dotnet test 
+  d:
+    clean: docker compose --profile "*" down  -v
+    up:
+      test: docker compose up test --build
+      api:  docker compose up api --build
+      db:   docker compose --profile db up --build
+    upd:
+      api:  docker compose up api --detach --build --wait
+      db:   docker compose --profile db up --detach --wait --build
+    down:
+      all:  docker compose --profile "*" down
+      db:   docker compose --profile db down 
+      api:  docker compose down api
+    cli:
+      db:   docker compose exec db mysql --user=root --password=root --database=bikamp 
+      api:  docker compose run --build -it test /bin/bash 
+      test: docker compose run --build -it test /bin/bash 
