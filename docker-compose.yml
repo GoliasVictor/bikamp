@@ -20,6 +20,21 @@ services:
       timeout: 30s
       retries: 3
 
+  client: 
+    container_name: "bikamp_client"
+    image: client
+    build:
+      context: .
+      dockerfile: ./docker/client/Dockerfile
+    profiles: [all, "client"]
+    environment:
+     - VITE_API_URL=http://localhost:5259/
+    ports:
+      - 5173:5173
+#    depends_on:
+#      db:
+#        condition: service_healthy
+
   db:
     container_name: "bikamp_bd"
     image: mysql
