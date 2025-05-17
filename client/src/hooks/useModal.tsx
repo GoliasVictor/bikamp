@@ -29,6 +29,10 @@ export const ModalProvider = ({ children } : PropsWithChildren) => {
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 };
 
-export const useModal = () => {
-  return useContext(ModalContext);
+export const useModal = (): ModalContextData => {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error("useModal deve ser usado dentro de um ModalProvider");
+  }
+  return context;
 };
