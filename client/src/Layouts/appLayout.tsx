@@ -10,9 +10,10 @@ export const AppLayout = () => {
 
   return (<>
     <ul>
-      <li>login: {user?.user_login}</li>
+      <li>User: {user?.user_login ?? "guest" }</li>
       <li><NavLink to="/bicicletas" className={a}>Bicicletas</NavLink></li>
-      <li><NavLink to="/emprestimos" className={a}>Emprestimos</NavLink></li>      
+      <li><NavLink to="/emprestimos" className={a}>Emprestimos</NavLink></li>
+      <li><NavLink to="/mantenedores" className={a}>Mantenedores</NavLink></li>      
       <li><NavLink to="/login" className={a}>Login</NavLink></li>      
     </ul> 
     -----<br/>

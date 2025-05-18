@@ -6,6 +6,7 @@ import { AppLayout } from "./Layouts/appLayout";
 import BicicletaPage from "./pages/bicicletaPage";
 import EmprestimosPage from "./pages/emprestimosPage";
 import EmprestimoPage from "./pages/emprestimoPage";
+import MantenedoresPage from "./pages/mantenedoresPage";
 
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
             <Route path="emprestimos">
               <Route index element={<EmprestimosPage />} />
               <Route path=":ra/:date" element={<EmprestimoPage />} />
+            </Route>
+            <Route path="mantenedores">
+              <Route index element={<MantenedoresPage/>} />
             </Route>
           </Route>
           <Route path="login" element={<LoginPage />} />
