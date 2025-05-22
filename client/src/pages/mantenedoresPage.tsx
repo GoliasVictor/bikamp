@@ -4,6 +4,8 @@ import type { components } from "../lib/api/v1";
 import { useApi } from '../clientApi';
 import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';
+import { GetMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
+import { MantenedorService } from '../commands/receivers';
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 type Cargo = 1 | 2 | 3 | 4 | undefined;
@@ -14,6 +16,9 @@ export default function MantenedoresPage() {
   const [ordenacao, setOrdenacao] = useState<'id' | 'nome' | 'cargo'>('id')
   const client = useApi()
   const modal = useModal()
+
+  const mantenedorService = new MantenedorService(client);
+  const getMantenedoresCommand = new GetMantenedoresCommand(mantenedorService);
 
   const openModal = () => {
     modal.setModal(
@@ -26,45 +31,26 @@ export default function MantenedoresPage() {
   }
 
 
-  async function handleSubmit(data: { mantenedor_id: number, nome: string; cargo: Cargo; senha: string }) {
-    console.log("mantenedores:" + mantenedores)
+  async function handleSubmit(mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
 
-    if (mantenedores.some(m => m.mantenedor_id === data.mantenedor_id)) {
-      alert("Este ID já esta em uso.")
-
-    } else {
-      try {
-        const request = await client.POST("/mantenedores", {
-          body: data
-        });
-        
-        if (request.response.ok){
-          alert("Mantenedor criado com sucesso!");
-          modal.closeModal();
-        } else {
-          throw new Error(`${request.response.status} ${request.response.statusText}`);
-        }
-      } catch (err) {
-        console.error("Erro inesperado:", err);
-        alert("Erro inesperado" + (err instanceof Error ? ": " + err.message : "."));
-      }
+    const postMantenedoresCommand = new PostMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
+    
+    if (await postMantenedoresCommand.execute()){
+        modal.closeModal()
     }
   }
 
   function handleCancel() {
-    modal.closeModal();
+    modal.closeModal()
   }
 
   useEffect(() => {
+    const fetchMantenedores = async () => {
+      const commandOutput = await getMantenedoresCommand.execute();
+      setMantenedores(commandOutput);
+    };
 
-    client.GET("/mantenedores").then(res => {
-
-      if (res.data != null) {
-        setMantenedores(res.data);
-      }
-
-    });
-
+    fetchMantenedores()
   }, [])
 
   const mantenedoresFiltrados = mantenedores

@@ -3,7 +3,7 @@ import { useState } from "react";
 type Cargo = 1 | 2 | 3 | 4 | undefined;
 
 type Props = {
-  onSubmit: (data: { mantenedor_id: number; nome: string; cargo: Cargo; senha: string }) => void;
+  onSubmit: ( mantenedor_id: number, nome: string, cargo: Cargo, senha: string ) => void;
   onCancel: () => void;
   loading?: boolean;
 };
@@ -20,7 +20,7 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
       alert("Por favor, selecione um cargo válido.");
       return;
     }
-    onSubmit({ mantenedor_id: mantenedor_id, nome, cargo, senha });
+    onSubmit(mantenedor_id, nome, cargo, senha);
   }
 
   return (
