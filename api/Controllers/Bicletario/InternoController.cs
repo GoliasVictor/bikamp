@@ -34,34 +34,14 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         if (CiclistaEstaProibido(ra, tran))
             return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
 
-
-
-        var count_bicicletario = await tran.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
-            new { solicitacao.bicicletario });
-        if (count_bicicletario < 1)
+        if (!HaBicicletarios(transaction))
             return BadRequest();
-
 
         if (!CiclistaEstaNoBanco(ra, tran))
             await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
 
-        var posibles_points = (await tran.QueryAsync<(int, int)>(
-            @"SELECT ponto.ponto_id AS ponto_retirada,
-                    ponto.bicicleta_id AS bicicleta
-            FROM ponto
-            JOIN bicicleta ON ponto.bicicleta_id = bicicleta.bicicleta_id
-            WHERE ponto.bicicletario_id = @bicicletario_id and
-                ponto.status_ponto_id = @STATUS_PONTO_ID_ONLINE and
-                ponto.bicicleta_id is not null and 
-                bicicleta.status_bicicleta_id = @STATUS_BICICLETA_ID_ATIVA;",
-            new
-            {
-                STATUS_PONTO_ID_ONLINE = StatusPontoId.Online,
-                STATUS_BICICLETA_ID_ATIVA = StatusBicicletaId.Ativada,
-                bicicletario_id = solicitacao.bicicletario
-            }
-        )).ToList();
-        (int ponto, int bicicleta) = posibles_points[Random.Shared.Next(posibles_points.Count)];
+        var pontos_possiveis = GetPontosPossiveis(solicitacao.bicicletario, tran);
+        (int ponto, int bicicleta) = pontos_possiveis[Random.Shared.Next(pontos_possiveis.Count)];
         await tran.ExecuteAsync(
             @"UPDATE ponto 
             SET bicicleta_id = null
@@ -128,6 +108,33 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         );
     }
 
+    private async bool HaBicicletarios(IDBTransaction transaction) {
+        using transaction;
+        var count_bicicletario = await tran.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
+            new { solicitacao.bicicletario });
+
+        return count_bicicletario > 0;
+    }
+
+    private async List<(int, int)> GetPontosPossiveis(int bicicletario_id, IDBTransaction transaction) {
+        using transaction;
+        return (await transaction.QueryAsync<(int, int)>(
+            @"SELECT ponto.ponto_id AS ponto_retirada,
+                    ponto.bicicleta_id AS bicicleta
+            FROM ponto
+            JOIN bicicleta ON ponto.bicicleta_id = bicicleta.bicicleta_id
+            WHERE ponto.bicicletario_id = @bicicletario_id and
+                ponto.status_ponto_id = @STATUS_PONTO_ID_ONLINE and
+                ponto.bicicleta_id is not null and 
+                bicicleta.status_bicicleta_id = @STATUS_BICICLETA_ID_ATIVA;",
+            new
+            {
+                STATUS_PONTO_ID_ONLINE = StatusPontoId.Online,
+                STATUS_BICICLETA_ID_ATIVA = StatusBicicletaId.Ativada,
+                bicicletario_id = bicicletario_id
+            }
+        )).ToList();
+    }
 
     public record RequestDevolucao(int bicicleta_id, int bicicletario_id, int ponto_id);
     [HttpPatch("ponto/bicicleta")]
