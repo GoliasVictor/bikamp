@@ -26,44 +26,12 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
     {
         using IDbTransaction tran = _conn.BeginTransaction();
 
-        bool matriculado = _dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno);
-        if (!matriculado)
+        if (!_dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno))
             return Conflict();
 
         int ra = solicitacao.ra_aluno;
 
-        (bool estaNoBanco, bool proibido) = await tran.QuerySingleAsync<(bool, bool)>(
-            @"SELECT 
-                EXISTS (
-                    SELECT ciclista_ra
-                    FROM   ciclista
-                    WHERE  ciclista_ra = @ra
-                ),
-                (
-                    EXISTS (
-                        SELECT *
-                        FROM penalidade
-                        WHERE ciclista_ra = @ra
-                        AND (penalidade_fim IS NULL OR Now() < penalidade_fim)
-                    )
-                    OR EXISTS(
-                        SELECT * 
-                        FROM emprestimo 
-                        WHERE ciclista_ra = @ra
-                        AND (
-                            emprestimo_fim IS NULL
-                            OR Now() > Timestampadd(minute, @MINUTOS_TEMPO_MAXIMO_EMPRESTIMO, emprestimo_inicio)
-                        )
-                    ) 
-                )",
-            new
-            {
-                MINUTOS_TEMPO_MAXIMO_EMPRESTIMO = MINUTOS_TEMPO_MAXIMO_EMPRESTIMO,
-                ra
-            }
-        );
-
-        if (proibido)
+        if (CiclistaEstaProibido(ra, tran))
             return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
 
 
@@ -74,7 +42,7 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
             return BadRequest();
 
 
-        if (!estaNoBanco)
+        if (!CiclistaEstaNoBanco(ra, tran))
             await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
 
         var posibles_points = (await tran.QueryAsync<(int, int)>(
@@ -111,6 +79,53 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         );
         tran.Commit();
         return Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Liberado, ponto, bicicleta));
+    }
+
+    private async bool CiclistaEstaNoBanco(int ra, IDBTransaction transaction)
+    {
+        using transaction;
+        return await transaction.QuerrySingleAsync<bool>(
+            @"SELECT
+                EXISTS (
+                    SELECT ciclista_ra
+                    FROM ciclista
+                    WHERE ciclista_ra = @ra
+                )",
+            new
+            {
+                ra
+            }
+        );
+    }
+
+    private async bool CiclistaEstaProibido(int ra, IDBTransaction transaction)
+    {
+        using transaction;
+        return await transaction.QuerrySingleAsync<bool>(
+             @"SELECT
+                (
+                    EXISTS (
+                        SELECT *
+                        FROM penalidade
+                        WHERE ciclista_ra = @ra
+                        AND (penalidade_fim IS NULL OR Now() < penalidade_fim)
+                    )
+                    OR EXISTS(
+                        SELECT * 
+                        FROM emprestimo 
+                        WHERE ciclista_ra = @ra
+                        AND (
+                            emprestimo_fim IS NULL
+                            OR Now() > Timestampadd(minute, @MINUTOS_TEMPO_MAXIMO_EMPRESTIMO, emprestimo_inicio)
+                        )
+                    ) 
+                )",
+            new
+            {
+                MINUTOS_TEMPO_MAXIMO_EMPRESTIMO = MINUTOS_TEMPO_MAXIMO_EMPRESTIMO,
+                ra
+            }
+        );
     }
 
 
