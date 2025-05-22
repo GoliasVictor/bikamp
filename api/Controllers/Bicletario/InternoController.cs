@@ -31,16 +31,16 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
 
         int ra = solicitacao.ra_aluno;
 
-        if (CiclistaEstaProibido(ra, tran))
+        if (await CiclistaEstaProibido(ra, tran))
             return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
 
-        if (!HaBicicletarios(transaction))
+        if (!await HaBicicletarios(solicitacao.bicicletario, tran))
             return BadRequest();
 
-        if (!CiclistaEstaNoBanco(ra, tran))
+        if (!await CiclistaEstaNoBanco(ra, tran))
             await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
 
-        var pontos_possiveis = GetPontosPossiveis(solicitacao.bicicletario, tran);
+        var pontos_possiveis = await GetPontosPossiveis(solicitacao.bicicletario, tran);
         (int ponto, int bicicleta) = pontos_possiveis[Random.Shared.Next(pontos_possiveis.Count)];
         await tran.ExecuteAsync(
             @"UPDATE ponto 
@@ -61,10 +61,9 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         return Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Liberado, ponto, bicicleta));
     }
 
-    private async bool CiclistaEstaNoBanco(int ra, IDBTransaction transaction)
+    private async Task<bool> CiclistaEstaNoBanco(int ra, IDbTransaction transaction)
     {
-        using transaction;
-        return await transaction.QuerrySingleAsync<bool>(
+        return await transaction.QuerySingleAsync<bool>(
             @"SELECT
                 EXISTS (
                     SELECT ciclista_ra
@@ -78,10 +77,9 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         );
     }
 
-    private async bool CiclistaEstaProibido(int ra, IDBTransaction transaction)
+    private async Task<bool> CiclistaEstaProibido(int ra, IDbTransaction transaction)
     {
-        using transaction;
-        return await transaction.QuerrySingleAsync<bool>(
+        return await transaction.QuerySingleAsync<bool>(
              @"SELECT
                 (
                     EXISTS (
@@ -108,16 +106,14 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         );
     }
 
-    private async bool HaBicicletarios(IDBTransaction transaction) {
-        using transaction;
-        var count_bicicletario = await tran.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
-            new { solicitacao.bicicletario });
+    private async Task<bool> HaBicicletarios(int bicicletario_id, IDbTransaction transaction) {
+        var count_bicicletario = await transaction.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
+            new { bicicletario = bicicletario_id });
 
         return count_bicicletario > 0;
     }
 
-    private async List<(int, int)> GetPontosPossiveis(int bicicletario_id, IDBTransaction transaction) {
-        using transaction;
+    private async Task<List<(int, int)>> GetPontosPossiveis(int bicicletario_id, IDbTransaction transaction) {
         return (await transaction.QueryAsync<(int, int)>(
             @"SELECT ponto.ponto_id AS ponto_retirada,
                     ponto.bicicleta_id AS bicicleta
