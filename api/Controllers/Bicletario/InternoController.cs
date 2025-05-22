@@ -26,19 +26,61 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
     {
         using IDbTransaction tran = _conn.BeginTransaction();
 
-        bool matriculado = _dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno);
-        if (!matriculado)
+        if (!_dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno))
             return Conflict();
 
         int ra = solicitacao.ra_aluno;
 
-        (bool estaNoBanco, bool proibido) = await tran.QuerySingleAsync<(bool, bool)>(
-            @"SELECT 
+        if (await CiclistaEstaProibido(ra, tran))
+            return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
+
+        if (!await HaBicicletarios(solicitacao.bicicletario, tran))
+            return BadRequest();
+
+        if (!await CiclistaEstaNoBanco(ra, tran))
+            await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
+
+        var pontos_possiveis = await GetPontosPossiveis(solicitacao.bicicletario, tran);
+        (int ponto, int bicicleta) = pontos_possiveis[Random.Shared.Next(pontos_possiveis.Count)];
+        await tran.ExecuteAsync(
+            @"UPDATE ponto 
+            SET bicicleta_id = null
+            WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;
+
+            INSERT INTO emprestimo (ciclista_ra, emprestimo_inicio, bicicletario_id_tirado, bicicleta_id) 
+            VALUES (@ciclista_ra, now(), @bicicletario_id, @bicicleta_id) ;",
+            new
+            {
+                ciclista_ra = ra,
+                bicicletario_id = solicitacao.bicicletario,
+                bicicleta_id = bicicleta,
+                ponto_id = ponto
+            }
+        );
+        tran.Commit();
+        return Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Liberado, ponto, bicicleta));
+    }
+
+    private async Task<bool> CiclistaEstaNoBanco(int ra, IDbTransaction transaction)
+    {
+        return await transaction.QuerySingleAsync<bool>(
+            @"SELECT
                 EXISTS (
                     SELECT ciclista_ra
-                    FROM   ciclista
-                    WHERE  ciclista_ra = @ra
-                ),
+                    FROM ciclista
+                    WHERE ciclista_ra = @ra
+                )",
+            new
+            {
+                ra
+            }
+        );
+    }
+
+    private async Task<bool> CiclistaEstaProibido(int ra, IDbTransaction transaction)
+    {
+        return await transaction.QuerySingleAsync<bool>(
+             @"SELECT
                 (
                     EXISTS (
                         SELECT *
@@ -62,22 +104,17 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
                 ra
             }
         );
+    }
 
-        if (proibido)
-            return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
+    private async Task<bool> HaBicicletarios(int bicicletario_id, IDbTransaction transaction) {
+        var count_bicicletario = await transaction.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
+            new { bicicletario = bicicletario_id });
 
+        return count_bicicletario > 0;
+    }
 
-
-        var count_bicicletario = await tran.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
-            new { solicitacao.bicicletario });
-        if (count_bicicletario < 1)
-            return BadRequest();
-
-
-        if (!estaNoBanco)
-            await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
-
-        var posibles_points = (await tran.QueryAsync<(int, int)>(
+    private async Task<List<(int, int)>> GetPontosPossiveis(int bicicletario_id, IDbTransaction transaction) {
+        return (await transaction.QueryAsync<(int, int)>(
             @"SELECT ponto.ponto_id AS ponto_retirada,
                     ponto.bicicleta_id AS bicicleta
             FROM ponto
@@ -90,29 +127,10 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
             {
                 STATUS_PONTO_ID_ONLINE = StatusPontoId.Online,
                 STATUS_BICICLETA_ID_ATIVA = StatusBicicletaId.Ativada,
-                bicicletario_id = solicitacao.bicicletario
+                bicicletario_id = bicicletario_id
             }
         )).ToList();
-        (int ponto, int bicicleta) = posibles_points[Random.Shared.Next(posibles_points.Count)];
-        await tran.ExecuteAsync(
-            @"UPDATE ponto 
-            SET bicicleta_id = null
-            WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;
-
-            INSERT INTO emprestimo (ciclista_ra, emprestimo_inicio, bicicletario_id_tirado, bicicleta_id) 
-            VALUES (@ciclista_ra, now(), @bicicletario_id, @bicicleta_id) ;",
-            new
-            {
-                ciclista_ra = ra,
-                bicicletario_id = solicitacao.bicicletario,
-                bicicleta_id = bicicleta,
-                ponto_id = ponto
-            }
-        );
-        tran.Commit();
-        return Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Liberado, ponto, bicicleta));
     }
-
 
     public record RequestDevolucao(int bicicleta_id, int bicicletario_id, int ponto_id);
     [HttpPatch("ponto/bicicleta")]
