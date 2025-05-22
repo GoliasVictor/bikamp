@@ -4,6 +4,9 @@ import React from 'react'
 import type { components } from "../lib/api/v1"; 
 import { useApi } from '../clientApi';
 import { Link } from 'react-router';
+import { GetBicicletasCommand} from '../commands/concreteCommands';
+import { BicicletaService } from '../commands/receivers';
+
 type Bicicleta = components["schemas"]["Bicicleta"];
 
 
@@ -11,11 +14,14 @@ function BicicletasPage() {
   const [todos, setTodos] = useState<Bicicleta[]>([])
   const client = useApi()
 
+  const bicicletasService = new BicicletaService(client)
+  const getBicicletasCommand = new GetBicicletasCommand(bicicletasService) 
+
   useEffect(() => {
     
-    client.GET("/bicicletas").then(res => {
-      if(res.data != null)
-        setTodos(res.data);
+    getBicicletasCommand.execute().then(res => {
+      if(res != null)
+        setTodos(res);
 
     });
 

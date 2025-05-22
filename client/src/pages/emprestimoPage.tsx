@@ -3,7 +3,12 @@ import '../App.css'
 import type { components } from "./../lib/api/v1"; 
 import { useApi } from './../clientApi';
 import { useParams } from 'react-router';
+import { EmprestimosService, MantenedorService } from '../commands/receivers';
+import { GetEmprestimosCommand } from '../commands/concreteCommands';
+
 type Emprestimo = components["schemas"]["Emprestimo"];
+
+
 
 
 function EmprestimoPage() {
@@ -11,12 +16,17 @@ function EmprestimoPage() {
   const { ra, date } = useParams();
   const client = useApi()
 
+
+  const mantenedorService = new EmprestimosService(client);
+  const getEmprestimoCommand = new GetEmprestimosCommand(mantenedorService);
+
+
   useEffect(() => {
     
-    client.GET("/emprestimos").then(res => {
+    getEmprestimoCommand.execute().then(res => {
       
-      if (res.data != null) {
-        let emp = res.data.find((e) => {
+      if (res != null) {
+        let emp = res.find((e) => {
           return e.ciclista_ra == ra &&  e.emprestimo_inicio! == date
         })
         console.log(emp)
