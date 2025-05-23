@@ -59,8 +59,11 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
     [HttpPatch()]
     public async Task<ActionResult> Patch(AtualizarMantenedor request)
     {
-        string campos = GetCamposParaAtualizar(request);
-
+        string campos = new SqlSetBuilder()
+            .Field(request.nome     is not null, "nome = @nome")
+            .Field(request.cargo_id is not null, "cargo_id = @cargo_id")
+            .Field(request.senha    is not null, "senha = @senha")
+            .Build();
         if (request.cargo_id is CargoId cargo && !Enum.IsDefined(cargo))
             return UnprocessableEntity();
 
@@ -80,27 +83,7 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         return Ok();
     }
 
-    private string GetCamposParaAtualizar(AtualizarMantenedor request)
-    {
-        
-        List<string> campos = new List<string>();
-
-
-        if (request.nome is not null)
-            campos.Add(@"nome = @nome");
-        
-        if (request.cargo_id is not null)
-            campos.Add(@"cargo_id = @cargo_id");
-        
-        if (request.senha is not null)
-            campos.Add(@"senha = @senha");
-
-        string camposConcat = "";
-
-        camposConcat = string.Join(", ", campos);
-
-        return camposConcat;
-    }
+ 
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
