@@ -1,9 +1,9 @@
 class SqlSetBuilder
 {
     private readonly List<string> campos = [];
-    public SqlSetBuilder Field(bool should, string value)
+    public SqlSetBuilder CondField(bool condition, string value)
     {
-        if (should)
+        if (condition)
             campos.Add(value);
         return this;
     }
