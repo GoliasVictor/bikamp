@@ -3,9 +3,9 @@ using Bikamp.Repositories;
 namespace Bikamp.Controllers;
 
 [ApiController]
-[Route("interno/")]
+[Route("api-bicicletario/")]
 
-public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
+public class ApiBicicletarioController(IDbConnection conn, Dac dac) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
     private readonly Dac _dac = dac;
