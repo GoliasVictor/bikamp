@@ -70,7 +70,7 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         int rows_affected = await _conn.ExecuteAsync(
             @$"UPDATE mantenedor 
             SET 
-                {camposParaAtualizar} 
+                {campos} 
             WHERE mantenedor_id = @id;",
             request
         );
@@ -87,13 +87,13 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
 
 
         if (request.nome)
-            campos.Add(@"nome = @request.nome");
+            campos.Add(@"nome = @nome");
         
         if (request.cargo_id)
-            campos.Add(@"cargo_id = @request.cargo_id");
+            campos.Add(@"cargo_id = @cargo_id");
         
         if (request.senha)
-            campos.Add(@"senha = @request.senha");
+            campos.Add(@"senha = @senha");
 
         string camposConcat = "";
 
