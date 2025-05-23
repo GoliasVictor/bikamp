@@ -86,13 +86,13 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         List<string> campos = new List<string>();
 
 
-        if (request.nome)
+        if (request.nome is not null)
             campos.Add(@"nome = @nome");
         
-        if (request.cargo_id)
+        if (request.cargo_id is not null)
             campos.Add(@"cargo_id = @cargo_id");
         
-        if (request.senha)
+        if (request.senha is not null)
             campos.Add(@"senha = @senha");
 
         string camposConcat = "";
