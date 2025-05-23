@@ -1,3 +1,5 @@
+using Bikamp.Repositories;
+
 namespace Bikamp.Controllers;
 
 [ApiController]
@@ -7,20 +9,12 @@ public class CiclistasController(IDbConnection conn) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
 
-    public record Ciclista(int ciclista_ra);
     [HttpGet()]
-    public async Task<ActionResult<List<BicicletaPonto>>> GetAll()
+    public async Task<ActionResult<List<Ciclista>>> GetAll()
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-
-        IEnumerable<Ciclista> result;
-        result = await tran.QueryAsync<Ciclista>(
-            @"select 
-                ciclista_ra
-            from ciclista
-            order by ciclista_ra"
-        );
-            
+        var ciclista_rep =  new CiclistaRepository();
+        var result = await ciclista_rep.Todos(tran);
         tran.Commit();
         return Ok(result);
     }
