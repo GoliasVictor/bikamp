@@ -1,3 +1,5 @@
+using Bikamp.Repositories;
+
 namespace Bikamp.Controllers;
 
 [ApiController]
@@ -25,22 +27,23 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
     public async Task<ActionResult<RespostaSolicitacaoEmprestimo>> PostEmprestimos(RequesicaoEmprestimo solicitacao)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-
+        var ciclista_rep = new CiclistaRepository();
+        var bicicletario_rep = new BicicletarioRepository();
         if (!_dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno))
             return Conflict();
 
         int ra = solicitacao.ra_aluno;
 
-        if (await CiclistaEstaProibido(ra, tran))
+        if (await ciclista_rep.EstaProibido(ra, tran))
             return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
 
-        if (!await HaBicicletarios(solicitacao.bicicletario, tran))
+        if (!await bicicletario_rep.Existe(solicitacao.bicicletario, tran))
             return BadRequest();
 
-        if (!await CiclistaEstaNoBanco(ra, tran))
+        if (!await ciclista_rep.Existe(ra, tran))
             await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
 
-        var pontos_possiveis = await GetPontosPossiveis(solicitacao.bicicletario, tran);
+        var pontos_possiveis = await bicicletario_rep.GetPontosPossiveis(solicitacao.bicicletario, tran);
         (int ponto, int bicicleta) = pontos_possiveis[Random.Shared.Next(pontos_possiveis.Count)];
         await tran.ExecuteAsync(
             @"UPDATE ponto 
@@ -59,77 +62,6 @@ public class InternoController(IDbConnection conn, Dac dac) : ControllerBase
         );
         tran.Commit();
         return Ok(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Liberado, ponto, bicicleta));
-    }
-
-    private async Task<bool> CiclistaEstaNoBanco(int ra, IDbTransaction transaction)
-    {
-        return await transaction.QuerySingleAsync<bool>(
-            @"SELECT
-                EXISTS (
-                    SELECT ciclista_ra
-                    FROM ciclista
-                    WHERE ciclista_ra = @ra
-                )",
-            new
-            {
-                ra
-            }
-        );
-    }
-
-    private async Task<bool> CiclistaEstaProibido(int ra, IDbTransaction transaction)
-    {
-        return await transaction.QuerySingleAsync<bool>(
-             @"SELECT
-                (
-                    EXISTS (
-                        SELECT *
-                        FROM penalidade
-                        WHERE ciclista_ra = @ra
-                        AND (penalidade_fim IS NULL OR Now() < penalidade_fim)
-                    )
-                    OR EXISTS(
-                        SELECT * 
-                        FROM emprestimo 
-                        WHERE ciclista_ra = @ra
-                        AND (
-                            emprestimo_fim IS NULL
-                            OR Now() > Timestampadd(minute, @MINUTOS_TEMPO_MAXIMO_EMPRESTIMO, emprestimo_inicio)
-                        )
-                    ) 
-                )",
-            new
-            {
-                MINUTOS_TEMPO_MAXIMO_EMPRESTIMO = MINUTOS_TEMPO_MAXIMO_EMPRESTIMO,
-                ra
-            }
-        );
-    }
-
-    private async Task<bool> HaBicicletarios(int bicicletario_id, IDbTransaction transaction) {
-        var count_bicicletario = await transaction.QuerySingleAsync<int>("SELECT count(*) as count FROM bicicletario WHERE bicicletario_id = @bicicletario;",
-            new { bicicletario = bicicletario_id });
-
-        return count_bicicletario > 0;
-    }
-
-    private async Task<List<(int, int)>> GetPontosPossiveis(int bicicletario_id, IDbTransaction transaction) {
-        return (await transaction.QueryAsync<(int, int)>(
-            @"SELECT ponto.ponto_id AS ponto_retirada,
-                    ponto.bicicleta_id AS bicicleta
-            FROM ponto
-            JOIN bicicleta ON ponto.bicicleta_id = bicicleta.bicicleta_id
-            WHERE ponto.bicicletario_id = @bicicletario_id and
-                ponto.status_ponto_id = @STATUS_PONTO_ID_ONLINE and
-                ponto.bicicleta_id is not null and 
-                bicicleta.status_bicicleta_id = @STATUS_BICICLETA_ID_ATIVA;",
-            new
-            {
-                STATUS_PONTO_ID_ONLINE = StatusPontoId.Online,
-                STATUS_BICICLETA_ID_ATIVA = StatusBicicletaId.Ativada,
-                bicicletario_id = bicicletario_id
-            }
-        )).ToList();
     }
 
     public record RequestDevolucao(int bicicleta_id, int bicicletario_id, int ponto_id);
