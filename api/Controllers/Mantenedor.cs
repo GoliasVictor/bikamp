@@ -59,27 +59,21 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
     [HttpPatch()]
     public async Task<ActionResult> Patch(AtualizarMantenedor request)
     {
-        string? camposParaAtualizar = request switch
-        {
-            { nome: not null, cargo_id: not null, senha: not null } => @"nome = @nome, cargo_id = @cargo_id, senha = @senha",
-            { nome: not null, cargo_id: not null } => @"nome = @nome, cargo_id = @cargo_id",
-            { nome: not null, senha: not null } => @"nome = @nome, senha = @senha",
-            { cargo_id: not null, senha: not null } => @"cargo_id = @cargo_id, senha = @senha",
-            { nome: not null } => @"nome = @nome",
-            { cargo_id: not null } => @"cargo_id = @cargo_id",
-            { senha: not null } => @"senha = @senha",
-            _ => null
-        };
+        string campos = new SqlSetBuilder()
+            .CondField(request.nome     is not null, "nome = @nome")
+            .CondField(request.cargo_id is not null, "cargo_id = @cargo_id")
+            .CondField(request.senha    is not null, "senha = @senha")
+            .Build();
         if (request.cargo_id is CargoId cargo && !Enum.IsDefined(cargo))
             return UnprocessableEntity();
 
-        if (camposParaAtualizar is null)
+        if (string.IsNullOrEmpty(campos))
             return UnprocessableEntity();
 
         int rows_affected = await _conn.ExecuteAsync(
             @$"UPDATE mantenedor 
             SET 
-                {camposParaAtualizar} 
+                {campos} 
             WHERE mantenedor_id = @id;",
             request
         );
@@ -88,6 +82,8 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
             return NotFound();
         return Ok();
     }
+
+ 
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
