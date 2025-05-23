@@ -1,4 +1,5 @@
 using Bikamp;
+using Bikamp.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -20,11 +21,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
-builder.Services.AddScoped<IDbConnection>(_ => {
+builder.Services.AddScoped<IDbConnection>(_ =>
+{
     IDbConnection conn = new MySqlConnection(builder.Configuration.GetConnectionString("Default"));
     conn.Open();
     return conn;
 });
+builder.Services.AddScoped<BicicletarioRepository>();
+builder.Services.AddScoped<CiclistaRepository>();
 builder.Services.AddScoped(_ =>  new Dac());
 
 
