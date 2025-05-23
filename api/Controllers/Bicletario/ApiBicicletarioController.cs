@@ -5,11 +5,12 @@ namespace Bikamp.Controllers;
 [ApiController]
 [Route("api-bicicletario/")]
 
-public class ApiBicicletarioController(IDbConnection conn, Dac dac) : ControllerBase
+public class ApiBicicletarioController(IDbConnection conn, Dac dac, BicicletarioRepository bicicletarioRep, CiclistaRepository ciclistaRep) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
     private readonly Dac _dac = dac;
-
+    private readonly BicicletarioRepository _bicicletarioRep = bicicletarioRep;
+    private readonly CiclistaRepository _ciclistaRep = ciclistaRep;
     public record RequesicaoEmprestimo(int bicicletario, int ra_aluno);
 
     public enum StatusSolicitacoaEmprestimo
@@ -27,23 +28,21 @@ public class ApiBicicletarioController(IDbConnection conn, Dac dac) : Controller
     public async Task<ActionResult<RespostaSolicitacaoEmprestimo>> PostEmprestimos(RequesicaoEmprestimo solicitacao)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        var ciclista_rep = new CiclistaRepository();
-        var bicicletario_rep = new BicicletarioRepository();
         if (!_dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno))
             return Conflict();
 
         int ra = solicitacao.ra_aluno;
 
-        if (await ciclista_rep.EstaProibido(ra, tran))
+        if (await _ciclistaRep.EstaProibido(ra, tran))
             return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
 
-        if (!await bicicletario_rep.Existe(solicitacao.bicicletario, tran))
+        if (!await _bicicletarioRep.Existe(solicitacao.bicicletario, tran))
             return BadRequest();
 
-        if (!await ciclista_rep.Existe(ra, tran))
+        if (!await _ciclistaRep.Existe(ra, tran))
             await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
 
-        var pontos_possiveis = await bicicletario_rep.GetPontosPossiveis(solicitacao.bicicletario, tran);
+        var pontos_possiveis = await _bicicletarioRep.GetPontosPossiveis(solicitacao.bicicletario, tran);
         (int ponto, int bicicleta) = pontos_possiveis[Random.Shared.Next(pontos_possiveis.Count)];
         await tran.ExecuteAsync(
             @"UPDATE ponto 

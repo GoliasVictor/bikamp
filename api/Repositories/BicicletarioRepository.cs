@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace Bikamp.Repositories;
 
-class BicicletarioRepository()
+public class BicicletarioRepository()
 {
 	public Task<IEnumerable<Ciclista>> Todos(IDbTransaction transaction)
 	{
