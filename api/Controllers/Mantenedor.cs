@@ -59,21 +59,12 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
     [HttpPatch()]
     public async Task<ActionResult> Patch(AtualizarMantenedor request)
     {
-        string? camposParaAtualizar = request switch
-        {
-            { nome: not null, cargo_id: not null, senha: not null } => @"nome = @nome, cargo_id = @cargo_id, senha = @senha",
-            { nome: not null, cargo_id: not null } => @"nome = @nome, cargo_id = @cargo_id",
-            { nome: not null, senha: not null } => @"nome = @nome, senha = @senha",
-            { cargo_id: not null, senha: not null } => @"cargo_id = @cargo_id, senha = @senha",
-            { nome: not null } => @"nome = @nome",
-            { cargo_id: not null } => @"cargo_id = @cargo_id",
-            { senha: not null } => @"senha = @senha",
-            _ => null
-        };
+        string campos = GetCamposParaAtualizar(request);
+
         if (request.cargo_id is CargoId cargo && !Enum.IsDefined(cargo))
             return UnprocessableEntity();
 
-        if (camposParaAtualizar is null)
+        if (string.IsNullOrEmpty(campos))
             return UnprocessableEntity();
 
         int rows_affected = await _conn.ExecuteAsync(
@@ -87,6 +78,28 @@ public class MantenedoresController(IDbConnection conn) : ControllerBase
         if (rows_affected == 0)
             return NotFound();
         return Ok();
+    }
+
+    private string GetCamposParaAtualizar(AtualizarMantenedor request)
+    {
+        
+        List<string> campos = new List<string>();
+
+
+        if (request.nome)
+            campos.Add(@"nome = @request.nome");
+        
+        if (request.cargo_id)
+            campos.Add(@"cargo_id = @request.cargo_id");
+        
+        if (request.senha)
+            campos.Add(@"senha = @request.senha");
+
+        string camposConcat = "";
+
+        camposConcat = string.Join(", ", campos);
+
+        return camposConcat;
     }
 
     [HttpDelete("{id}")]
