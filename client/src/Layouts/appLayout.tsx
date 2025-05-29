@@ -16,7 +16,7 @@ export const AppLayout = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
               <h1 className="text-xl font-semibold text-gray-800">BIKAMP</h1>
-              
+
               <nav className="flex space-x-1">
                 <NavLink
                   to="/bicicletas"
@@ -24,31 +24,30 @@ export const AppLayout = () => {
                 >
                   Bicicletas
                 </NavLink>
-                
+
                 <NavLink
                   to="/emprestimos"
                   className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${navLinkStyle}`}
                 >
                   Empréstimos
                 </NavLink>
-                
+
                 <NavLink
                   to="/mantenedores"
                   className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${navLinkStyle}`}
                 >
                   Mantenedores
                 </NavLink>
+                <NavLink
+                  to="/login"
+                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${navLinkStyle}`}
+                >
+                  <span className="text-gray-500">
+                    {user?.user_login ? `Usuário: ${user.user_login}` : "Login"}
+                  </span>
+                </NavLink>
               </nav>
             </div>
-            
-            <NavLink
-              to="/login"
-              className={`flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${navLinkStyle}`}
-            >
-              <span className="text-gray-500">
-                {user?.user_login ? `Usuário: ${user.user_login}` : "Usuário: convidado"}
-              </span>
-            </NavLink>
           </div>
         </div>
       </header>

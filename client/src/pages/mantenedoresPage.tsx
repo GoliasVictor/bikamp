@@ -6,6 +6,8 @@ import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';
 import { GetMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
 import { MantenedorService } from '../commands/receivers';
+import { DataTable } from '../components/dataTable';
+import { Column } from '../components/dataTable';
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 type Cargo = 1 | 2 | 3 | 4 | undefined;
@@ -19,6 +21,27 @@ export default function MantenedoresPage() {
 
   const mantenedorService = new MantenedorService(client);
   const getMantenedoresCommand = new GetMantenedoresCommand(mantenedorService);
+
+  const columns: Column<Mantenedor>[] = [
+    {
+      header: 'ID',
+      accessor: 'mantenedor_id',
+      align: 'right',
+      width: '10%',
+    },
+    {
+      header: 'Nome',
+      accessor: 'nome',
+      align: 'left',
+      width: '45%',
+    },
+    {
+      header: 'Cargo',
+      accessor: 'cargo',
+      align: 'left',
+      width: '45%',
+    },
+  ];
 
   const openModal = () => {
     modal.setModal(
@@ -34,9 +57,9 @@ export default function MantenedoresPage() {
   async function handleSubmit(mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
 
     const postMantenedoresCommand = new PostMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
-    
-    if (await postMantenedoresCommand.execute()){
-        modal.closeModal()
+
+    if (await postMantenedoresCommand.execute()) {
+      modal.closeModal()
     }
   }
 
@@ -57,7 +80,7 @@ export default function MantenedoresPage() {
     .filter(m => {
       const termo = filtro.toLowerCase();
       return (
-        m.mantenedor_id?.toString().includes(termo) ||
+        ("id " + m.mantenedor_id?.toString()).includes(termo) ||
         m.nome?.toLowerCase().includes(termo) ||
         ("cargo " + m.cargo?.toString()).includes(termo)
       );
@@ -76,33 +99,67 @@ export default function MantenedoresPage() {
 
   return (
     <div style={{ padding: '1rem' }}>
-      <h2>Lista de Mantenedores</h2>
+      <h2 style={{
+        fontSize: '1.75rem', // ou '28px'
+        fontWeight: 'bold',
+        color: '#007BFF', // azul forte
+        marginBottom: '1rem',
+        borderBottom: '2px solid #007BFF',
+        paddingBottom: '0.5rem'
+      }}>Lista de Mantenedores</h2>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div>
         <input
           type="text"
           placeholder=" Filtro da pesquisa"
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
-          style={{ marginRight: '1rem' }}
+          style={{
+            marginRight: '1rem',
+            border: '2px solid #007BFF',
+            borderRadius: '4px',
+            padding: '0.5rem',
+            fontSize: '1rem',
+            height: '2.5rem',
+            boxSizing: 'border-box'
+          }}
+
         />
 
         <select
           value={ordenacao}
           onChange={(e) => setOrdenacao(e.target.value as 'id' | 'nome' | 'cargo')}
+          style={{
+            marginRight: '1rem',
+            border: '2px solid #007BFF',
+            borderRadius: '4px',
+            padding: '0.5rem',
+            fontSize: '1rem',
+            height: '2.5rem',
+            boxSizing: 'border-box'
+          }}
         >
           <option value="id">Ordenar por ID</option>
           <option value="nome">Ordenar por Nome</option>
           <option value="cargo">Ordenar por Cargo</option>
         </select>
-        <button type="submit" onClick={openModal}>Novo Mantenedor</button>
+        <button type="submit" onClick={openModal}
+          style={{
+            marginRight: '1rem',
+            color: '#fff',
+            border: '2px solid #007BFF',
+            backgroundColor: " #007BFF",
+            borderRadius: '4px',
+            padding: '0.5rem',
+            fontSize: '1rem',
+            textAlign: "center",
+            height: '2.5rem',
+            boxSizing: 'border-box',
+            marginTop: 'rem',
+            cursor: 'pointer'
+          }}>Novo Mantenedor</button>
       </div>
-
-      {mantenedoresFiltrados.map((t) =>
-        <p key={t.mantenedor_id?.toString()!}>
-          {t.mantenedor_id} - {t.nome} - Cargo {t.cargo}
-        </p>
-      )}
+      <DataTable<Mantenedor> columns={columns} data={mantenedoresFiltrados} />
     </div>
   );
 }

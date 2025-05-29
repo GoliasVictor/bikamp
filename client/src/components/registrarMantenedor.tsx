@@ -3,7 +3,7 @@ import { useState } from "react";
 type Cargo = 1 | 2 | 3 | 4 | undefined;
 
 type Props = {
-  onSubmit: ( mantenedor_id: number, nome: string, cargo: Cargo, senha: string ) => void;
+  onSubmit: (mantenedor_id: number, nome: string, cargo: Cargo, senha: string) => void;
   onCancel: () => void;
   loading?: boolean;
 };
@@ -33,17 +33,24 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
         minWidth: "320px",
       }}
     >
-      <h3>Adicionar Novo Mantenedor</h3>
+      <h3 style={{
+        fontSize: '1.75rem', // ou '28px'
+        fontWeight: 'bold',
+        color: '#007BFF', // azul forte
+        marginBottom: '1rem',
+        borderBottom: '2px solid #007BFF',
+        paddingBottom: '0.5rem'
+      }}>Adicionar Novo Mantenedor</h3>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div style={{ fontWeight: 'bold', marginBottom: "1rem",  textAlign: 'left',     display: 'flex',  flexDirection: 'column', gap: '0.5rem'}}>
         <label>
           Id: <br />
           <input
             type="number"
             required
             value={mantenedor_id}
-            onChange={ (e) => setId(Number(e.target.value))}
-            style={{ width: "100%" }}
+            onChange={(e) => setId(Number(e.target.value))}
+            style={{ width: "100%", fontWeight: "100"  }}
           />
         </label>
         <label>
@@ -53,12 +60,9 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
             required
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontWeight: "100"  }}
           />
         </label>
-      </div>
-
-      <div style={{ marginBottom: "1rem" }}>
         <label>
           Cargo: <br />
           <select
@@ -72,9 +76,9 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
                 setCargo(undefined);
               }
             }}
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontWeight: "100" }}
           >
-            <option value="" disabled>
+            <option value="" disabled >
               Selecione um cargo
             </option>
             <option value={1}>1</option>
@@ -83,9 +87,7 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
             <option value={4}>4</option>
           </select>
         </label>
-      </div>
 
-      <div style={{ marginBottom: "1rem" }}>
         <label>
           Senha: <br />
           <input
@@ -93,7 +95,7 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
             required
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontWeight: "100"  }}
           />
         </label>
       </div>
