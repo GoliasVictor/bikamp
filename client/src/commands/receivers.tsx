@@ -1,5 +1,5 @@
 import { useApi } from "../clientApi";
-import type { components } from "../lib/api/v1";
+import type { components } from "../lib/api/lastest";
 type Cargo = components["schemas"]["Mantenedor"]["cargo"];
 
 //TODO: classes que para cada tipo de dado executam suas requisições   
@@ -44,4 +44,18 @@ export class BicicletaService {
         const request = await this.client.GET("/bicicletas")
         return request.data ?? []
     }
+}
+
+export class SimuladorService {
+  private client: ReturnType<typeof useApi>
+
+  constructor(client: ReturnType<typeof useApi>) {
+      this.client = client; 
+  }
+
+  async postIteracaoRa(data : {  bicicletario: number, ra_aluno: number} ): Promise<any>{
+    console.log(data)
+    const request = await this.client.POST("/api-bicicletario/emprestimos", {body: data});
+    return request.response ?? []
+  }
 }

@@ -1,5 +1,5 @@
 import { BikampCommand } from "./command";
-import type { components } from "../lib/api/v1";
+import type { components } from "../lib/api/lastest";
 
 //TODO: importar recievers 
 import { BicicletaService, EmprestimosService, MantenedorService } from "./receivers";
