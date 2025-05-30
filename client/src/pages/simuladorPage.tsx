@@ -7,6 +7,15 @@ import {PostInteracaoRaCommand } from '../commands/concreteCommands';
 import { SimuladorService } from '../commands/receivers';
 import EncostarRaModal from '../components/encostarRaModal';
 
+function ResultadoInteracaoRaModal(props : { onOk:() => void, data : components["schemas"]["RespostaSolicitacaoEmprestimo"]} ){
+  return <form className="flex flex-col border-2" onSubmit={props.onOk}>
+    {JSON.stringify(props.data)}
+    <div className="flex flex-row w-fill justify-between">
+      <button className="m-2"> Confirmar </button>
+    </div>
+  </form>
+}
+
 export default function SimuladorPage() {
   const client = useApi()
   const modal = useModal()
@@ -25,8 +34,10 @@ export default function SimuladorPage() {
 
   async function handleSubmit(ra: number, bicicletario: number ) {
     const postInteracaoRaCommand = new PostInteracaoRaCommand(simuladorService, ra, bicicletario);
-    if (await postInteracaoRaCommand.execute()){
-        modal.closeModal()
+    const result = await postInteracaoRaCommand.execute()
+    if (await postInteracaoRaCommand.execute()) {
+      modal.closeModal()
+      modal.setModal(<ResultadoInteracaoRaModal onOk={() => { }} data={result} />)
     }
   }
 

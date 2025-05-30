@@ -54,8 +54,7 @@ export class SimuladorService {
   }
 
   async postInteracaoRa(data : {  bicicletario: number, ra_aluno: number} ): Promise<any>{
-    console.log(data)
     const request = await this.client.POST("/api-bicicletario/emprestimos", {body: data});
-    return request.response;
+    return request.data;
   }
 }
