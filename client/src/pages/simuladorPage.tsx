@@ -3,17 +3,14 @@ import '../App.css'
 import type { components } from "../lib/api/lastest";
 import { useApi } from '../clientApi';
 import { useModal } from '../hooks/useModal';
-import { GetMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
-import { MantenedorService } from '../commands/receivers';
+import {PostInteracaoRaCommand } from '../commands/concreteCommands';
+import { SimuladorService } from '../commands/receivers';
 import EncostarRaModal from '../components/encostarRaModal';
-
-type Mantenedor = components["schemas"]["Mantenedor"];
-type Cargo = 1 | 2 | 3 | 4 | undefined;
 
 export default function SimuladorPage() {
   const client = useApi()
   const modal = useModal()
-  const mantenedorService = new MantenedorService(client);
+  const simuladorService = new SimuladorService(client);
 
   const openModal = () => {
     modal.setModal(
@@ -26,9 +23,9 @@ export default function SimuladorPage() {
   }
 
 
-  async function handleSubmit(mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
-    const postMantenedoresCommand = new PostMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
-    if (await postMantenedoresCommand.execute()){
+  async function handleSubmit(ra: number, bicicletario: number ) {
+    const postInteracaoRaCommand = new PostInteracaoRaCommand(simuladorService, ra, bicicletario);
+    if (await postInteracaoRaCommand.execute()){
         modal.closeModal()
     }
   }

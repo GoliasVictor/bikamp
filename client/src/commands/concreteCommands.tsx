@@ -2,12 +2,13 @@ import { BikampCommand } from "./command";
 import type { components } from "../lib/api/lastest";
 
 //TODO: importar recievers 
-import { BicicletaService, EmprestimosService, MantenedorService } from "./receivers";
+import { BicicletaService, EmprestimosService, MantenedorService, SimuladorService } from "./receivers";
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 type Cargo = components["schemas"]["Mantenedor"]["cargo"];
 type Emprestimo = components["schemas"]["Emprestimo"]; 
 type Bicicleta = components["schemas"]["Bicicleta"]; 
+type RespostaSolicitacaoEmprestimo = components["schemas"]["RespostaSolicitacaoEmprestimo"];
 
 //TODO: classes que implementam BikampCommand
 
@@ -84,5 +85,24 @@ export class GetBicicletasCommand implements BikampCommand {
 
     async execute(): Promise<Bicicleta[]> {
         return await this.bicicletasService.getBicicletas()
+    }
+}
+
+export class PostInteracaoRaCommand implements BikampCommand {
+    private data: {
+        bicicletario: number,
+        ra_aluno: number
+    }
+
+    constructor(
+        private simuladorService: SimuladorService,
+        ra: number,
+        bicicletario_id: number
+    ) { 
+        this.data = { ra_aluno: ra, bicicletario: bicicletario_id };
+    }
+
+    async execute(): Promise<RespostaSolicitacaoEmprestimo> {
+        return await this.simuladorService.postInteracaoRa(this.data);
     }
 }
