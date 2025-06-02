@@ -2,22 +2,17 @@
 import React from 'react';
 
 export interface Column<T> {
-  /** Texto que aparecerá no <th> */
   header: string;
-  /** Nome da propriedade em T a ser mostrada naquela coluna */
   accessor: keyof T;
-  /** opcional: alinhamento (padrão: 'right') */
   align?: 'left' | 'center' | 'right';
-  /** opcional: largura mínima ou máxima (ex: "150px", "20%") */
   width?: string;
+  action?: any
 }
 
 interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
-  /** opcional: estilo extra para a <table> */
   tableStyle?: React.CSSProperties;
-  /** opcional: classe CSS para a <table> */
   className?: string;
 }
 

@@ -1,18 +1,27 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import type { components } from "../lib/api/v1";
+type Mantenedor = components["schemas"]["Mantenedor"];
 type Cargo = 1 | 2 | 3 | 4 | undefined;
 
 type Props = {
-  onSubmit: (action: "post", mantenedor_id: number, nome: string, cargo: Cargo, senha: string) => void;
+  mantenedor: Mantenedor;
+  onSubmit: (action: "patch", mantenedor_id: number, nome: string, cargo: Cargo, senha: string) => void;
   onCancel: () => void;
   loading?: boolean;
 };
 
-export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Props) {
+export default function EditarMantenedor({ mantenedor: preData, onSubmit, onCancel, loading }: Props) {
+
   const [mantenedor_id, setId] = useState(0);
   const [nome, setNome] = useState("");
   const [cargo, setCargo] = useState<Cargo | undefined>(undefined);
   const [senha, setSenha] = useState("");
+
+  useEffect(() => {
+    setId(preData.mantenedor_id ?? 0);
+    setNome(preData.nome ?? "");
+    setCargo(preData.cargo);
+  }, [preData]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,7 +29,7 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
       alert("Por favor, selecione um cargo válido.");
       return;
     }
-    onSubmit("post", mantenedor_id, nome, cargo, senha);
+    onSubmit("patch", mantenedor_id, nome, cargo, senha);
   }
 
   return (
@@ -42,15 +51,22 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
         paddingBottom: '0.5rem'
       }}>Adicionar Novo Mantenedor</h3>
 
-      <div style={{ fontWeight: 'bold', marginBottom: "1rem",  textAlign: 'left',     display: 'flex',  flexDirection: 'column', gap: '0.5rem'}}>
+      <div style={{ fontWeight: 'bold', marginBottom: "1rem", textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <label>
           Id: <br />
           <input
             type="number"
-            required
             value={mantenedor_id}
-            onChange={(e) => setId(Number(e.target.value))}
-            style={{ width: "100%", fontWeight: "100"  }}
+            readOnly
+            disabled
+            style={{
+              width: "100%",
+              fontWeight: "100",
+              backgroundColor: "#f5f5f5",
+              color: "#6c757d",
+              border: "1px solid #ced4da",
+              cursor: "not-allowed"
+            }}
           />
         </label>
         <label>
@@ -60,7 +76,7 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
             required
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            style={{ width: "100%", fontWeight: "100"  }}
+            style={{ width: "100%", fontWeight: "100" }}
           />
         </label>
         <label>
@@ -93,9 +109,8 @@ export default function RegistrarMantenedor({ onSubmit, onCancel, loading }: Pro
           <input
             type="password"
             required
-            value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            style={{ width: "100%", fontWeight: "100"  }}
+            style={{ width: "100%", fontWeight: "100" }}
           />
         </label>
       </div>

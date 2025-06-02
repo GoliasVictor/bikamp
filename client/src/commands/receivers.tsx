@@ -19,6 +19,13 @@ export class MantenedorService {
     const request = await this.client.POST("/mantenedores", {body: data});
     return request.response ?? []
   }
+
+  async patchMantenedores(data: { id: number, nome: string; cargo_id: Cargo; senha: string }): Promise<any> {
+    console.log(data)
+    const request = await this.client.PATCH("/mantenedores", {body: data});
+    return request.response ?? []
+  }
+
 }
 
 export class EmprestimosService {

@@ -4,10 +4,12 @@ import type { components } from "../lib/api/v1";
 import { useApi } from '../clientApi';
 import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';
-import { GetMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
+import EditarMantenedor from '../components/editarMantenedor';
+import { GetMantenedoresCommand, PatchMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
 import { MantenedorService } from '../commands/receivers';
 import { DataTable } from '../components/dataTable';
 import { Column } from '../components/dataTable';
+import { BikampCommand } from '../commands/command';
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 type Cargo = 1 | 2 | 3 | 4 | undefined;
@@ -21,8 +23,11 @@ export default function MantenedoresPage() {
 
   const mantenedorService = new MantenedorService(client);
   const getMantenedoresCommand = new GetMantenedoresCommand(mantenedorService);
+  type MantenedorRow = Mantenedor & {
+  action: JSX.Element;
+};
 
-  const columns: Column<Mantenedor>[] = [
+  const columns: Column<MantenedorRow>[] = [
     {
       header: 'ID',
       accessor: 'mantenedor_id',
@@ -41,9 +46,15 @@ export default function MantenedoresPage() {
       align: 'left',
       width: '45%',
     },
+    {
+      header: '',
+      accessor: 'action',
+      align: 'left',
+      width: '45%',
+    }
   ];
 
-  const openModal = () => {
+  const openRegiModal = () => {
     modal.setModal(
       <RegistrarMantenedor
         onSubmit={handleSubmit}
@@ -53,12 +64,30 @@ export default function MantenedoresPage() {
     );
   }
 
+  const openEditModal = (mantenedor: Mantenedor) => {
+  modal.setModal(
+    <EditarMantenedor
+      mantenedor={mantenedor}
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
+      loading={false}
+    />
+  );
+};
 
-  async function handleSubmit(mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
 
-    const postMantenedoresCommand = new PostMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
+  async function handleSubmit(action: "post" | "patch", mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
+    let command: BikampCommand | undefined;
 
-    if (await postMantenedoresCommand.execute()) {
+    if (action === "post") {
+      command = new PostMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
+    }
+
+    if (action === "patch") {
+      command = new PatchMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
+    }
+
+    if (command && await command.execute()) {
       modal.closeModal()
     }
   }
@@ -76,7 +105,7 @@ export default function MantenedoresPage() {
     fetchMantenedores()
   }, [])
 
-  const mantenedoresFiltrados = mantenedores
+  const mantenedoresFiltered = mantenedores
     .filter(m => {
       const termo = filtro.toLowerCase();
       return (
@@ -96,6 +125,25 @@ export default function MantenedoresPage() {
         return campoA.localeCompare(campoB);
       }
     });
+  const mantenedoresRow: MantenedorRow[] = mantenedoresFiltered.map(m => ({
+  ...m,
+  action: (
+    <button
+      onClick={() => openEditModal(m)}
+      style={{
+        backgroundColor: '#ffc107',
+        color: '#000',
+        border: 'none',
+        padding: '0.4rem 0.8rem',
+        borderRadius: '4px',
+        cursor: 'pointer',
+      }}
+    >
+      Editar
+    </button>
+  )
+}));
+
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -143,7 +191,7 @@ export default function MantenedoresPage() {
           <option value="nome">Ordenar por Nome</option>
           <option value="cargo">Ordenar por Cargo</option>
         </select>
-        <button type="submit" onClick={openModal}
+        <button type="submit" onClick={openRegiModal}
           style={{
             marginRight: '1rem',
             color: '#fff',
@@ -159,7 +207,7 @@ export default function MantenedoresPage() {
             cursor: 'pointer'
           }}>Novo Mantenedor</button>
       </div>
-      <DataTable<Mantenedor> columns={columns} data={mantenedoresFiltrados} />
+      <DataTable<MantenedorRow> columns={columns} data={mantenedoresRow} />
     </div>
   );
 }

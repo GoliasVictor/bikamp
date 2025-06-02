@@ -67,6 +67,54 @@ export class PostMantenedoresCommand implements BikampCommand {
    
   }
 
+export class PatchMantenedoresCommand implements BikampCommand {
+    private data: {
+        id: number;
+        nome: string;
+        cargo_id: Cargo;
+        senha: string;
+    };
+
+    constructor(
+        private mantenedorService: MantenedorService,
+        id: number,
+        nome: string,
+        cargo_id: Cargo,
+        senha: string
+    ) {
+        this.data = { id, nome, cargo_id, senha };
+    }
+
+    async execute(): Promise<boolean> {
+
+        const mantenedores: Mantenedor[] = await this.mantenedorService.getMantenedores();
+
+        if (!mantenedores.some(m => m.mantenedor_id === this.data.id)) {
+            alert("Este ID não existe.") 
+            throw new Error("Este ID não existe.");
+
+        } else {
+            try {
+                const response = await this.mantenedorService.patchMantenedores(this.data);
+
+                if (response.ok) {
+                    alert("Mantenedor editado com sucesso!")
+                    return true;
+                } else {
+                    throw new Error(`${response.status} ${response.statusText}`);
+                }
+            } catch (err) {
+                console.error("Erro inesperado:", err);
+                alert("Erro inesperado" + (err instanceof Error ? ": " + err.message : "."));
+                return false;
+            }
+        }
+    }
+
+   
+  }
+
+
 export class GetEmprestimosCommand implements BikampCommand {
     constructor(
         private emprestimoService : EmprestimosService
