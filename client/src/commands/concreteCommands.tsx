@@ -110,8 +110,41 @@ export class PatchMantenedoresCommand implements BikampCommand {
             }
         }
     }
+  }
 
-   
+export class DeleteMantenedoresCommand implements BikampCommand {
+    private data: {
+        id: number;
+    };
+
+    constructor(
+        private mantenedorService: MantenedorService,
+        id: number
+    ) {
+        this.data = { id };
+    }
+
+    async execute(): Promise<boolean> {
+
+        const mantenedores: Mantenedor[] = await this.mantenedorService.getMantenedores();
+
+        if (!mantenedores.some(m => m.mantenedor_id === this.data.id)) {
+            alert("Este ID não existe.") 
+            throw new Error("Este ID não existe.");
+
+        } else {
+            try {
+                await this.mantenedorService.deleteMantenedores(this.data.id);
+                alert("Mantenedor deletado com sucesso!")
+                return true;
+               
+            } catch (err) {
+                console.error("Erro inesperado:", err);
+                alert("Erro inesperado" + (err instanceof Error ? ": " + err.message : "."));
+                return false;
+            }
+        }
+    }
   }
 
 

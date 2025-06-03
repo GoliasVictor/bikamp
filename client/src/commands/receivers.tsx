@@ -9,29 +9,38 @@ export class MantenedorService {
   constructor(client: ReturnType<typeof useApi>) {
     this.client = client;
   }
-   async getMantenedores(): Promise<any> {
+  async getMantenedores(): Promise<any> {
     const request = await this.client.GET("/mantenedores");
     return request.data ?? [];
   }
 
   async postMantenedores(data: { mantenedor_id: number, nome: string; cargo: Cargo; senha: string }): Promise<any> {
     console.log(data)
-    const request = await this.client.POST("/mantenedores", {body: data});
+    const request = await this.client.POST("/mantenedores", { body: data });
     return request.response ?? []
   }
 
   async patchMantenedores(data: { id: number, nome: string; cargo_id: Cargo; senha: string }): Promise<any> {
     console.log(data)
-    const request = await this.client.PATCH("/mantenedores", {body: data});
+    const request = await this.client.PATCH("/mantenedores", { body: data });
     return request.response ?? []
   }
 
+  async deleteMantenedores(id: number): Promise<any> {
+    console.log(id)
+    await this.client.DELETE("/mantenedores/{id}", {
+      params: {
+        path: {id: id},
+      },
+    });
+    return true
+  }
 }
 
 export class EmprestimosService {
-    private client: ReturnType<typeof useApi>
+  private client: ReturnType<typeof useApi>
 
-    constructor(client: ReturnType<typeof useApi>) {
+  constructor(client: ReturnType<typeof useApi>) {
     this.client = client;
   }
    async getEmprestimos(): Promise<any> {

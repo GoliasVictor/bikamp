@@ -5,11 +5,13 @@ import { useApi } from '../clientApi';
 import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';
 import EditarMantenedor from '../components/editarMantenedor';
-import { GetMantenedoresCommand, PatchMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
+import { GetMantenedoresCommand, PatchMantenedoresCommand, PostMantenedoresCommand, DeleteMantenedoresCommand } from '../commands/concreteCommands';
 import { MantenedorService } from '../commands/receivers';
 import { DataTable } from '../components/dataTable';
 import { Column } from '../components/dataTable';
 import { BikampCommand } from '../commands/command';
+import ConfirmarModal from '../components/confirmarModal';
+
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 type Cargo = 1 | 2 | 3 | 4 | undefined;
@@ -24,8 +26,8 @@ export default function MantenedoresPage() {
   const mantenedorService = new MantenedorService(client);
   const getMantenedoresCommand = new GetMantenedoresCommand(mantenedorService);
   type MantenedorRow = Mantenedor & {
-  action: JSX.Element;
-};
+    action: JSX.Element;
+  };
 
   const columns: Column<MantenedorRow>[] = [
     {
@@ -65,15 +67,21 @@ export default function MantenedoresPage() {
   }
 
   const openEditModal = (mantenedor: Mantenedor) => {
-  modal.setModal(
-    <EditarMantenedor
-      mantenedor={mantenedor}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-      loading={false}
-    />
-  );
-};
+    modal.setModal(
+      <EditarMantenedor
+        mantenedor={mantenedor}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        loading={false}
+      />
+    );
+  };
+
+  const openDeleModal = (mantenedor: Mantenedor) => {
+    modal.setModal(
+      <ConfirmarModal onConfirm={() => handleConfirm(mantenedor.mantenedor_id)}></ConfirmarModal>
+    )
+  }
 
 
   async function handleSubmit(action: "post" | "patch", mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
@@ -92,6 +100,15 @@ export default function MantenedoresPage() {
     }
   }
 
+  async function handleConfirm(mantenedor_id: number | undefined) {
+    if (mantenedor_id) {
+      let command = new DeleteMantenedoresCommand(mantenedorService, mantenedor_id);
+      //await command.execute();
+      command.execute();
+    }
+    modal.closeModal();
+  }
+  
   function handleCancel() {
     modal.closeModal()
   }
@@ -126,23 +143,43 @@ export default function MantenedoresPage() {
       }
     });
   const mantenedoresRow: MantenedorRow[] = mantenedoresFiltered.map(m => ({
-  ...m,
-  action: (
-    <button
-      onClick={() => openEditModal(m)}
-      style={{
-        backgroundColor: '#ffc107',
-        color: '#000',
-        border: 'none',
-        padding: '0.4rem 0.8rem',
-        borderRadius: '4px',
-        cursor: 'pointer',
-      }}
-    >
-      Editar
-    </button>
-  )
-}));
+    ...m,
+    action: (
+      <div style={{
+        display: 'flex',
+        gap: '0.5rem', // espaço entre os botões
+        alignItems: 'center',
+      }}>
+        <button
+          onClick={() => openEditModal(m)}
+          style={{
+            backgroundColor: '#ffc107',
+            color: '#000',
+            border: 'none',
+            padding: '0.4rem 0.8rem',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Editar
+        </button>
+        <button
+          onClick={() => openDeleModal(m)}
+          style={{
+            backgroundColor: '#c71f09',
+            color: '#000',
+            border: 'none',
+            padding: '0.4rem 0.8rem',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Deletar
+        </button>
+        <div></div>
+      </div>
+    )
+  }));
 
 
   return (
@@ -156,7 +193,12 @@ export default function MantenedoresPage() {
         paddingBottom: '0.5rem'
       }}>Lista de Mantenedores</h2>
 
-      <div>
+      <div style={{
+        gap: '0.5rem',
+        alignItems: 'center',
+        display: 'flex',
+        flexWrap: 'nowrap'
+      }}>
         <input
           type="text"
           placeholder=" Filtro da pesquisa"
@@ -204,7 +246,8 @@ export default function MantenedoresPage() {
             height: '2.5rem',
             boxSizing: 'border-box',
             marginTop: 'rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            whiteSpace: 'nowrap'
           }}>Novo Mantenedor</button>
       </div>
       <DataTable<MantenedorRow> columns={columns} data={mantenedoresRow} />

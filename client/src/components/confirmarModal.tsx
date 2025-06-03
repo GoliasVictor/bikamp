@@ -12,7 +12,6 @@ export default function ConfirmarModal({children, onConfirm}: ConfirmarModalProp
   }
   const handleConfirm = () => {
     onConfirm()
-    closeModal();
   }
   return (<> 
     <form className="flex flex-col border-2" onSubmit={handleConfirm}>

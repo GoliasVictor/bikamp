@@ -26,6 +26,7 @@ export function DataTable<T extends Record<string, any>>({
     <table
       className={className}
       style={{
+        alignItems: 'center',
         width: '100%',
         borderCollapse: 'collapse',
         textAlign: 'right',
@@ -33,7 +34,7 @@ export function DataTable<T extends Record<string, any>>({
         ...tableStyle,
       }}
     >
-      <thead>
+      <thead >
         <tr>
           {columns.map((col) => (
             <th
@@ -43,6 +44,7 @@ export function DataTable<T extends Record<string, any>>({
                 padding: '0.5rem',
                 textAlign: col.align ?? 'right',
                 width: col.width,
+                borderCollapse: 'collapse',
               }}
             >
               {col.header}
@@ -51,7 +53,7 @@ export function DataTable<T extends Record<string, any>>({
         </tr>
       </thead>
 
-      <tbody>
+      <tbody style={{ whiteSpace: 'nowrap' }}>
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {columns.map((col) => {
@@ -65,7 +67,6 @@ export function DataTable<T extends Record<string, any>>({
                     textAlign: col.align ?? 'right',
                   }}
                 >
-                  {/** Se quiser tratar formatação especial, por exemplo datas, números etc, aqui é o lugar. Por enquanto, renderizamos direto. */}
                   {cell}
                 </td>
               );
