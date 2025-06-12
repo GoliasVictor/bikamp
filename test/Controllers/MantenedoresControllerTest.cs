@@ -39,7 +39,7 @@ public class MantenedoresControllerTest : IDisposable
         var result = await controller.Get(id);
         
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var mantenedor = Assert.IsType<Mantenedor>(okResult.Value);
+        var mantenedor = Assert.IsType<Api.Mantenedor>(okResult.Value);
         Assert.Equal(id, mantenedor.mantenedor_id);
     }
 
@@ -94,7 +94,7 @@ public class MantenedoresControllerTest : IDisposable
         var mantenedor = new Mantenedor(id, cargoId, nome, senha);
 
     
-        var result = await controller.Post(new Bikamp.Mantenedor(id, cargoId, nome, senha));
+        var result = await controller.Post(new Bikamp.Mantenedor(id, (Api.CargoId)cargoId, nome, senha));
     
         Assert.IsType<OkResult>(result);
         var actual = bd.Get(new Mantenedor.PK(id));
@@ -108,7 +108,7 @@ public class MantenedoresControllerTest : IDisposable
     public async void Post_InvalidCargo_ReturnsUnprocessableEntity(int id, int cargoId, string nome, string senha)
     {
     
-        var mantenedor = new Bikamp.Mantenedor(id, cargoId, nome, senha);
+        var mantenedor = new Bikamp.Mantenedor(id, (Api.CargoId)cargoId, nome, senha);
         var result = await controller.Post(mantenedor);
     
         Assert.IsType<UnprocessableEntityResult>(result);
