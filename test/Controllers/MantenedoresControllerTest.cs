@@ -36,10 +36,8 @@ public class MantenedoresControllerTest : IDisposable
     [InlineData(2)] // Classe válida: ID existente
     public async void Get_ValidExistingId_ReturnsMantenedor(int id)
     {
-        // Act
         var result = await controller.Get(id);
         
-        // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var mantenedor = Assert.IsType<Mantenedor>(okResult.Value);
         Assert.Equal(id, mantenedor.mantenedor_id);
@@ -51,10 +49,8 @@ public class MantenedoresControllerTest : IDisposable
     [InlineData(0)]    // Classe inválida: ID zero
     public async void Get_InvalidId_ReturnsNotFound(int id)
     {
-        // Act
         var result = await controller.Get(id);
         
-        // Assert
         Assert.IsType<NotFoundResult>(result.Result);
     }
 
@@ -67,10 +63,8 @@ public class MantenedoresControllerTest : IDisposable
     [InlineData(int.MaxValue)] // Valor limite: máximo inteiro
     public async void Get_BoundaryValues_ReturnsNotFound(int id)
     {
-        // Act
         var result = await controller.Get(id);
         
-        // Assert
         Assert.IsType<NotFoundResult>(result.Result);
     }
 
@@ -81,14 +75,11 @@ public class MantenedoresControllerTest : IDisposable
     [Fact]
     public async void Post_ValidMantenedor_Success()
     {
-        // Arrange
         var id = 4;
         var expected = new Mantenedor(id, 1, "alfredo", "8888");
 
-        // Act
         var result = await controller.Post(new(id, (Api.CargoId)1, "alfredo", "8888"));
   
-        // Assert
         Assert.IsType<OkResult>(result);
         var actual = bd.Get(new Mantenedor.PK(id));
         Assert.Equal(expected, actual);
@@ -99,13 +90,12 @@ public class MantenedoresControllerTest : IDisposable
     [InlineData(6, 2, "jose", "12345")]        // Classe válida: cargo 2
     public async void Post_ValidMantenedorWithDifferentCargos_Success(int id, int cargoId, string nome, string senha)
     {
-        // Arrange
+    
         var mantenedor = new Mantenedor(id, cargoId, nome, senha);
 
-        // Act
-        var result = await controller.Post(mantenedor);
-        
-        // Assert
+    
+        var result = await controller.Post(new Bikamp.Mantenedor(id, cargoId, nome, senha));
+    
         Assert.IsType<OkResult>(result);
         var actual = bd.Get(new Mantenedor.PK(id));
         Assert.Equal(mantenedor, actual);
@@ -117,13 +107,10 @@ public class MantenedoresControllerTest : IDisposable
     [InlineData(9, 0, "nome", "senha")]        // Classe inválida: cargo zero
     public async void Post_InvalidCargo_ReturnsUnprocessableEntity(int id, int cargoId, string nome, string senha)
     {
-        // Arrange
-        var mantenedor = new Mantenedor(id, cargoId, nome, senha);
-
-        // Act
+    
+        var mantenedor = new Bikamp.Mantenedor(id, cargoId, nome, senha);
         var result = await controller.Post(mantenedor);
-        
-        // Assert
+    
         Assert.IsType<UnprocessableEntityResult>(result);
     }
 
