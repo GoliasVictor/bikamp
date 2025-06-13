@@ -76,7 +76,7 @@ record Penalidade (
     string? detalhes, 
     int mantenedor_id_aplicador,
     int? mantenedor_id_perdoador,
-    int? motivacao_perdao
+    string? motivacao_perdao
 ) : Tabela {
     public record PK ( 
         DateTime penalidade_inicio, 
