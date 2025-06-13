@@ -1,0 +1,1553 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+	  "title": "api",
+	  "version": "1.0"
+	},
+	"paths": {
+	  "/api-bicicletario/emprestimos": {
+		"post": {
+		  "tags": [
+			"ApiBicicletario"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequesicaoEmprestimo"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequesicaoEmprestimo"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequesicaoEmprestimo"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/RespostaSolicitacaoEmprestimo"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/RespostaSolicitacaoEmprestimo"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/RespostaSolicitacaoEmprestimo"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/api-bicicletario/ponto/bicicleta": {
+		"patch": {
+		  "tags": [
+			"ApiBicicletario"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestDevolucao"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestDevolucao"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestDevolucao"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/bicicletarios": {
+		"post": {
+		  "tags": [
+			"Bicicletario"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestCreateBicicletario"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestCreateBicicletario"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestCreateBicicletario"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "integer",
+					"format": "int32"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "integer",
+					"format": "int32"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "integer",
+					"format": "int32"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"get": {
+		  "tags": [
+			"Bicicletario"
+		  ],
+		  "parameters": [
+			{
+			  "name": "detalhado",
+			  "in": "query",
+			  "schema": {
+				"type": "boolean"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Bicicletario"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Bicicletario"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Bicicletario"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/bicicletarios/{id}": {
+		"delete": {
+		  "tags": [
+			"Bicicletario"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/bicicletas": {
+		"get": {
+		  "tags": [
+			"Bicicletas"
+		  ],
+		  "parameters": [
+			{
+			  "name": "perdidas",
+			  "in": "query",
+			  "schema": {
+				"type": "boolean"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/BicicletaPonto"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/BicicletaPonto"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/BicicletaPonto"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"post": {
+		  "tags": [
+			"Bicicletas"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Bicicleta"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Bicicleta"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Bicicleta"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		},
+		"put": {
+		  "tags": [
+			"Bicicletas"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Bicicleta"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Bicicleta"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Bicicleta"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/bicicletas/{id}": {
+		"get": {
+		  "tags": [
+			"Bicicletas"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/BicicletaPonto"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/BicicletaPonto"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/BicicletaPonto"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/ciclistas": {
+		"get": {
+		  "tags": [
+			"Ciclistas"
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Ciclista"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Ciclista"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Ciclista"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/emprestimos": {
+		"get": {
+		  "tags": [
+			"Emprestimos"
+		  ],
+		  "parameters": [
+			{
+			  "name": "aberto",
+			  "in": "query",
+			  "schema": {
+				"type": "boolean"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Emprestimo"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Emprestimo"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Emprestimo"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/emprestimos/fechar": {
+		"patch": {
+		  "tags": [
+			"Emprestimos"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestFecharEmprestimo"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestFecharEmprestimo"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestFecharEmprestimo"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Emprestimo"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Emprestimo"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Emprestimo"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/mantenedores": {
+		"get": {
+		  "tags": [
+			"Mantenedores"
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Mantenedor"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Mantenedor"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Mantenedor"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"post": {
+		  "tags": [
+			"Mantenedores"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Mantenedor"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Mantenedor"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Mantenedor"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		},
+		"patch": {
+		  "tags": [
+			"Mantenedores"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AtualizarMantenedor"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AtualizarMantenedor"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AtualizarMantenedor"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/mantenedores/{id}": {
+		"get": {
+		  "tags": [
+			"Mantenedores"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/Mantenedor"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/Mantenedor"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/Mantenedor"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"delete": {
+		  "tags": [
+			"Mantenedores"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/pardon": {
+		"post": {
+		  "tags": [
+			"Pardon"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/PardonRequest"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/PardonRequest"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/PardonRequest"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		},
+		"get": {
+		  "tags": [
+			"Pardon"
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/PardonRequest"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/PardonRequest"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/PardonRequest"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/penalidades": {
+		"get": {
+		  "tags": [
+			"Penalidaes"
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Penalidade"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Penalidade"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/Penalidade"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"patch": {
+		  "tags": [
+			"Penalidaes"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestPerdoarPenalidade"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestPerdoarPenalidade"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/RequestPerdoarPenalidade"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/penalidades/manual": {
+		"post": {
+		  "tags": [
+			"Penalidaes"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/NovaPenalidadeManual"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/NovaPenalidadeManual"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/NovaPenalidadeManual"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/pontos": {
+		"get": {
+		  "tags": [
+			"Pontos"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id_bicicletario",
+			  "in": "query",
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			},
+			{
+			  "name": "status",
+			  "in": "query",
+			  "schema": {
+				"type": "array",
+				"items": {
+				  "$ref": "#/components/schemas/StatusPontoId"
+				}
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/PontoInfo"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/PontoInfo"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/PontoInfo"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"post": {
+		  "tags": [
+			"Pontos"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/NovoPonto"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/NovoPonto"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/NovoPonto"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		},
+		"patch": {
+		  "tags": [
+			"Pontos"
+		  ],
+		  "requestBody": {
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AtualizacaoPonto"
+				}
+			  },
+			  "text/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AtualizacaoPonto"
+				}
+			  },
+			  "application/*+json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AtualizacaoPonto"
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": {
+			  "description": "OK"
+			}
+		  }
+		}
+	  },
+	  "/pontos/{bicicletario_id}/{ponto_id}": {
+		"get": {
+		  "tags": [
+			"Pontos"
+		  ],
+		  "parameters": [
+			{
+			  "name": "bicicletario_id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			},
+			{
+			  "name": "ponto_id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/PontoInfo"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/PontoInfo"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/PontoInfo"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/tipo-penalidade": {
+		"get": {
+		  "tags": [
+			"TipoPenalidade"
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/TipoPenalidade"
+					}
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/TipoPenalidade"
+					}
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"type": "array",
+					"items": {
+					  "$ref": "#/components/schemas/TipoPenalidade"
+					}
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "/tipo-penalidade/{id}": {
+		"get": {
+		  "tags": [
+			"TipoPenalidade"
+		  ],
+		  "parameters": [
+			{
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "responses": {
+			"200": {
+			  "description": "OK",
+			  "content": {
+				"text/plain": {
+				  "schema": {
+					"$ref": "#/components/schemas/TipoPenalidade"
+				  }
+				},
+				"application/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/TipoPenalidade"
+				  }
+				},
+				"text/json": {
+				  "schema": {
+					"$ref": "#/components/schemas/TipoPenalidade"
+				  }
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	},
+	"components": {
+	  "schemas": {
+		"AtualizacaoPonto": {
+		  "type": "object",
+		  "properties": {
+			"bicicletario_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"ponto_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"status": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"AtualizarMantenedor": {
+		  "type": "object",
+		  "properties": {
+			"id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"nome": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"senha": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"cargo_id": {
+			  "$ref": "#/components/schemas/CargoId"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"Bicicleta": {
+		  "type": "object",
+		  "properties": {
+			"id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"status": {
+			  "$ref": "#/components/schemas/StatusBicicletaId"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"BicicletaPonto": {
+		  "type": "object",
+		  "properties": {
+			"id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"status": {
+			  "$ref": "#/components/schemas/StatusBicicletaId"
+			},
+			"bicicletario": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"ponto": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"Bicicletario": {
+		  "type": "object",
+		  "properties": {
+			"id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"localizacao_latitude": {
+			  "type": "number",
+			  "format": "double"
+			},
+			"localizacao_longitude": {
+			  "type": "number",
+			  "format": "double"
+			},
+			"desativado": {
+			  "type": "boolean"
+			},
+			"pontos": {
+			  "type": "array",
+			  "items": {
+				"$ref": "#/components/schemas/BicicletarioPonto"
+			  },
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"BicicletarioPonto": {
+		  "type": "object",
+		  "properties": {
+			"ponto": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"status_ponto_id": {
+			  "$ref": "#/components/schemas/StatusPontoId"
+			},
+			"bicicleta": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"CargoId": {
+		  "enum": [
+			1,
+			2,
+			3,
+			4
+		  ],
+		  "type": "integer",
+		  "format": "int32"
+		},
+		"Ciclista": {
+		  "type": "object",
+		  "properties": {
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"Emprestimo": {
+		  "type": "object",
+		  "properties": {
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"emprestimo_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"emprestimo_fim": {
+			  "type": "string",
+			  "format": "date-time",
+			  "nullable": true
+			},
+			"bicicletario_id_devolvido": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"bicicletario_id_tirado": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"bicicleta_id": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"Mantenedor": {
+		  "type": "object",
+		  "properties": {
+			"mantenedor_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"cargo": {
+			  "$ref": "#/components/schemas/CargoId"
+			},
+			"nome": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"senha": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"NovaPenalidadeManual": {
+		  "type": "object",
+		  "properties": {
+			"mantenedor_id_aplicador": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"tipo_penalidade_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"penalidade_fim": {
+			  "type": "string",
+			  "format": "date-time",
+			  "nullable": true
+			},
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"emprestimo_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"detalhes": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"NovoPonto": {
+		  "type": "object",
+		  "properties": {
+			"bicicletario_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"ponto_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"status_ponto_id": {
+			  "$ref": "#/components/schemas/StatusPontoId"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"PardonRequest": {
+		  "type": "object",
+		  "properties": {
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"pardon_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"justificativa": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"Penalidade": {
+		  "type": "object",
+		  "properties": {
+			"penalidade_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"penalidade_fim": {
+			  "type": "string",
+			  "format": "date-time",
+			  "nullable": true
+			},
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"emprestimo_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"tipo_penalidade_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"detalhes": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"mantenedor_id_aplicador": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"mantenedor_id_perdoador": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"penalidade_automatica": {
+			  "type": "boolean"
+			},
+			"motivacao_perdao": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"PontoInfo": {
+		  "type": "object",
+		  "properties": {
+			"bicicletario": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"ponto": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"status_ponto": {
+			  "$ref": "#/components/schemas/StatusPontoId"
+			},
+			"bicicleta": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"status_bicicleta": {
+			  "$ref": "#/components/schemas/StatusBicicletaId"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"RequesicaoEmprestimo": {
+		  "type": "object",
+		  "properties": {
+			"bicicletario": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"ra_aluno": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"RequestCreateBicicletario": {
+		  "type": "object",
+		  "properties": {
+			"latitude": {
+			  "type": "number",
+			  "format": "double"
+			},
+			"longitude": {
+			  "type": "number",
+			  "format": "double"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"RequestDevolucao": {
+		  "type": "object",
+		  "properties": {
+			"bicicleta_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"bicicletario_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"ponto_id": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"RequestFecharEmprestimo": {
+		  "type": "object",
+		  "properties": {
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"emprestimo_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"perda_bicicleta": {
+			  "type": "boolean"
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"RequestPerdoarPenalidade": {
+		  "type": "object",
+		  "properties": {
+			"ciclista_ra": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"emprestimo_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"penalidade_inicio": {
+			  "type": "string",
+			  "format": "date-time"
+			},
+			"mantenedor_id_perdoador": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"motivacao_perdao": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"RespostaSolicitacaoEmprestimo": {
+		  "type": "object",
+		  "properties": {
+			"status": {
+			  "$ref": "#/components/schemas/StatusSolicitacoaEmprestimo"
+			},
+			"ponto": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"bicicleta": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		},
+		"StatusBicicletaId": {
+		  "enum": [
+			1,
+			2,
+			3,
+			4,
+			5
+		  ],
+		  "type": "integer",
+		  "format": "int32"
+		},
+		"StatusPontoId": {
+		  "enum": [
+			1,
+			2,
+			3,
+			4
+		  ],
+		  "type": "integer",
+		  "format": "int32"
+		},
+		"StatusSolicitacoaEmprestimo": {
+		  "enum": [
+			1,
+			2,
+			3,
+			4
+		  ],
+		  "type": "integer",
+		  "format": "int32"
+		},
+		"TipoPenalidade": {
+		  "type": "object",
+		  "properties": {
+			"tipo_penalidade_id": {
+			  "type": "integer",
+			  "format": "int32"
+			},
+			"nome": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"descricao": {
+			  "type": "string",
+			  "nullable": true
+			}
+		  },
+		  "additionalProperties": false
+		}
+	  }
+	}
+  }
