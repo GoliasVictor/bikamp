@@ -18,7 +18,7 @@ public class ApiBicicletarioController(IDbConnection conn, Dac dac, Bicicletario
         Liberado = 1,
         Indisponivel = 2,
         NaoPermitido = 3,
-        RaInvalido = 4
+        CartaoInvalido = 4
 
     }
 
@@ -28,13 +28,17 @@ public class ApiBicicletarioController(IDbConnection conn, Dac dac, Bicicletario
     public async Task<ActionResult<RespostaSolicitacaoEmprestimo>> PostEmprestimos(RequesicaoEmprestimo solicitacao)
     {
         using IDbTransaction tran = _conn.BeginTransaction();
-        if (!_dac.EhAlunoRegulamenteMatriculado(solicitacao.ra_aluno))
-            return Conflict();
 
-        int ra = solicitacao.ra_aluno;
+        var ret_ra = _dac.ObterRaAlunoCartao(solicitacao.ra_aluno);
+        if (ret_ra is null)
+            return Conflict(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.CartaoInvalido, null, null));
+        var ra = ret_ra.Value;
+
+        if (!_dac.EhAlunoRegulamenteMatriculado(ra))
+            return Conflict(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null));
 
         if (await _ciclistaRep.EstaProibido(ra, tran))
-            return new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null);
+            return Conflict(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.NaoPermitido, null, null));
 
         if (!await _bicicletarioRep.Existe(solicitacao.bicicletario, tran))
             return BadRequest();
@@ -43,6 +47,10 @@ public class ApiBicicletarioController(IDbConnection conn, Dac dac, Bicicletario
             await tran.ExecuteAsync("insert into  ciclista (ciclista_ra) value (@ra); ", new { ra });
 
         var pontos_possiveis = await _bicicletarioRep.GetPontosPossiveis(solicitacao.bicicletario, tran);
+
+        if (!pontos_possiveis.Any())
+            return Conflict(new RespostaSolicitacaoEmprestimo(StatusSolicitacoaEmprestimo.Indisponivel, null, null));
+            
         (int ponto, int bicicleta) = pontos_possiveis[Random.Shared.Next(pontos_possiveis.Count)];
         await tran.ExecuteAsync(
             @"UPDATE ponto 

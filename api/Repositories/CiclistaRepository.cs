@@ -45,13 +45,11 @@ public class CiclistaRepository()
                         WHERE ciclista_ra = @ra
                         AND (
                             emprestimo_fim IS NULL
-                            OR Now() > Timestampadd(minute, @MINUTOS_TEMPO_MAXIMO_EMPRESTIMO, emprestimo_inicio)
                         )
                     ) 
                 )",
             new
             {
-                MINUTOS_TEMPO_MAXIMO_EMPRESTIMO = MINUTOS_TEMPO_MAXIMO_EMPRESTIMO,
                 ra
             }
         );
