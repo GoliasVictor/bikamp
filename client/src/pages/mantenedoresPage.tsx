@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
-import type { components } from "../lib/api/v1";
+import type { components } from "../lib/api/lastest";
 import { useApi } from '../clientApi';
 import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';

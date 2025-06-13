@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
 import React from 'react'
-import type { components } from "./../lib/api/v1"; 
+import type { components } from "./../lib/api/lastest"; 
 import { useApi } from './../clientApi';
 import { Link } from 'react-router';
 type Emprestimo = components["schemas"]["Emprestimo"];

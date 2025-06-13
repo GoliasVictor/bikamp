@@ -7,6 +7,7 @@ import BicicletaPage from "./pages/bicicletaPage";
 import EmprestimosPage from "./pages/emprestimosPage";
 import EmprestimoPage from "./pages/emprestimoPage";
 import MantenedoresPage from "./pages/mantenedoresPage";
+import SimuladorPage from "./pages/simuladorPage";
 
 
 function App() {
@@ -14,7 +15,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<AppLayout />}>
-          <Route path="*" element={<>not found</>} />
+        <Route path="*" element={<>not found</>} />
+          <Route path="simulador">
+              <Route index element={<SimuladorPage/>} />
+          </Route>
           <Route element={<ProtectedLayout />}>
 
             <Route path="bicicletas">
