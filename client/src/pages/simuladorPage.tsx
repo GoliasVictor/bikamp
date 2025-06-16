@@ -6,6 +6,7 @@ import { useModal } from '../hooks/useModal';
 import {PostInteracaoRaCommand } from '../commands/concreteCommands';
 import { SimuladorService } from '../commands/receivers';
 import EncostarRaModal from '../components/encostarRaModal';
+import { Button } from "@/components/ui/button"
 
 function ResultadoInteracaoRaModal(props : { onOk:() => void, data : components["schemas"]["RespostaSolicitacaoEmprestimo"]} ){
   return <form className="flex flex-col border-2" onSubmit={props.onOk}>
@@ -51,7 +52,7 @@ export default function SimuladorPage() {
     <div style={{ padding: '1rem' }}>
       <h2>Ações do Simulador</h2>
       <div style={{ marginBottom: '1rem' }}>
-        <button type="submit" onClick={openModal}>Encostar RA</button>
+        <Button onClick={openModal}>Encostar RA</Button>
       </div>
     </div>
   );
