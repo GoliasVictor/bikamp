@@ -46,6 +46,7 @@ export default function EncostarRaModal({ onSubmit, onCancel, loading }: Props) 
           <div className="grid gap-2">          
             <Label htmlFor="ra">RA: </Label>
             <Input
+              id="ra"
               type="number"
               required
               value={ra}
