@@ -12,7 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown , Edit, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, Edit, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/table"
 import { StatusBicicleta } from "@/lib/statusBicicleta"
 import { EditarBicicletaDialog } from "./editarBicicletaDialog"
+import { NovaBicicletaDialog } from "./novaBicicletaDialog"
 
 
 
@@ -49,10 +50,18 @@ export type Emprestimo = {
   bicicleta_patrimonio: string,
 }
 export const columns: ColumnDef<Emprestimo>[] = [
- 
+
   {
     accessorKey: "id",
-    header: "Codigo",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Status
+        <ArrowUpDown />
+      </Button>
+    ),
     filterFn: 'includesString',
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("id")}</div>
@@ -62,7 +71,7 @@ export const columns: ColumnDef<Emprestimo>[] = [
     accessorKey: "bicicleta_patrimonio",
     header: ({ column }) => {
       return (
-        <Button 
+        <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -106,18 +115,18 @@ export const columns: ColumnDef<Emprestimo>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row , table}) => {
+    cell: ({ row, table }) => {
       const bicicleta = row.original
-      return ( 
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <EditarBicicletaDialog bicicletaId={bicicleta.id} default={bicicleta} onUpdated={table.options.meta!.onUpdated}/>
-          </Button> 
+      return (
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <EditarBicicletaDialog bicicletaId={bicicleta.id} default={bicicleta} onUpdated={table.options.meta!.onUpdated} />
+        </Button>
       )
     },
   },
 ]
 
-export default function BicicletasTable({ data, onUpdated}: { data : any, onUpdated: () => void }) {
+export default function BicicletasTable({ data, onUpdated }: { data: any, onUpdated: () => void }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -150,17 +159,17 @@ export default function BicicletasTable({ data, onUpdated}: { data : any, onUpda
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between  py-4">
         <Select onValueChange={
           (str) =>
             table.getColumn("status")?.setFilterValue(str)
-          }
+        }
           defaultValue={
             (table.getColumn("status")?.getFilterValue() as string) ?? ""
           }>
-            <SelectTrigger>
-              <SelectValue placeholder="Filtrar status bicicleta " />
-            </SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrar status bicicleta " />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value={"null"}>
               Todos
@@ -172,9 +181,10 @@ export default function BicicletasTable({ data, onUpdated}: { data : any, onUpda
                   {str}
                 </SelectItem>
               ))
-              }
-            </SelectContent>
-          </Select>
+            }
+          </SelectContent>
+        </Select>
+        <NovaBicicletaDialog onUpdated={onUpdated} />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -187,9 +197,9 @@ export default function BicicletasTable({ data, onUpdated}: { data : any, onUpda
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}

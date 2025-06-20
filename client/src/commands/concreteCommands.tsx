@@ -106,6 +106,22 @@ export class PutBicicletasCommand implements BikampCommand {
   }
 }
 
+export class PostBicicletasCommand implements BikampCommand {
+  constructor(
+    private bicicletasService: BicicletaService,
+    private status: StatusBicicletaEnum ,
+    private bicicleta_patrimonio: string
+  ) { }
+
+  async execute(): Promise<void> {
+    return await this.bicicletasService.postBicicleta({
+      status: this.status,
+      bicicleta_patrimonio: this.bicicleta_patrimonio
+    })
+  }
+}
+
+
 export class PostInteracaoRaCommand implements BikampCommand {
   private data: {
     bicicletario: number,
