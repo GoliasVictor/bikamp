@@ -75,7 +75,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
             return UnprocessableEntity();
         using IDbTransaction tran = _conn.BeginTransaction();
         string patrimonio = bicicleta.bicicleta_patrimonio.ToUpper();
-        uint next_id = await tran.QuerySingleAsync<uint>("select max(bicicleta_id)+1 from bicicleta");
+        uint next_id = await tran.QuerySingleAsync<uint>("select COALESCE(max(bicicleta_id), 0)+1 from bicicleta");
         await tran.ExecuteAsync(
             @"INSERT INTO bicicleta (
                 bicicleta_id,
