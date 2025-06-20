@@ -31,15 +31,16 @@ import { StatusBicicleta } from "@/lib/statusBicicleta";
 
 type Props = {
   bicicletaId: number;
-  default: { status: number, bicicleta_patrimonio: string };
+  defaultValue: { status: number, bicicleta_patrimonio: string };
   onUpdated: () => void;
 };
 
-export function EditarBicicletaDialog({bicicletaId, default: defaultValue, onUpdated }: Props) {
+export function EditarBicicletaDialog(props: Props) {
   const client = useApi()
   const bicicletaService = new BicicletaService(client);
   const [open, setOpen] = useState(false);
-
+  console.log("d", props)  
+  let {bicicletaId, defaultValue: defaultValue, onUpdated } = props
   const [status, setStatus] = useState<number>(defaultValue.status);
   const [bicicleta_patrimonio, setPatrimonio] = useState(defaultValue.bicicleta_patrimonio);
 

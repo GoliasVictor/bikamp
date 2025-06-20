@@ -119,7 +119,7 @@ export const columns: ColumnDef<Emprestimo>[] = [
       const bicicleta = row.original
       return (
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <EditarBicicletaDialog bicicletaId={bicicleta.id} default={bicicleta} onUpdated={table.options.meta!.onUpdated} />
+          <EditarBicicletaDialog bicicletaId={bicicleta.id} defaultValue={bicicleta} onUpdated={table.options.meta!.onUpdated} />
         </Button>
       )
     },
