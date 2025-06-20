@@ -92,6 +92,14 @@ export const columns: ColumnDef<Emprestimo>[] = [
     cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("emprestimo_inicio")).toUTCString()}</div>,
   },
   {
+    accessorKey: "bicicleta_id",
+    header: "Bicicleta",
+    filterFn: 'includesString',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("bicicleta_id")}</div>
+    ),
+  },
+  {
     accessorKey: "emprestimo_fim",
     header: ({ column }) => {
       return (

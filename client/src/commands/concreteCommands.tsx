@@ -9,6 +9,7 @@ type Cargo = components["schemas"]["Mantenedor"]["cargo"];
 type Emprestimo = components["schemas"]["Emprestimo"]; 
 type Bicicleta = components["schemas"]["Bicicleta"]; 
 type RespostaSolicitacaoEmprestimo = components["schemas"]["RespostaSolicitacaoEmprestimo"];
+type RequestDevolucao = components["schemas"]["RequestDevolucao"];
 
 //TODO: classes que implementam BikampCommand
 
@@ -104,5 +105,21 @@ export class PostInteracaoRaCommand implements BikampCommand {
 
     async execute(): Promise<RespostaSolicitacaoEmprestimo> {
         return await this.simuladorService.postInteracaoRa(this.data);
+    }
+}
+
+export class PatchDevolverBicicletaCommand implements BikampCommand {
+    private data: RequestDevolucao
+    constructor(
+        private simuladorService: SimuladorService,
+        bicicleta_id: number,
+        bicicletario_id: number,
+        ponto_id: number
+    ) { 
+        this.data = { bicicleta_id, ponto_id, bicicletario_id };
+    }
+
+    async execute(): Promise<[void, any]> {
+        return await this.simuladorService.patchDevolverBicicleta(this.data);
     }
 }
