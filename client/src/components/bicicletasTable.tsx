@@ -59,6 +59,21 @@ export const columns: ColumnDef<Emprestimo>[] = [
     ),
   },
   {
+    accessorKey: "bicicleta_patrimonio",
+    header: ({ column }) => {
+      return (
+        <Button 
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Patrimônio
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="capitalize">{row.getValue("bicicleta_patrimonio")}</div>,
+  },
+  {
     accessorKey: "status",
     header: ({ column }) => {
       return (

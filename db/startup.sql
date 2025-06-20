@@ -40,6 +40,7 @@ CREATE TABLE status_bicicleta (
 
 CREATE TABLE bicicleta (
 	bicicleta_id INT NOT NULL PRIMARY KEY,
+	bicicleta_patrimonio varchar(8) NOT NULL,
 	status_bicicleta_id INT NOT NULL,
 	FOREIGN KEY (status_bicicleta_id ) REFERENCES status_bicicleta(status_bicicleta_id)
 );

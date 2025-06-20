@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Bikamp;
 public enum CargoId {
     Supervisor = 1, 
@@ -22,9 +24,10 @@ public enum StatusBicicletaId {
 }
 
 public record Mantenedor(int mantenedor_id, CargoId cargo, string nome, string senha);
-public record Bicicleta(uint id, StatusBicicletaId status);
+public record Bicicleta(uint id, string bicicleta_patrimonio, StatusBicicletaId status);
+public record PostBicicleta([NotNull]string bicicleta_patrimonio, StatusBicicletaId status);
 public record Ciclista(int ciclista_ra);
-public record BicicletaPonto(int id, StatusBicicletaId status, int? bicicletario, int? ponto);
+public record BicicletaPonto(int id, StatusBicicletaId status, string bicicleta_patrimonio, int? bicicletario, int? ponto);
 public record Emprestimo(
     int ciclista_ra,
     DateTime emprestimo_inicio,
