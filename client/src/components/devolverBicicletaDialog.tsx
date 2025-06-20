@@ -20,14 +20,7 @@ import { SimuladorService } from '../commands/receivers';
 import { useModal } from '../hooks/useModal';
 import { json } from "stream/consumers";
 
-function ResultadoInteracaoRaModal(props: { onOk: () => void, data: components["schemas"]["RespostaSolicitacaoEmprestimo"] }) {
-  return <form className="flex flex-col border-2" onSubmit={props.onOk}>
-    {JSON.stringify(props.data)}
-    <div className="flex flex-row w-fill justify-between">
-      <button className="m-2"> Confirmar </button>
-    </div>
-  </form>
-}
+
 
 export function DevolverBicicletaDialog() {
   const client = useApi()
@@ -41,14 +34,12 @@ export function DevolverBicicletaDialog() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log("handleSubmit", bicicletaId, bicicletario_id);
 
     const command = new PatchDevolverBicicletaCommand(simuladorService, bicicletaId, bicicletario_id, pontoId);
 
     const result = await command.execute()
     setOpen(false);
-    console.log("result", result);
-    toast("Interação RA realizada com sucesso!",
+    toast("Bicicleta devolvida com sucesso!",
       {
         description: JSON.stringify(result),
         

@@ -103,7 +103,10 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     [HttpPut("")]
     public async Task<ActionResult> Put(Bicicleta bicicleta)
     {
-        await _conn.ExecuteAsync("UPDATE bicicleta SET status_bicicleta_id = @status WHERE bicicleta_id = @id;", bicicleta);
+        await _conn.ExecuteAsync(@"UPDATE bicicleta SET 
+            status_bicicleta_id = @status,
+            bicicleta_patrimonio = @bicicleta_patrimonio 
+        WHERE bicicleta_id = @id;", bicicleta);
         return Ok();
     }
 

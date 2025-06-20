@@ -45,6 +45,10 @@ export class BicicletaService {
         const request = await this.client.GET("/bicicletas")
         return request.data ?? []
     }
+  async putBicicleta(data: components["schemas"]["Bicicleta"]): Promise<any> {
+    const request = await this.client.PUT(`/bicicletas`, { body: data });
+    return request.data;
+  }
 }
 
 export class SimuladorService {

@@ -25,9 +25,17 @@ function BicicletasPage() {
     });
 
   }, [])
+
+  function handleBicicletasUpdated() {    
+    getBicicletasCommand.execute().then(res => {
+      if (res != null)
+        setBicicletas(res);
+
+    });
+  }
   return (
     <>
-        <BicicletasTable data={bicicletas}/>
+        <BicicletasTable data={bicicletas} onUpdated={handleBicicletasUpdated}/>
     </>
   )
 }

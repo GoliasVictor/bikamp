@@ -12,7 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown , Edit, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -32,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatusBicicleta } from "@/lib/statusBicicleta"
+import { EditarBicicletaDialog } from "./editarBicicletaDialog"
 
 
 
@@ -45,14 +46,13 @@ export type Payment = {
 export type Emprestimo = {
   id: number,
   status: number,
-  bicicletario: number | null,
-  ponto: number | null
+  bicicleta_patrimonio: string,
 }
 export const columns: ColumnDef<Emprestimo>[] = [
  
   {
     accessorKey: "id",
-    header: "RA",
+    header: "Codigo",
     filterFn: 'includesString',
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("id")}</div>
@@ -103,9 +103,21 @@ export const columns: ColumnDef<Emprestimo>[] = [
       <div className="capitalize center">{row.getValue("ponto")}</div>
     ),
   },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row , table}) => {
+      const bicicleta = row.original
+      return ( 
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <EditarBicicletaDialog bicicletaId={bicicleta.id} default={bicicleta} onUpdated={table.options.meta!.onUpdated}/>
+          </Button> 
+      )
+    },
+  },
 ]
 
-export default function BicicletasTable({ data }: { data : any }) {
+export default function BicicletasTable({ data, onUpdated}: { data : any, onUpdated: () => void }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -124,12 +136,16 @@ export default function BicicletasTable({ data }: { data : any }) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection
     },
+    meta: {
+      onUpdated
+    }
   })
 
   return (
