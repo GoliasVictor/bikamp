@@ -251,9 +251,9 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["Bicicleta"];
-                    "text/json": components["schemas"]["Bicicleta"];
-                    "application/*+json": components["schemas"]["Bicicleta"];
+                    "application/json": components["schemas"]["PostBicicleta"];
+                    "text/json": components["schemas"]["PostBicicleta"];
+                    "application/*+json": components["schemas"]["PostBicicleta"];
                 };
             };
             responses: {
@@ -941,7 +941,7 @@ export interface components {
             bicicletario_id?: number;
             /** Format: int32 */
             ponto_id?: number;
-            status?: string | null;
+            status?: string;
         };
         AtualizarMantenedor: {
             /** Format: int32 */
@@ -953,12 +953,14 @@ export interface components {
         Bicicleta: {
             /** Format: int32 */
             id?: number;
+            bicicleta_patrimonio?: string;
             status?: components["schemas"]["StatusBicicletaId"];
         };
         BicicletaPonto: {
             /** Format: int32 */
             id?: number;
             status?: components["schemas"]["StatusBicicletaId"];
+            bicicleta_patrimonio?: string;
             /** Format: int32 */
             bicicletario?: number | null;
             /** Format: int32 */
@@ -1008,8 +1010,8 @@ export interface components {
             /** Format: int32 */
             mantenedor_id?: number;
             cargo?: components["schemas"]["CargoId"];
-            nome?: string | null;
-            senha?: string | null;
+            nome?: string;
+            senha?: string;
         };
         NovaPenalidadeManual: {
             /** Format: int32 */
@@ -1036,7 +1038,7 @@ export interface components {
             ciclista_ra?: number;
             /** Format: date-time */
             pardon_inicio?: string;
-            justificativa?: string | null;
+            justificativa?: string;
         };
         Penalidade: {
             /** Format: date-time */
@@ -1066,6 +1068,10 @@ export interface components {
             /** Format: int32 */
             bicicleta?: number | null;
             status_bicicleta?: components["schemas"]["StatusBicicletaId"];
+        };
+        PostBicicleta: {
+            bicicleta_patrimonio?: string;
+            status?: components["schemas"]["StatusBicicletaId"];
         };
         RequesicaoEmprestimo: {
             /** Format: int32 */
@@ -1103,7 +1109,7 @@ export interface components {
             penalidade_inicio?: string;
             /** Format: int32 */
             mantenedor_id_perdoador?: number;
-            motivacao_perdao?: string | null;
+            motivacao_perdao?: string;
         };
         RespostaSolicitacaoEmprestimo: {
             status?: components["schemas"]["StatusSolicitacoaEmprestimo"];
@@ -1130,8 +1136,8 @@ export interface components {
         TipoPenalidade: {
             /** Format: int32 */
             tipo_penalidade_id?: number;
-            nome?: string | null;
-            descricao?: string | null;
+            nome?: string;
+            descricao?: string;
         };
     };
     responses: never;

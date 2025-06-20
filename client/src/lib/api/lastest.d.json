@@ -257,17 +257,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Bicicleta"
+                "$ref": "#/components/schemas/PostBicicleta"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Bicicleta"
+                "$ref": "#/components/schemas/PostBicicleta"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Bicicleta"
+                "$ref": "#/components/schemas/PostBicicleta"
               }
             }
           }
@@ -1070,8 +1070,7 @@
             "format": "int32"
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1104,6 +1103,9 @@
             "type": "integer",
             "format": "int32"
           },
+          "bicicleta_patrimonio": {
+            "type": "string"
+          },
           "status": {
             "$ref": "#/components/schemas/StatusBicicletaId"
           }
@@ -1119,6 +1121,9 @@
           },
           "status": {
             "$ref": "#/components/schemas/StatusBicicletaId"
+          },
+          "bicicleta_patrimonio": {
+            "type": "string"
           },
           "bicicletario": {
             "type": "integer",
@@ -1242,12 +1247,10 @@
             "$ref": "#/components/schemas/CargoId"
           },
           "nome": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "senha": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1312,8 +1315,7 @@
             "format": "date-time"
           },
           "justificativa": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1386,6 +1388,18 @@
             "nullable": true
           },
           "status_bicicleta": {
+            "$ref": "#/components/schemas/StatusBicicletaId"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PostBicicleta": {
+        "type": "object",
+        "properties": {
+          "bicicleta_patrimonio": {
+            "type": "string"
+          },
+          "status": {
             "$ref": "#/components/schemas/StatusBicicletaId"
           }
         },
@@ -1474,8 +1488,7 @@
             "format": "int32"
           },
           "motivacao_perdao": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1538,12 +1551,10 @@
             "format": "int32"
           },
           "nome": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "descricao": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
