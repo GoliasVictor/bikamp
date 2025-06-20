@@ -119,8 +119,8 @@ const Navbar1 = ({
               </span>
             </NavLink>
             <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
+              <SheetTrigger >
+                <Button asChild variant="outline" size="icon">
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
