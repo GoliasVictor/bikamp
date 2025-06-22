@@ -19,38 +19,41 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/lastest";
 import { toast } from 'sonner';
-import { useApi } from '../clientApi';
-import { PatchDevolverBicicletaCommand, PutBicicletasCommand } from '../commands/concreteCommands';
-import { BicicletaService, SimuladorService } from '../commands/receivers';
-import { useModal } from '../hooks/useModal';
-import { json } from "stream/consumers";
+import { useApi } from '../clientQuery';
 import { Edit } from "lucide-react";
-import { StatusBicicleta } from "@/lib/statusBicicleta";
+import { StatusBicicleta, StatusBicicletaEnum } from "@/lib/statusBicicleta";
+import { useQueryClient } from '@tanstack/react-query'
 
 type Props = {
   bicicletaId: number;
-  defaultValue: { status: number, bicicleta_patrimonio: string };
-  onUpdated: () => void;
+  defaultValue: { status: number, bicicleta_patrimonio: string }; 
 };
 
 export function EditarBicicletaDialog(props: Props) {
-  const client = useApi()
-  const bicicletaService = new BicicletaService(client);
   const [open, setOpen] = useState(false);
-  console.log("d", props)  
-  let {bicicletaId, defaultValue: defaultValue, onUpdated } = props
-  const [status, setStatus] = useState<number>(defaultValue.status);
+  let {bicicletaId, defaultValue: defaultValue } = props
+  const [status, setStatus] = useState<StatusBicicletaEnum>(defaultValue.status);
   const [bicicleta_patrimonio, setPatrimonio] = useState(defaultValue.bicicleta_patrimonio);
-
+  const queryClient = useQueryClient();
+  const api = useApi()
+  const { mutate } = api.useMutation("put", "/bicicletas", {
+    onSettled: (_data, _error, _variables, _context) => {
+      queryClient.invalidateQueries({ queryKey: ["get"] })
+    },
+  });
+  
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-     
-
-    const command = new PutBicicletasCommand(bicicletaService, bicicletaId, status, bicicleta_patrimonio);
-
-    const result = await command.execute()
+    
+    
+    mutate({
+      body: {
+        id: bicicletaId,
+        status: status,
+        bicicleta_patrimonio: bicicleta_patrimonio
+      }
+    })
     setOpen(false);
     toast("Editado a bicicleta com sucesso!",
       {        
@@ -59,7 +62,6 @@ export function EditarBicicletaDialog(props: Props) {
         },
         duration: 2000,
       })
-    onUpdated();
   }
 
   return (

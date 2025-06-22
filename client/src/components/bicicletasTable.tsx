@@ -12,7 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, Edit, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -119,14 +119,14 @@ export const columns: ColumnDef<Emprestimo>[] = [
       const bicicleta = row.original
       return (
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <EditarBicicletaDialog bicicletaId={bicicleta.id} defaultValue={bicicleta} onUpdated={table.options.meta!.onUpdated} />
+          <EditarBicicletaDialog bicicletaId={bicicleta.id} defaultValue={bicicleta} />
         </Button>
       )
     },
   },
 ]
 
-export default function BicicletasTable({ data, onUpdated }: { data: any, onUpdated: () => void }) {
+export default function BicicletasTable({ data}: { data: any  }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -151,9 +151,6 @@ export default function BicicletasTable({ data, onUpdated }: { data: any, onUpda
       columnFilters,
       columnVisibility,
       rowSelection
-    },
-    meta: {
-      onUpdated
     }
   })
 
@@ -184,7 +181,7 @@ export default function BicicletasTable({ data, onUpdated }: { data: any, onUpda
             }
           </SelectContent>
         </Select>
-        <NovaBicicletaDialog onUpdated={onUpdated} />
+        <NovaBicicletaDialog />
       </div>
       <div className="rounded-md border">
         <Table>

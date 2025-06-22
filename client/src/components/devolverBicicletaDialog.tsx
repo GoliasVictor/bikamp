@@ -12,13 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/lastest";
 import { toast } from 'sonner';
 import { useApi } from '../clientApi';
 import { PatchDevolverBicicletaCommand } from '../commands/concreteCommands';
 import { SimuladorService } from '../commands/receivers';
 import { useModal } from '../hooks/useModal';
-import { json } from "stream/consumers";
 
 
 

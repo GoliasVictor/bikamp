@@ -2,31 +2,29 @@ import { useEffect, useState } from 'react'
 import '../App.css'
 import React from 'react'
 import type { components } from "./../lib/api/lastest"; 
-import { useApi } from './../clientApi';
+import { useApi } from '../clientQuery';
 import { Link } from 'react-router';
 import DataTableDemo from '@/components/mantenedores'
-
+import { useQueryClient } from '@tanstack/react-query'
 type Emprestimo = components["schemas"]["Emprestimo"];
   
 
 export default function EmprestimosPage() {
-  const [emprestimos, setEmprestimos] = useState<Emprestimo[]>([])
   const client = useApi()
+  const queryClient = useQueryClient();
+  const { data, error, isLoading } = client.useQuery("get", "/emprestimos", {}, {
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+  if (error) {
+    return <div>Error: {error}</div>
+  }
 
-  useEffect(() => {
-    
-    client.GET("/emprestimos").then(res => {
-      
-      if (res.data != null) {
-        setEmprestimos(res.data);
-      }
-
-    });
-
-  }, [])
   return (
     <>
-      <DataTableDemo data={emprestimos}/>
+      <DataTableDemo data={data}/>
     </>
   )
 }
