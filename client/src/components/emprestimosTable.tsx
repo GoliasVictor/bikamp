@@ -131,7 +131,7 @@ export const columns: ColumnDef<Emprestimo>[] = [
   },
 ]
 
-export default function DataTableDemo({ data }: { data : any }) {
+export default function EmprestimosTable({ data }: { data : any }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

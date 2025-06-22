@@ -20,14 +20,6 @@ import { useModal } from '../hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { json } from "stream/consumers";
 
-function ResultadoInteracaoRaModal(props: { onOk: () => void, data: components["schemas"]["RespostaSolicitacaoEmprestimo"] }) {
-  return <form className="flex flex-col border-2" onSubmit={props.onOk}>
-    {JSON.stringify(props.data)}
-    <div className="flex flex-row w-fill justify-between">
-      <button className="m-2"> Confirmar </button>
-    </div>
-  </form>
-}
 
 export function InteracaoRaDialog() {
   const client = useApi()
