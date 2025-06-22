@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
 import type { components } from "../lib/api/specs";
-import { useApi } from '../clientApi';
+import { useApi } from '../hooks/useApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';
-import { MantenedorService } from '../services/services';
+import { MantenedorService } from '../lib/services';
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 

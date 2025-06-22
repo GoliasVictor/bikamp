@@ -1,8 +1,8 @@
 import '../App.css'
-import { useApi } from '@/clientApi';
+import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
 import BicicletasTable from '@/components/bicicletasTable';
-import { BicicletaService } from '@/services/services';
+import { BicicletaService } from '@/lib/services';
 
 
 
