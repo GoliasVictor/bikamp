@@ -17,7 +17,7 @@ import { useApi } from '../clientApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SimuladorService } from '../services/services';
 import { useModal } from '../hooks/useModal';
-import { components } from "@/lib/api/lastest";
+import { components } from "@/lib/api/specs";
 
 
 

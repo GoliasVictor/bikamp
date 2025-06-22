@@ -1,5 +1,5 @@
 import createClient, { Middleware } from "openapi-fetch";
-import type { paths } from "./lib/api/lastest"; 
+import type { paths } from "./lib/api/specs"; 
 import { useAuth } from "./hooks/useAuth";
 
 export function useApi() {

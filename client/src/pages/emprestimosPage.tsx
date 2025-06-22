@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
 import React from 'react'
-import type { components } from "../lib/api/lastest"; 
+import type { components } from "../lib/api/specs"; 
 import { useApi } from '@/clientApi';
 import { useQuery } from '@tanstack/react-query';
 import EmprestimosTable from '@/components/emprestimosTable'

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/lastest";
+import type { components } from "../lib/api/specs";
 import { toast } from 'sonner';
 import { useApi } from '../clientApi';
 import { SimuladorService } from '../services/services';

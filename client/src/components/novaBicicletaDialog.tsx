@@ -24,7 +24,7 @@ import { useApi } from '@/clientApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BicicletaService } from '../services/services';
 import { StatusBicicleta, StatusBicicletaEnum } from "@/lib/statusBicicleta";
-import { components } from "@/lib/api/lastest";
+import { components } from "@/lib/api/specs";
 
 
 export function NovaBicicletaDialog() {

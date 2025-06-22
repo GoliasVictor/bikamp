@@ -1,5 +1,5 @@
 import { useApi } from "../clientApi";
-import type { components } from "../lib/api/lastest";
+import type { components } from "../lib/api/specs";
 type Cargo = components["schemas"]["Mantenedor"]["cargo"];
 
 type RequestDevolucao = components["schemas"]["RequestDevolucao"];
