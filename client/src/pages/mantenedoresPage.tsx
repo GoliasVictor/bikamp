@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import '../App.css'
-import type { components } from "../lib/api/specs";
-import { useApi } from '../hooks/useApi';
+import '@/App.css'
+import type { components } from "@/lib/api/specs";
+import { useApi } from '@/hooks/useApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useModal } from '../hooks/useModal';
-import RegistrarMantenedor from '../components/registrarMantenedor';
-import { MantenedorService } from '../lib/services';
+import { useModal } from '@/hooks/useModal';
+import { MantenedorService } from '@/lib/services';
+import { MantenedorNovoDialog } from '@/components/dialogs/mantenedorNovoDialog';
 
 type Mantenedor = components["schemas"]["Mantenedor"];
 
@@ -100,7 +100,7 @@ export default function MantenedoresPage() {
           <option value="nome">Ordenar por Nome</option>
           <option value="cargo">Ordenar por Cargo</option>
         </select>
-        <button type="submit" onClick={openModal}>Novo Mantenedor</button>
+        <MantenedorNovoDialog/>
       </div>
 
       {mantenedoresFiltrados.map((t) =>
