@@ -20,39 +20,43 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from 'sonner';
-import { useApi } from '../clientApi';
-import { PostBicicletasCommand} from '@/commands/concreteCommands';
-import { BicicletaService } from '../commands/receivers';
+import { useApi } from '@/clientApi';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { BicicletaService } from '../services/services';
 import { StatusBicicleta, StatusBicicletaEnum } from "@/lib/statusBicicleta";
+import { components } from "@/lib/api/lastest";
 
-type Props = {
-  onUpdated?: () => void;
-};
 
-export function NovaBicicletaDialog({ onUpdated }: Props) {
+export function NovaBicicletaDialog() {
   const client = useApi()
+  const queryClient = useQueryClient();
   const bicicletaService = new BicicletaService(client);
   const [open, setOpen] = useState(false);
 
-  const [status, setStatus] = useState<number>(1);
+  const [status, setStatus] = useState<StatusBicicletaEnum>(StatusBicicletaEnum.Ativada);
   const [bicicleta_patrimonio, setPatrimonio] = useState("");
-
+  const { mutate }  = useMutation({
+    mutationFn: (data: components["schemas"]["PostBicicleta"]) => {
+      return bicicletaService.postBicicleta(data);
+    },
+    onSuccess: () => {
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
+      toast("Editado a bicicleta com sucesso!",
+        {        
+          action: {
+            label: "Ok", onClick: () => console.log("Ok"),
+          },
+          duration: 2000,
+        })
+      }
+  });
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-     
-
-    const command = new PostBicicletasCommand(bicicletaService, status, bicicleta_patrimonio);
-
-    const result = await command.execute()
-    setOpen(false);
-    toast("Editado a bicicleta com sucesso!",
-      {        
-        action: {
-          label: "Ok", onClick: () => console.log("Ok"),
-        },
-        duration: 2000,
-      })
-    onUpdated?.();
+    mutate({
+      status: status,
+      bicicleta_patrimonio: bicicleta_patrimonio
+    });
   }
 
   return (

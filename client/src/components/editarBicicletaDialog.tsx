@@ -20,10 +20,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from 'sonner';
-import { useApi } from '../clientQuery';
+import { useApi } from '@/clientApi';
 import { Edit } from "lucide-react";
 import { StatusBicicleta, StatusBicicletaEnum } from "@/lib/statusBicicleta";
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { BicicletaService } from "@/services/services";
 
 type Props = {
   bicicletaId: number;
@@ -37,22 +38,22 @@ export function EditarBicicletaDialog(props: Props) {
   const [bicicleta_patrimonio, setPatrimonio] = useState(defaultValue.bicicleta_patrimonio);
   const queryClient = useQueryClient();
   const api = useApi()
-  const { mutate } = api.useMutation("put", "/bicicletas", {
-    onSettled: (_data, _error, _variables, _context) => {
-      queryClient.invalidateQueries({ queryKey: ["get"] })
-    },
-  });
+  const bicicletaService = new BicicletaService(api);
   
+  const { mutate } = useMutation({
+    mutationFn: ( data: { id: number, status: StatusBicicletaEnum, bicicleta_patrimonio: string } ) => {
+      return bicicletaService.putBicicleta(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
+    },
+  })
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    
-    
     mutate({
-      body: {
-        id: bicicletaId,
-        status: status,
-        bicicleta_patrimonio: bicicleta_patrimonio
-      }
+      id: bicicletaId,
+      status: status,
+      bicicleta_patrimonio: bicicleta_patrimonio
     })
     setOpen(false);
     toast("Editado a bicicleta com sucesso!",

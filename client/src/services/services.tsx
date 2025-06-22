@@ -10,7 +10,7 @@ export class MantenedorService {
   constructor(client: ReturnType<typeof useApi>) {
     this.client = client;
   }
-  async getMantenedores(): Promise<any> {
+  async getMantenedores(): Promise<components["schemas"]["Mantenedor"][]> {
     const request = await this.client.GET("/mantenedores");
     return request.data ?? [];
   }
@@ -28,7 +28,7 @@ export class EmprestimosService {
   constructor(client: ReturnType<typeof useApi>) {
     this.client = client;
   }
-  async getEmprestimos(): Promise<any> {
+  async getEmprestimos(): Promise<components["schemas"]["Emprestimo"][]> {
     const request = await this.client.GET("/emprestimos");
     return request.data ?? [];
   }
@@ -41,15 +41,13 @@ export class BicicletaService {
     this.client = client;
   }
 
-  async getBicicletas(): Promise<any> {
-    const request = await this.client.GET("/bicicletas")
-    return request.data ?? []
+  async getBicicletas(): Promise<components["schemas"]["BicicletaPonto"][]> {
+    return (await this.client.GET("/bicicletas")).data ?? []  
   }
   async putBicicleta(data: components["schemas"]["Bicicleta"]): Promise<any> {
-    const request = await this.client.PUT(`/bicicletas`, { body: data });
-    return request.data;
+    return this.client.PUT(`/bicicletas`, { body: data });
   }
-  async postBicicleta(data: components["schemas"]["Bicicleta"]): Promise<any> {
+  async postBicicleta(data: components["schemas"]["PostBicicleta"]): Promise<any> {
     const request = await this.client.POST(`/bicicletas`, { body: data });
     return request.data;
   }
