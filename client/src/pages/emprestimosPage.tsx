@@ -4,7 +4,7 @@ import React from 'react'
 import type { components } from "../lib/api/specs"; 
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
-import EmprestimosTable from '@/components/emprestimosTable'
+import EmprestimosTable from '@/components/tables/emprestimosTable'
 import { useQueryClient } from '@tanstack/react-query'
 import { EmprestimosService } from '@/lib/services';
 type Emprestimo = components["schemas"]["Emprestimo"];
