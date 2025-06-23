@@ -12,7 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, SquareArrowOutUpRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -35,12 +35,28 @@ import { components } from "@/lib/api/specs"
 import cargos from "@/lib/cargos"
 import { MantenedorNovoDialog } from "../dialogs/mantenedorNovoDialog"
 import { StatusPontoEnum } from "@/lib/statusPonto"
+import { NavLink } from "react-router"
 
  
 
 export type Bicicletario = components["schemas"]["Bicicletario"]
 
 export const columns: ColumnDef<Bicicletario>[] = [
+    {
+    id: "open",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const t = row.original
+
+      return (
+        <NavLink className="flex items-center justify-center" to={"/bicicletarios/" + t.id}>
+          <Button variant="ghost">
+            <SquareArrowOutUpRight/>
+          </Button>
+        </NavLink>
+      )
+    },
+  },
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -48,7 +64,7 @@ export const columns: ColumnDef<Bicicletario>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Identiicacao
+        Identificacao
         <ArrowUpDown />
       </Button>
     ),
@@ -82,7 +98,6 @@ export const columns: ColumnDef<Bicicletario>[] = [
       )
     },
     cell: ({ row: { original } }) => {
-      console.log(original.desativado )
       return (
         <div className="capitalize center">{!original.desativado ? "Sim ":  "Nao"}</div>
       )

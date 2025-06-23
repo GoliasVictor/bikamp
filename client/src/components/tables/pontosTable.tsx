@@ -34,31 +34,36 @@ import {
 import { components } from "@/lib/api/specs"
 import cargos from "@/lib/cargos"
 import { MantenedorNovoDialog } from "../dialogs/mantenedorNovoDialog"
+import statusPonto from "@/lib/statusPonto"
+import { PontoNovoDialog } from "@/components/dialogs/pontoNovoDialog"
+import { PontoEditarDialog } from "@/components/dialogs/pontoEditarDialog"
 
- 
+export type Meta = { bicicletario_id : number}   
 
-export type Mantenedor = components["schemas"]["Mantenedor"]
+export type Ponto = Exclude<components["schemas"]["Bicicletario"]["pontos"], null>[0]
 
-export const columns: ColumnDef<Mantenedor>[] = [
+export const columns: ColumnDef<Ponto>[] = [
   {
-    accessorKey: "mantenedor_id",
+    accessorKey: "ponto",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Identiicacao
+        Identificacao
         <ArrowUpDown />
       </Button>
     ),
     filterFn: 'includesString',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("mantenedor_id")}</div>
-    ),
+    cell: ({ row }) => {
+      
+      return (
+        <div className="capitalize">{row.getValue("ponto")}</div>
+      )
+    },
   },
   {
-    filterFn: 'includesString',
-    accessorKey: "cargo",
+    accessorKey: "status_ponto_id",
     header: ({ column }) => {
       return (
         <Button
@@ -70,32 +75,50 @@ export const columns: ColumnDef<Mantenedor>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="capitalize">{cargos.cargoToString(row.getValue("cargo"))}</div>,
+    cell: ({ row }) => <div className="capitalize">{statusPonto.toString(row.getValue("status_ponto_id"))}</div>,
   },
   {
-    accessorKey: "nome",
+    accessorKey: "bicicleta",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nome
+          Bicicleta
           <ArrowUpDown />
         </Button>
       )
     },
     cell: ({ row }) => (
-      <div className="capitalize center">{row.getValue("nome")}</div>
+      <div className="capitalize center">{row.getValue("bicicleta")}</div>
     ),
-  }
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row, table }) => {
+      const o = row.original
+      const meta = (table.options.meta! as Meta)
+      return (
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <PontoEditarDialog defaultValue={{
+            bicicletario_id: meta.bicicletario_id,
+            status: o.status_ponto_id,
+            ponto_id: o.ponto
+          }} />
+        </Button>
+      )
+    },
+  },
 ]
 
-export default function MantenedoresTable({ data}: { data: any  }) {
+export default function PontosTable({ data, bicicletario_id}: { data: any, bicicletario_id : number}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
@@ -116,46 +139,15 @@ export default function MantenedoresTable({ data}: { data: any  }) {
       columnFilters,
       columnVisibility,
       rowSelection
+    },
+    meta: {
+      bicicletario_id: bicicletario_id
     }
   })
 
   return (
     <div className="flex items-center justify-center ">
       <div className="w-min flex-col">
-        <div className="flex items-center justify-between py-4">
-          <Select onValueChange={
-            (str) => {
-              if (str === "null") {
-                table.getColumn("cargo")?.setFilterValue(undefined)
-              }
-              else {
-                table.getColumn("cargo")?.setFilterValue(str)
-              }
-            }
-          }
-            defaultValue={
-              (table.getColumn("cargo")?.getFilterValue() as string) ?? ""
-            }>
-            <SelectTrigger>
-              <SelectValue placeholder="Filtrar status bicicleta " />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={"null"}>
-                Todos
-              </SelectItem>
-
-              {
-                cargos.allCargos().map(([cd, str]) => (
-                  <SelectItem key={cd} value={cd.toString()}>
-                    {str}
-                  </SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
-          
-          <MantenedorNovoDialog/>
-        </div>
         <div className="rounded-md border">
           <Table>
             <TableHeader>

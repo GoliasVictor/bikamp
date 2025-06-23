@@ -1,3 +1,4 @@
+import { timeStamp } from "console";
 import { useApi } from "../hooks/useApi";
 import type { components } from "./api/specs";
 type Cargo = components["schemas"]["Mantenedor"]["cargo"];
@@ -16,7 +17,6 @@ export class MantenedorService {
   }
 
   async postMantenedores(data: { mantenedor_id: number, nome: string; cargo: Cargo; senha: string }): Promise<any> {
-    console.log(data)
     const request = await this.client.POST("/mantenedores", { body: data });
     return request.response ?? []
   }
@@ -69,12 +69,38 @@ export class BicicletariosService {
       }
     })).data ?? []  
   }
-  async postBicicleta(data: components["schemas"]["RequestCreateBicicletario"]): Promise<number> {
+  async deleteBicicletario(id: number): Promise<any> {
+    const request = await this.client.DELETE(`/bicicletarios/{id}`, {
+      params: {
+        path: {
+          id: id
+        }
+      }
+    });
+    if (request.error) {
+      throw Error((request as any).error) 
+    }
+  }
+  async postBicicletario(data: components["schemas"]["RequestCreateBicicletario"]): Promise<number> {
     const request = await this.client.POST(`/bicicletarios`, { body: data });
     if (request.data == undefined) {
       return -1
     }
     return request.data;
+  }
+
+  async postPontoBicicletario(data: components["schemas"]["NovoPonto"]): Promise<any> {
+    const request = await this.client.POST(`/pontos`, { body: data });
+    if (request.error) {
+      throw Error((request as any).error) 
+    }
+  }
+
+  async patchPontoBicicletario(data: components["schemas"]["AtualizacaoPonto"]): Promise<any> {
+    const request = await this.client.PATCH(`/pontos`, { body: data });
+    if (request.error) {
+      throw Error((request as any).error) 
+    }
   }
 }
 

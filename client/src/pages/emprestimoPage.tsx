@@ -1,7 +1,7 @@
 import '../App.css'
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
-import { data, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { EmprestimosService } from '../lib/services';
 
 

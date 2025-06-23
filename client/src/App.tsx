@@ -9,6 +9,7 @@ import EmprestimoPage from "@/pages/emprestimoPage";
 import MantenedoresPage from "@/pages/mantenedoresPage";
 import SimuladorPage from "@/pages/simuladorPage";
 import BicicletariosPage from "@/pages/bicicletariosPage";
+import BicicletarioPage from "@/pages/bicicletarioPage";
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
           </Route>
           <Route path="bicicletarios">
               <Route index element={<BicicletariosPage />} />
-              <Route path=":id" element={<BicicletaPage />} />
+              <Route path=":id" element={<BicicletarioPage />} />
             </Route>
             <Route path="emprestimos">
               <Route index element={<EmprestimosPage />} />

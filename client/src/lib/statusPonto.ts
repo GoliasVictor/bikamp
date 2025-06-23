@@ -12,19 +12,17 @@ let StringStatusPonto: [StatusPontoEnum, string][] = [
 	[StatusPontoEnum.Manutencao, "Em manutencao"],
 	[StatusPontoEnum.Removido, "Removido"],
 ]
-export class StatusPonto {
-                                                  	private status: StatusPontoEnum;
 
-	constructor(status: StatusPontoEnum) {
-		this.status = status;
-	}
-
-
-	toString(): string {
-		const statusString = StringStatusPonto.find(([status]) => status === this.status);
+function toString(status : any): string {
+		const statusString = StringStatusPonto.find(([cdStatus]) => cdStatus === status);
 		return statusString ? statusString[1] : "Desconhecido";
 	}
-	static allStatuses(): [StatusPontoEnum, string][] {
+function all(): [StatusPontoEnum, string][] {
 		return StringStatusPonto;
-	}
+}
+
+export default {
+  StatusPontoEnum, 
+  toString,
+  all
 }
