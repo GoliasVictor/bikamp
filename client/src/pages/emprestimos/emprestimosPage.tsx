@@ -1,7 +1,7 @@
-import '../App.css' 
+import '@/App.css' 
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
-import EmprestimosTable from '@/components/tables/emprestimosTable'
+import EmprestimosTable from '@/pages/emprestimos/emprestimosTable'
 import { EmprestimosService } from '@/lib/services';
   
 

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/table"
 import { components } from "@/lib/api/specs"
 import statusPonto from "@/lib/statusPonto"
-import { PontoEditarDialog } from "@/components/dialogs/pontoEditarDialog"
+import { PontoEditarDialog } from "@/pages/bicicletario/pontoEditarDialog"
 
 export type Meta = { bicicletario_id : number}   
 

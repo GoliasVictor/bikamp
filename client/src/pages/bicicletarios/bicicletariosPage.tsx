@@ -2,7 +2,7 @@ import '@/App.css'
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
 import { BicicletariosService } from '@/lib/services';
-import BicicletariosTable from '@/components/tables/bicicletariosTable';
+import BicicletariosTable from '@/pages/bicicletarios/bicicletariosTable';
 
 export default function BicicletariosPage() { 
   const api = useApi()

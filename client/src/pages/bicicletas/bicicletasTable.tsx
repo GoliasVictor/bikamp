@@ -32,8 +32,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatusBicicleta } from "@/lib/statusBicicleta"
-import { EditarBicicletaDialog } from "@/components/dialogs/editarBicicletaDialog"
-import { NovaBicicletaDialog } from "@/components/dialogs/novaBicicletaDialog"
+import { EditarBicicletaDialog } from "@/pages/bicicleta/editarBicicletaDialog"
+import { NovaBicicletaDialog } from "@/pages/bicicletas/novaBicicletaDialog"
 
 
 

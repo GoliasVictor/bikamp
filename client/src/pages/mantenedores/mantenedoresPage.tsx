@@ -2,7 +2,7 @@ import '@/App.css'
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
 import { MantenedorService } from '@/lib/services';
-import MantenedoresTable from '@/components/tables/mantenedoresTable';
+import MantenedoresTable from '@/pages/mantenedores/mantenedoresTable';
 
 export default function MantenedoresPage() { 
   const api = useApi()

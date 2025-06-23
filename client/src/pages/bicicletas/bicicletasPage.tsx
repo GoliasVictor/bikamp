@@ -1,7 +1,7 @@
-import '../App.css'
+import '@/App.css'
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
-import BicicletasTable from '@/components/tables/bicicletasTable';
+import BicicletasTable from '@/pages/bicicletas/bicicletasTable';
 import { BicicletaService } from '@/lib/services';
 
 

@@ -12,16 +12,9 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, SquareArrowOutUpRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 import {
   Table,
@@ -32,66 +25,98 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { components } from "@/lib/api/specs"
-import cargos from "@/lib/cargos"
-import { MantenedorNovoDialog } from "../dialogs/mantenedorNovoDialog"
+import { NavLink } from "react-router"
+import { BicicletarioNovoDialog } from "./bicicletarioNovoDialog"
 
  
 
-export type Mantenedor = components["schemas"]["Mantenedor"]
+export type Bicicletario = components["schemas"]["Bicicletario"]
 
-export const columns: ColumnDef<Mantenedor>[] = [
+export const columns: ColumnDef<Bicicletario>[] = [
+    {
+    id: "open",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const t = row.original
+
+      return (
+        <NavLink className="flex items-center justify-center" to={"/bicicletarios/" + t.id}>
+          <Button variant="ghost">
+            <SquareArrowOutUpRight/>
+          </Button>
+        </NavLink>
+      )
+    },
+  },
   {
-    accessorKey: "mantenedor_id",
+    accessorKey: "id",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Identiicacao
+        Identificacao
         <ArrowUpDown />
       </Button>
     ),
     filterFn: 'includesString',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("mantenedor_id")}</div>
+      <div className="capitalize">{row.getValue("id")}</div>
     ),
   },
   {
     filterFn: 'includesString',
-    accessorKey: "cargo",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Cargo
-          <ArrowUpDown />
-        </Button>
-      )
+    id: "localizacao",
+    header: ({}) => {
+      return "Localizacao"
+      
     },
-    cell: ({ row }) => <div className="capitalize">{cargos.cargoToString(row.getValue("cargo"))}</div>,
+    cell: ({ row: { original } }) => {
+      return <div className="capitalize">({original.localizacao_latitude}, {original.localizacao_longitude} )</div>
+    },
   },
   {
-    accessorKey: "nome",
+    accessorKey: "desativado",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nome
+          Ativado
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => (
-      <div className="capitalize center">{row.getValue("nome")}</div>
-    ),
+    cell: ({ row: { original } }) => {
+      return (
+        <div className="capitalize center">{!original.desativado ? "Sim ":  "Nao"}</div>
+      )
+    },
+  },
+  {
+    accessorKey: "pontos",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Q. Bicicletas
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row: { original } }) => {
+      console.log(original.desativado )
+      return (
+        <div className="capitalize center">{original.pontos?.filter(p => p.bicicleta != null ).length }</div>
+      )
+    },
   }
 ]
 
-export default function MantenedoresTable({ data}: { data: any  }) {
+export default function BicicletariosTable({ data}: { data: any  }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -122,39 +147,8 @@ export default function MantenedoresTable({ data}: { data: any  }) {
   return (
     <div className="flex items-center justify-center ">
       <div className="w-min flex-col">
-        <div className="flex items-center justify-between py-4">
-          <Select onValueChange={
-            (str) => {
-              if (str === "null") {
-                table.getColumn("cargo")?.setFilterValue(undefined)
-              }
-              else {
-                table.getColumn("cargo")?.setFilterValue(str)
-              }
-            }
-          }
-            defaultValue={
-              (table.getColumn("cargo")?.getFilterValue() as string) ?? ""
-            }>
-            <SelectTrigger>
-              <SelectValue placeholder="Filtrar status bicicleta " />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={"null"}>
-                Todos
-              </SelectItem>
-
-              {
-                cargos.allCargos().map(([cd, str]) => (
-                  <SelectItem key={cd} value={cd.toString()}>
-                    {str}
-                  </SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
-          
-          <MantenedorNovoDialog/>
+        <div className="flex items-center justify-end py-4">
+          <BicicletarioNovoDialog/>
         </div>
         <div className="rounded-md border">
           <Table>

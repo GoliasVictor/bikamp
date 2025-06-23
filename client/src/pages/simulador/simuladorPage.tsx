@@ -1,7 +1,7 @@
-import { DevolverBicicletaDialog } from '@/components/dialogs/devolverBicicletaDialog';
-import '../App.css'
+import { DevolverBicicletaDialog } from '@/pages/simulador/devolverBicicletaDialog';
+import '@/App.css'
 
-import { InteracaoRaDialog } from '@/components/dialogs/interacaoRaDialog';
+import { InteracaoRaDialog } from '@/pages/simulador/interacaoRaDialog';
 
 
 export default function SimuladorPage() {

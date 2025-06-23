@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 //import { useApi } from '../clientApi';
 
 export const LoginPage = () => {

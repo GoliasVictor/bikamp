@@ -1,15 +1,15 @@
 import { Route, Routes } from "react-router";
 import { LoginPage } from '@/pages/loginPage';
-import BicicletasPage from '@/pages/bicicletasPage';
+import BicicletasPage from '@/pages/bicicletas/bicicletasPage';
 import { ProtectedLayout } from "@/Layouts/protectedLayout";
 import { AppLayout } from "@/Layouts/appLayout";
-import BicicletaPage from "@/pages/bicicletaPage";
-import EmprestimosPage from "@/pages/emprestimosPage";
-import EmprestimoPage from "@/pages/emprestimoPage";
-import MantenedoresPage from "@/pages/mantenedoresPage";
-import SimuladorPage from "@/pages/simuladorPage";
-import BicicletariosPage from "@/pages/bicicletariosPage";
-import BicicletarioPage from "@/pages/bicicletarioPage";
+import BicicletaPage from "@/pages/bicicleta/bicicletaPage";
+import EmprestimosPage from "@/pages/emprestimos/emprestimosPage";
+import EmprestimoPage from "@/pages/emprestimo/emprestimoPage";
+import MantenedoresPage from "@/pages/mantenedores/mantenedoresPage";
+import SimuladorPage from "@/pages/simulador/simuladorPage";
+import BicicletariosPage from "@/pages/bicicletarios/bicicletariosPage";
+import BicicletarioPage from "@/pages/bicicletario/bicicletarioPage";
 
 
 function App() {
