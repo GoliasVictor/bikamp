@@ -22,7 +22,7 @@ import { useState } from "react";
 import { toast } from 'sonner';
 import { useApi } from '@/hooks/useApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BicicletaService } from '../lib/services';
+import { BicicletaService } from '../../lib/services';
 import { StatusBicicleta, StatusBicicletaEnum } from "@/lib/statusBicicleta";
 import { components } from "@/lib/api/specs";
 

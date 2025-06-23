@@ -12,34 +12,31 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/specs";
 import { toast } from 'sonner';
-import { useApi } from '../hooks/useApi';
-import { SimuladorService } from '../lib/services';
-import { useModal } from '../hooks/useModal';
+import { useApi } from '@/hooks/useApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { json } from "stream/consumers";
+import { SimuladorService } from '@/lib/services';
+import { useModal } from '@/hooks/useModal';
+import { components } from "@/lib/api/specs";
 
 
-export function InteracaoRaDialog() {
+
+export function DevolverBicicletaDialog() {
   const client = useApi()
   const modal = useModal()
   const simuladorService = new SimuladorService(client);
   const [open, setOpen] = useState(false);
 
-  const [ra, setRA] = useState<number | "">("");
-  const [bicicletario_id, setBicicletarioID] = useState(0);
-  const queryClient = useQueryClient();
-  const { mutate , data} = useMutation({
-    mutationFn: (data: components["schemas"]["RequesicaoEmprestimo"]) => {
-      return simuladorService.postInteracaoRa(data);
+  const [bicicletaId, setBicicletaId] = useState<number>(0);
+  const [bicicletario_id, setBicicletarioId] = useState(0);
+  const [pontoId, setPontoId] = useState<number>(0);
+  const { mutate, data } = useMutation({
+    mutationFn: (data: components["schemas"]["RequestDevolucao"]) => {
+      return simuladorService.patchDevolverBicicleta(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
-      queryClient.invalidateQueries({ queryKey: ["emprestimos"] });
       setOpen(false);
-      console.log("result", data);
-      toast("Interação RA realizada com sucesso!",
+      toast("Bicicleta devolvida com sucesso!",
       {
         description: JSON.stringify(data),
         
@@ -48,45 +45,39 @@ export function InteracaoRaDialog() {
         },
         duration: 2000,
       })
-    },
+    }
   });
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (ra == "") {
-      alert("Por favor, insira um RA válido.");
-      return;
-    }
-    console.log("handleSubmit", ra, bicicletario_id);
-
     mutate({
-      ra_aluno: ra,
-      bicicletario: bicicletario_id
-    });    
-
+      bicicleta_id: bicicletaId,
+      bicicletario_id: bicicletario_id,
+      ponto_id: pontoId
+    });
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Encostar RA</Button>
+        <Button>Devolver Bicicleta</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Simulação de interação de RA com bicicletário</DialogTitle>
+            <DialogTitle>Simulação devolução de bicicleta</DialogTitle>
             <DialogDescription>
-              Inisira o ra e o bicicletario que sera feito a interação.
+              Indique o id da bicicleta e o bicicletario em que a bicicleta sera devolvida.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 my-4">
             <div className="grid gap-3">
-              <Label htmlFor="ra">Codigo cartao: </Label>
+              <Label htmlFor="bicicleta_id">Bicicleta: </Label>
               <Input
-                id="ra"
+                id="bicicleta_id"
                 type="number"
                 required
-                value={ra}
-                onChange={(e) => setRA(Number(e.target.value))}
+                value={bicicletaId}
+                onChange={(e) => setBicicletaId(Number(e.target.value))}
                 style={{ width: "100%" }}
               />
             </div>
@@ -97,7 +88,18 @@ export function InteracaoRaDialog() {
                 type="number"
                 required
                 value={bicicletario_id}
-                onChange={(e) => setBicicletarioID(Number(e.target.value))}
+                onChange={(e) => setBicicletarioId(Number(e.target.value))}
+                style={{ width: "100%" }}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="ponto_id">Bicicletário: </Label>
+              <Input
+                id="ponto_id"
+                type="number"
+                required
+                value={pontoId}
+                onChange={(e) => setPontoId(Number(e.target.value))}
                 style={{ width: "100%" }}
               />
             </div>
