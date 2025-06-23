@@ -91,7 +91,7 @@ export function DevolverBicicletaDialog() {
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="ponto_id">Bicicletário: </Label>
+              <Label htmlFor="ponto_id">Ponto: </Label>
               <Input
                 id="ponto_id"
                 type="number"

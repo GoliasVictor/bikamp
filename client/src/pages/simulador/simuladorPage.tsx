@@ -2,20 +2,34 @@ import { DevolverBicicletaDialog } from '@/pages/simulador/devolverBicicletaDial
 import '@/App.css'
 
 import { InteracaoRaDialog } from '@/pages/simulador/interacaoRaDialog';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 
 export default function SimuladorPage() {
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Ações do Simulador</h2>
-      <div style={{ marginBottom: '1rem' }}>
+    <Card className='h-min w-sm'>
+      <CardHeader>
+        <CardHeader className='flex flex-col items-center'>
+          <CardTitle>
+            Simulador de Bicicletário
+          </CardTitle>
+          <CardDescription>
+            Simule a interação com o bicicletário e as bicicletas usando RA.
+          </CardDescription>
+        </CardHeader>
+
+      </CardHeader>
+      <CardContent>
+      <div className='flex gap-4 flex-col'>
         <InteracaoRaDialog></InteracaoRaDialog>
         <DevolverBicicletaDialog></DevolverBicicletaDialog>
 
       </div>
       
-    </div>
+        
+      </CardContent>
+    </Card>
   );
 }
 
