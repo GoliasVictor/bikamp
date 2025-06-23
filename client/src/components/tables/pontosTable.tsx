@@ -15,14 +15,7 @@ import {
 import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
+ 
 import {
   Table,
   TableBody,
@@ -32,10 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { components } from "@/lib/api/specs"
-import cargos from "@/lib/cargos"
-import { MantenedorNovoDialog } from "../dialogs/mantenedorNovoDialog"
 import statusPonto from "@/lib/statusPonto"
-import { PontoNovoDialog } from "@/components/dialogs/pontoNovoDialog"
 import { PontoEditarDialog } from "@/components/dialogs/pontoEditarDialog"
 
 export type Meta = { bicicletario_id : number}   
@@ -64,13 +54,14 @@ export const columns: ColumnDef<Ponto>[] = [
   },
   {
     accessorKey: "status_ponto_id",
+
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Cargo
+          Situacao
           <ArrowUpDown />
         </Button>
       )
@@ -113,14 +104,16 @@ export const columns: ColumnDef<Ponto>[] = [
   },
 ]
 
-export default function PontosTable({ data, bicicletario_id}: { data: any, bicicletario_id : number}) {
+export default function PontosTable({ data, bicicletario_id, desativado}: { data: any, bicicletario_id : number, desativado: boolean }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
 
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<VisibilityState>({
+      actions: !desativado,
+    })
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({

@@ -140,7 +140,7 @@ export default function BicicletariosPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <PontosTable data={bicicletario!.pontos} bicicletario_id={bicicletario!.id} />
+            <PontosTable data={bicicletario!.pontos} bicicletario_id={bicicletario!.id} desativado={bicicletario.desativado} />
 
           </CardContent>
         </Card>

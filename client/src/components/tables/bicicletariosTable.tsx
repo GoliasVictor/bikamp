@@ -36,6 +36,7 @@ import cargos from "@/lib/cargos"
 import { MantenedorNovoDialog } from "../dialogs/mantenedorNovoDialog"
 import { StatusPontoEnum } from "@/lib/statusPonto"
 import { NavLink } from "react-router"
+import { BicicletarioNovoDialog } from "../dialogs/bicicletarioNovoDialog"
 
  
 
@@ -157,7 +158,7 @@ export default function BicicletariosTable({ data}: { data: any  }) {
     <div className="flex items-center justify-center ">
       <div className="w-min flex-col">
         <div className="flex items-center justify-end py-4">
-          <MantenedorNovoDialog/>
+          <BicicletarioNovoDialog/>
         </div>
         <div className="rounded-md border">
           <Table>
