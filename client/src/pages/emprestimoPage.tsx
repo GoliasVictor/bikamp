@@ -1,7 +1,7 @@
 import '../App.css'
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router';
+import { data, useParams } from 'react-router';
 import { EmprestimosService } from '../lib/services';
 
 
@@ -16,7 +16,7 @@ function EmprestimoPage() {
 
   const mantenedorService = new EmprestimosService(client);
   const { data: emprestimo, error, isLoading } = useQuery({
-    queryKey: ["emprestimos"],
+    queryKey: ["emprestimos", { ra, date}],
     queryFn: async () => {
       const emprestimos = await mantenedorService.getEmprestimos()
       const emp = emprestimos.find((e) => {

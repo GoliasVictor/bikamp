@@ -61,11 +61,12 @@ const Navbar1 = ({
     title: "BIKAMP	",
   },
   menu = [
-    { url: "/"            , title : "Home"   },
-    { url: "/bicicletas"  , title : "Bicicletas"},
-    { url: "/emprestimos" , title : "Empréstimos"},
-    { url: "/mantenedores", title : "Mantenedores"},
-    { url: "/simulador"   , title : "Simulador Bicicletário"},
+    { url: "/"             , title : "Home"   },
+    { url: "/bicicletas"   , title : "Bicicletas"},
+    { url: "/bicicletarios", title : "Bicicletarios"},
+    { url: "/emprestimos"  , title : "Empréstimos"},
+    { url: "/mantenedores" , title : "Mantenedores"},
+    { url: "/simulador"    , title : "Simulador Bicicletário"},
   ],
   auth = {
     login: { title: "Login", url: "/login" },

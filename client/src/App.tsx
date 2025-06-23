@@ -1,13 +1,14 @@
 import { Route, Routes } from "react-router";
-import { LoginPage } from './pages/loginPage';
-import BicicletasPage from './pages/bicicletasPage';
-import { ProtectedLayout } from "./Layouts/protectedLayout";
-import { AppLayout } from "./Layouts/appLayout";
-import BicicletaPage from "./pages/bicicletaPage";
-import EmprestimosPage from "./pages/emprestimosPage";
-import EmprestimoPage from "./pages/emprestimoPage";
-import MantenedoresPage from "./pages/mantenedoresPage";
-import SimuladorPage from "./pages/simuladorPage";
+import { LoginPage } from '@/pages/loginPage';
+import BicicletasPage from '@/pages/bicicletasPage';
+import { ProtectedLayout } from "@/Layouts/protectedLayout";
+import { AppLayout } from "@/Layouts/appLayout";
+import BicicletaPage from "@/pages/bicicletaPage";
+import EmprestimosPage from "@/pages/emprestimosPage";
+import EmprestimoPage from "@/pages/emprestimoPage";
+import MantenedoresPage from "@/pages/mantenedoresPage";
+import SimuladorPage from "@/pages/simuladorPage";
+import BicicletariosPage from "@/pages/bicicletariosPage";
 
 
 function App() {
@@ -23,6 +24,10 @@ function App() {
 
             <Route path="bicicletas">
               <Route index element={<BicicletasPage />} />
+              <Route path=":id" element={<BicicletaPage />} />
+          </Route>
+          <Route path="bicicletarios">
+              <Route index element={<BicicletariosPage />} />
               <Route path=":id" element={<BicicletaPage />} />
             </Route>
             <Route path="emprestimos">

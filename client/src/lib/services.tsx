@@ -53,6 +53,31 @@ export class BicicletaService {
   }
 }
 
+export class BicicletariosService {
+  private client: ReturnType<typeof useApi>
+
+  constructor(client: ReturnType<typeof useApi>) {
+    this.client = client;
+  }
+
+  async getBicicletarios(): Promise<components["schemas"]["Bicicletario"][]> {
+    return (await this.client.GET("/bicicletarios", {
+      params: {
+        query: {
+          detalhado: true
+        }
+      }
+    })).data ?? []  
+  }
+  async postBicicleta(data: components["schemas"]["RequestCreateBicicletario"]): Promise<number> {
+    const request = await this.client.POST(`/bicicletarios`, { body: data });
+    if (request.data == undefined) {
+      return -1
+    }
+    return request.data;
+  }
+}
+
 export class SimuladorService {
   private client: ReturnType<typeof useApi>
 
