@@ -41,6 +41,7 @@ record Bicicletario(
 };
 record Bicicleta (
     int bicicleta_id,
+    string bicicleta_patrimonio,
     int status_bicicleta_id
 ) : Tabela {
     public record PK (int id) : IPrimaryKey<Bicicleta>;

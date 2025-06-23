@@ -54,10 +54,10 @@ public class PenalidadesControllerTest : IDisposable
             new(4, -22.81478224016535, -47.07041111428769),
         ];
         List<Bicicleta> bicicletas = [
-            new(0, 1),
-            new(1, 1),
-            new(12, 1),
-            new(58, 1),
+            new(0,"CJ0CNQ", 1),
+            new(1,"016DQK", 1),
+            new(12,"0QB5MQ", 1),
+            new(58,"M9073E", 1),
         ];
 
 

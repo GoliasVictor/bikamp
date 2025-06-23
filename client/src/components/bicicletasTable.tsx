@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { SquareArrowOutUpRight } from "lucide-react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,18 +12,17 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, Edit, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import {
   Table,
   TableBody,
@@ -33,7 +31,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { NavLink } from "react-router"
+import { StatusBicicleta } from "@/lib/statusBicicleta"
+import { EditarBicicletaDialog } from "./editarBicicletaDialog"
+import { NovaBicicletaDialog } from "./novaBicicletaDialog"
 
 
 
@@ -45,93 +45,88 @@ export type Payment = {
 }
 
 export type Emprestimo = {
-  ciclista_ra: number,
-  emprestimo_inicio: Date,
-  emprestimo_fim: Date | null,
-  bicicletario_id_devolvido: number | null,
-  bicicletario_id_tirado: number,
-  bicicleta_id: number
+  id: number,
+  status: number,
+  bicicleta_patrimonio: string,
 }
 export const columns: ColumnDef<Emprestimo>[] = [
-    {
-    id: "open",
+
+  {
+    accessorKey: "id",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Status
+        <ArrowUpDown />
+      </Button>
+    ),
+    filterFn: 'includesString',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("id")}</div>
+    ),
+  },
+  {
+    accessorKey: "bicicleta_patrimonio",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Patrimônio
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="capitalize">{row.getValue("bicicleta_patrimonio")}</div>,
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="capitalize">{(new StatusBicicleta(row.getValue("status"))).toString()}</div>,
+  },
+  {
+    accessorKey: "bicicletario",
+    header: "Bicicletário",
+    cell: ({ row }) => (
+      <div className="capitalize center">{row.getValue("bicicletario")}</div>
+    ),
+  },
+
+  {
+    accessorKey: "ponto",
+    header: "Ponto",
+    cell: ({ row }) => (
+      <div className="capitalize center">{row.getValue("ponto")}</div>
+    ),
+  },
+  {
+    id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const t = row.original
-
+    cell: ({ row, table }) => {
+      const bicicleta = row.original
       return (
-        <NavLink className="flex items-center justify-center" to={"/emprestimos/" + t.ciclista_ra + "/" + t.emprestimo_inicio?.toString()}>
-          <Button variant="ghost">
-            <SquareArrowOutUpRight/>
-          </Button>
-        </NavLink>
-      )
-    },
-  },
-  {
-    accessorKey: "ciclista_ra",
-    header: "RA",
-    filterFn: 'includesString',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("ciclista_ra")}</div>
-    ),
-  },
-  {
-    accessorKey: "emprestimo_inicio",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Inicio
-          <ArrowUpDown />
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <EditarBicicletaDialog bicicletaId={bicicleta.id} default={bicicleta} onUpdated={table.options.meta!.onUpdated} />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("emprestimo_inicio")).toUTCString()}</div>,
-  },
-  {
-    accessorKey: "bicicleta_id",
-    header: "Bicicleta",
-    filterFn: 'includesString',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("bicicleta_id")}</div>
-    ),
-  },
-  {
-    accessorKey: "emprestimo_fim",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Fim
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase left">{row.getValue("emprestimo_fim") ? new Date(row.getValue("emprestimo_fim")).toUTCString() : ""}</div>,
-  },
-  {
-    accessorKey: "bicicletario_id_devolvido",
-    header: "Devolvido em",
-    cell: ({ row }) => (
-      <div className="capitalize center">{row.getValue("bicicletario_id_devolvido")}</div>
-    ),
-  },
-
-  {
-    accessorKey: "bicicletario_id_tirado",
-    header: "Pego em",
-    cell: ({ row }) => (
-      <div className="capitalize center">{row.getValue("bicicletario_id_tirado")}</div>
-    ),
   },
 ]
 
-export default function DataTableDemo({ data }: { data : any }) {
+export default function BicicletasTable({ data, onUpdated }: { data: any, onUpdated: () => void }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -150,25 +145,46 @@ export default function DataTableDemo({ data }: { data : any }) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection
     },
+    meta: {
+      onUpdated
+    }
   })
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter ra..."
-          value={(table.getColumn("ciclista_ra")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("ciclista_ra")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> 
+      <div className="flex items-center justify-between  py-4">
+        <Select onValueChange={
+          (str) =>
+            table.getColumn("status")?.setFilterValue(str)
+        }
+          defaultValue={
+            (table.getColumn("status")?.getFilterValue() as string) ?? ""
+          }>
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrar status bicicleta " />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={"null"}>
+              Todos
+            </SelectItem>
+
+            {
+              StatusBicicleta.allStatuses().map(([cd, str]) => (
+                <SelectItem key={cd} value={cd.toString()}>
+                  {str}
+                </SelectItem>
+              ))
+            }
+          </SelectContent>
+        </Select>
+        <NovaBicicletaDialog onUpdated={onUpdated} />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -181,9 +197,9 @@ export default function DataTableDemo({ data }: { data : any }) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}

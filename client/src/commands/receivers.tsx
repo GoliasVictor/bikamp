@@ -2,6 +2,7 @@ import { useApi } from "../clientApi";
 import type { components } from "../lib/api/lastest";
 type Cargo = components["schemas"]["Mantenedor"]["cargo"];
 
+type RequestDevolucao = components["schemas"]["RequestDevolucao"];
 //TODO: classes que para cada tipo de dado executam suas requisições   
 export class MantenedorService {
   private client: ReturnType<typeof useApi>
@@ -9,52 +10,65 @@ export class MantenedorService {
   constructor(client: ReturnType<typeof useApi>) {
     this.client = client;
   }
-   async getMantenedores(): Promise<any> {
+  async getMantenedores(): Promise<any> {
     const request = await this.client.GET("/mantenedores");
     return request.data ?? [];
   }
 
   async postMantenedores(data: { mantenedor_id: number, nome: string; cargo: Cargo; senha: string }): Promise<any> {
     console.log(data)
-    const request = await this.client.POST("/mantenedores", {body: data});
+    const request = await this.client.POST("/mantenedores", { body: data });
     return request.response ?? []
   }
 }
 
 export class EmprestimosService {
-    private client: ReturnType<typeof useApi>
+  private client: ReturnType<typeof useApi>
 
-    constructor(client: ReturnType<typeof useApi>) {
+  constructor(client: ReturnType<typeof useApi>) {
     this.client = client;
   }
-   async getEmprestimos(): Promise<any> {
+  async getEmprestimos(): Promise<any> {
     const request = await this.client.GET("/emprestimos");
     return request.data ?? [];
   }
 }
 
 export class BicicletaService {
-    private client: ReturnType<typeof useApi>
+  private client: ReturnType<typeof useApi>
 
-    constructor(client: ReturnType<typeof useApi>) {
-        this.client = client; 
-    }
+  constructor(client: ReturnType<typeof useApi>) {
+    this.client = client;
+  }
 
-    async getBicicletas(): Promise<any>{
-        const request = await this.client.GET("/bicicletas")
-        return request.data ?? []
-    }
+  async getBicicletas(): Promise<any> {
+    const request = await this.client.GET("/bicicletas")
+    return request.data ?? []
+  }
+  async putBicicleta(data: components["schemas"]["Bicicleta"]): Promise<any> {
+    const request = await this.client.PUT(`/bicicletas`, { body: data });
+    return request.data;
+  }
+  async postBicicleta(data: components["schemas"]["Bicicleta"]): Promise<any> {
+    const request = await this.client.POST(`/bicicletas`, { body: data });
+    return request.data;
+  }
 }
 
 export class SimuladorService {
   private client: ReturnType<typeof useApi>
 
   constructor(client: ReturnType<typeof useApi>) {
-      this.client = client; 
+    this.client = client;
   }
 
-  async postInteracaoRa(data : {  bicicletario: number, ra_aluno: number} ): Promise<any>{
+  async postInteracaoRa(data: { bicicletario: number, ra_aluno: number }): Promise<any> {
     const request = await this.client.POST("/api-bicicletario/emprestimos", { body: data });
+    return request.data;
+  }
+
+  async patchDevolverBicicleta(data: RequestDevolucao): Promise<any> {
+    const request = await this.client.PATCH("/api-bicicletario/ponto/bicicleta", { body: data });
     return request.data;
   }
 }

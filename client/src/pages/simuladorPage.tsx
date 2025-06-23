@@ -1,3 +1,4 @@
+import { DevolverBicicletaDialog } from '@/components/devolverBicicletaDialog';
 import '../App.css'
 
 import { InteracaoRaDialog } from '@/components/interacaoRaDialog';
@@ -10,7 +11,10 @@ export default function SimuladorPage() {
       <h2>Ações do Simulador</h2>
       <div style={{ marginBottom: '1rem' }}>
         <InteracaoRaDialog></InteracaoRaDialog>
+        <DevolverBicicletaDialog></DevolverBicicletaDialog>
+
       </div>
+      
     </div>
   );
 }

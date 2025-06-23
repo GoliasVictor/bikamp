@@ -17,7 +17,8 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
             result = await tran.QueryAsync<BicicletaPonto>(
                 @"select 
                     bicicleta.bicicleta_id as id,
-                    bicicleta.status_bicicleta_id as status, 
+                    bicicleta.status_bicicleta_id as status,
+                    bicicleta.bicicleta_patrimonio as bicicleta_patrimonio,
                     ponto.bicicletario_id as bicicletario,
                     ponto.ponto_id as ponto 
                 from bicicleta
@@ -36,6 +37,7 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
             result = await tran.QueryAsync<BicicletaPonto>(@"SELECT 
                     bicicleta.bicicleta_id as id,
                     bicicleta.status_bicicleta_id as status, 
+                    bicicleta.bicicleta_patrimonio as bicicleta_patrimonio,
                     ponto.bicicletario_id as bicicletario,
                     ponto.ponto_id as ponto 
                 from bicicleta
@@ -67,41 +69,44 @@ public class BicicletasController(IDbConnection conn) : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<ActionResult> Post(Bicicleta bicicleta)
+    public async Task<ActionResult> Post(PostBicicleta bicicleta)
     {
         if (!Enum.IsDefined(bicicleta.status))
             return UnprocessableEntity();
         using IDbTransaction tran = _conn.BeginTransaction();
-
-        var bicicleta_existe = await tran.QuerySingleAsync<bool>(
-            @"select exists(
-                select * 
-                from bicicleta 
-                where bicicleta_id = @id
-            )",
-            new { id = bicicleta.id }
-        );
-        if (bicicleta_existe)
-            return Conflict("Bicicleta com o id indicado já existe");
-        
-
+        string patrimonio = bicicleta.bicicleta_patrimonio.ToUpper();
+        uint next_id = await tran.QuerySingleAsync<uint>("select COALESCE(max(bicicleta_id), 0)+1 from bicicleta");
         await tran.ExecuteAsync(
             @"INSERT INTO bicicleta (
                 bicicleta_id,
+                bicicleta_patrimonio,
                 status_bicicleta_id
             ) 
             VALUES (
                 @id,
+                @bicicleta_patrimonio,
                 @status
-            )", bicicleta);
+            )", new
+            {
+                id = next_id, 
+                bicicleta_patrimonio = patrimonio,
+                status = bicicleta.status
+            });
         tran.Commit();
-        return Ok();
+        return Ok(new Bicicleta(
+            id: next_id,
+            bicicleta_patrimonio: patrimonio,
+            status: bicicleta.status
+        ));
     }
 
     [HttpPut("")]
     public async Task<ActionResult> Put(Bicicleta bicicleta)
     {
-        await _conn.ExecuteAsync("UPDATE bicicleta SET status_bicicleta_id = @status WHERE bicicleta_id = @id;", bicicleta);
+        await _conn.ExecuteAsync(@"UPDATE bicicleta SET 
+            status_bicicleta_id = @status,
+            bicicleta_patrimonio = @bicicleta_patrimonio 
+        WHERE bicicleta_id = @id;", bicicleta);
         return Ok();
     }
 

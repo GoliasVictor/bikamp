@@ -1,5 +1,6 @@
 using Bikamp;
 using Bikamp.Repositories;
+using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -18,7 +19,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SupportNonNullableReferenceTypes();
+});
 builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IDbConnection>(_ =>
@@ -40,6 +44,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MapScalarApiReference(option =>
+    {
+        option.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json";
+        
+    });
 }
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
