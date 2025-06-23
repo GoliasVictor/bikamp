@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { toast } from 'sonner';
 import { useApi } from '@/hooks/useApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BicicletariosService } from '../../lib/services';

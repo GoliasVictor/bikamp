@@ -8,14 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/dialog"; 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
@@ -23,7 +16,6 @@ import { toast } from 'sonner';
 import { useApi } from '@/hooks/useApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BicicletariosService } from '../../lib/services';
-import statusPonto, { StatusPontoEnum } from "@/lib/statusPonto";
 import { components } from "@/lib/api/specs";
 
 type NovoBicicletario = components["schemas"]["RequestCreateBicicletario"]

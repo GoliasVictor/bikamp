@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import { useApi } from "../hooks/useApi";
 import type { components } from "./api/specs";
 type Cargo = components["schemas"]["Mantenedor"]["cargo"];

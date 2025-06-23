@@ -2,10 +2,9 @@ import '@/App.css'
 import { useApi } from '@/hooks/useApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BicicletariosService } from '@/lib/services';
-import BicicletariosTable from '@/components/tables/bicicletariosTable';
 import { Navigate, useParams } from 'react-router';
 import { useState } from 'react';
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import PontosTable from '@/components/tables/pontosTable';
 import { Button } from '@/components/ui/button';
 import { PontoNovoDialog } from '@/components/dialogs/pontoNovoDialog';
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/alert"
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,

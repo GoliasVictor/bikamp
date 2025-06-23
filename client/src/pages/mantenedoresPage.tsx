@@ -1,6 +1,6 @@
 import '@/App.css'
 import { useApi } from '@/hooks/useApi';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { MantenedorService } from '@/lib/services';
 import MantenedoresTable from '@/components/tables/mantenedoresTable';
 

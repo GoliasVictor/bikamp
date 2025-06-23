@@ -14,16 +14,14 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from 'sonner';
 import { useApi } from '@/hooks/useApi';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { SimuladorService } from '@/lib/services';
-import { useModal } from '@/hooks/useModal';
 import { components } from "@/lib/api/specs";
 
 
 
 export function DevolverBicicletaDialog() {
   const client = useApi()
-  const modal = useModal()
   const simuladorService = new SimuladorService(client);
   const [open, setOpen] = useState(false);
 

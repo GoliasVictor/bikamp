@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react'
-import '../App.css'
-import React from 'react'
-import type { components } from "../lib/api/specs"; 
+import '../App.css' 
 import { useApi } from '@/hooks/useApi';
 import { useQuery } from '@tanstack/react-query';
 import EmprestimosTable from '@/components/tables/emprestimosTable'
-import { useQueryClient } from '@tanstack/react-query'
 import { EmprestimosService } from '@/lib/services';
-type Emprestimo = components["schemas"]["Emprestimo"];
   
 
 export default function EmprestimosPage() {

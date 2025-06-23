@@ -115,7 +115,7 @@ export const columns: ColumnDef<Emprestimo>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const bicicleta = row.original
       return (
         <Button variant="ghost" className="h-8 w-8 p-0">

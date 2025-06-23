@@ -1,6 +1,6 @@
 import '@/App.css'
 import { useApi } from '@/hooks/useApi';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { BicicletariosService } from '@/lib/services';
 import BicicletariosTable from '@/components/tables/bicicletariosTable';
 

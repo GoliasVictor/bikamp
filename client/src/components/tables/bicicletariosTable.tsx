@@ -15,13 +15,6 @@ import {
 import { ArrowUpDown, SquareArrowOutUpRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 import {
   Table,
@@ -32,9 +25,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { components } from "@/lib/api/specs"
-import cargos from "@/lib/cargos"
-import { MantenedorNovoDialog } from "../dialogs/mantenedorNovoDialog"
-import { StatusPontoEnum } from "@/lib/statusPonto"
 import { NavLink } from "react-router"
 import { BicicletarioNovoDialog } from "../dialogs/bicicletarioNovoDialog"
 
@@ -77,7 +67,7 @@ export const columns: ColumnDef<Bicicletario>[] = [
   {
     filterFn: 'includesString',
     id: "localizacao",
-    header: ({ column }) => {
+    header: ({}) => {
       return "Localizacao"
       
     },

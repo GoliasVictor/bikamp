@@ -1,5 +1,4 @@
-import { Outlet, NavLink } from "react-router";
-import { useAuth } from "../hooks/useAuth";
+import { Outlet } from "react-router";
 import "../App.css";
 import ModalView from "../components/modalView";
 import Menu from "@/components/menu";

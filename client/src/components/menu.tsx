@@ -1,5 +1,5 @@
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
-import { Outlet, NavLink } from "react-router";
+import { Menu } from "lucide-react";
+import { NavLink } from "react-router";
 
 import {
   Accordion,
@@ -97,7 +97,7 @@ const Navbar1 = ({
           <div className="flex gap-4">
             {
               user?.user_login ? <>
-                <span className="text-gray-500 flex inline-flex items-center justify-center gap-2"> Usuário: {user.user_login} </span>
+                <span className="text-gray-500 inline-flex items-center justify-center gap-2"> Usuário: {user.user_login} </span>
                 <Button asChild variant="outline">
                     <NavLink to={auth.login.url}>Sair</NavLink>
                 </Button>
