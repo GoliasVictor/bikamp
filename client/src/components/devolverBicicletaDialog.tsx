@@ -12,13 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/lastest";
 import { toast } from 'sonner';
-import { useApi } from '../clientApi';
-import { PatchDevolverBicicletaCommand } from '../commands/concreteCommands';
-import { SimuladorService } from '../commands/receivers';
+import { useApi } from '../hooks/useApi';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { SimuladorService } from '../lib/services';
 import { useModal } from '../hooks/useModal';
-import { json } from "stream/consumers";
+import { components } from "@/lib/api/specs";
 
 
 
@@ -31,24 +30,30 @@ export function DevolverBicicletaDialog() {
   const [bicicletaId, setBicicletaId] = useState<number>(0);
   const [bicicletario_id, setBicicletarioId] = useState(0);
   const [pontoId, setPontoId] = useState<number>(0);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const command = new PatchDevolverBicicletaCommand(simuladorService, bicicletaId, bicicletario_id, pontoId);
-
-    const result = await command.execute()
-    setOpen(false);
-    toast("Bicicleta devolvida com sucesso!",
+  const { mutate, data } = useMutation({
+    mutationFn: (data: components["schemas"]["RequestDevolucao"]) => {
+      return simuladorService.patchDevolverBicicleta(data);
+    },
+    onSuccess: () => {
+      setOpen(false);
+      toast("Bicicleta devolvida com sucesso!",
       {
-        description: JSON.stringify(result),
+        description: JSON.stringify(data),
         
         action: {
           label: "Ok", onClick: () => console.log("Ok"),
         },
         duration: 2000,
       })
-
+    }
+  });
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    mutate({
+      bicicleta_id: bicicletaId,
+      bicicletario_id: bicicletario_id,
+      ponto_id: pontoId
+    });
   }
 
   return (

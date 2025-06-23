@@ -1,6 +1,6 @@
 import createClient, { Middleware } from "openapi-fetch";
-import type { paths } from "./lib/api/lastest"; 
-import { useAuth } from "./hooks/useAuth";
+import type { paths } from "../lib/api/specs"; 
+import { useAuth } from "./useAuth";
 
 export function useApi() {
 	const client = createClient<paths>({ baseUrl: import.meta.env.VITE_API_URL })

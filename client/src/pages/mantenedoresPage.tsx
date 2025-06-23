@@ -1,25 +1,38 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
-import type { components } from "../lib/api/lastest";
-import { useApi } from '../clientApi';
+import type { components } from "../lib/api/specs";
+import { useApi } from '../hooks/useApi';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '../hooks/useModal';
 import RegistrarMantenedor from '../components/registrarMantenedor';
-import { GetMantenedoresCommand, PostMantenedoresCommand } from '../commands/concreteCommands';
-import { MantenedorService } from '../commands/receivers';
+import { MantenedorService } from '../lib/services';
 
 type Mantenedor = components["schemas"]["Mantenedor"];
-type Cargo = 1 | 2 | 3 | 4 | undefined;
 
-export default function MantenedoresPage() {
-  const [mantenedores, setMantenedores] = useState<Mantenedor[]>([])
+export default function MantenedoresPage() { 
   const [filtro, setFiltro] = useState<string>('')
   const [ordenacao, setOrdenacao] = useState<'id' | 'nome' | 'cargo'>('id')
-  const client = useApi()
+  const api = useApi()
   const modal = useModal()
+  const mantenedorService = new MantenedorService(api);
+  const queryClient = useQueryClient();
 
-  const mantenedorService = new MantenedorService(client);
-  const getMantenedoresCommand = new GetMantenedoresCommand(mantenedorService);
-
+  const { data : mantenedores, isLoading, error } = useQuery({
+    queryKey: ["mantenedores"], 
+    queryFn: async () => await mantenedorService.getMantenedores()
+  })
+  
+  const { mutate } = useMutation({
+    mutationFn: (data: Mantenedor) => {
+      return mantenedorService.postMantenedores(data);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["mantenedores"] });
+      modal.closeModal()
+    },
+  });
+  
   const openModal = () => {
     modal.setModal(
       <RegistrarMantenedor
@@ -31,29 +44,21 @@ export default function MantenedoresPage() {
   }
 
 
-  async function handleSubmit(mantenedor_id: number, nome: string, cargo: Cargo, senha: string) {
-
-    const postMantenedoresCommand = new PostMantenedoresCommand(mantenedorService, mantenedor_id, nome, cargo, senha)
-    
-    if (await postMantenedoresCommand.execute()){
-        modal.closeModal()
-    }
+  async function handleSubmit(data : Mantenedor) {
+    mutate(data)
   }
 
   function handleCancel() {
     modal.closeModal()
   }
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+  if (error) {
+    return <div>Error: {error.name}</div>
+  }
 
-  useEffect(() => {
-    const fetchMantenedores = async () => {
-      const commandOutput = await getMantenedoresCommand.execute();
-      setMantenedores(commandOutput);
-    };
-
-    fetchMantenedores()
-  }, [])
-
-  const mantenedoresFiltrados = mantenedores
+  const mantenedoresFiltrados = mantenedores!
     .filter(m => {
       const termo = filtro.toLowerCase();
       return (

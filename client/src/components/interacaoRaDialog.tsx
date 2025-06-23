@@ -12,22 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/lastest";
+import type { components } from "../lib/api/specs";
 import { toast } from 'sonner';
-import { useApi } from '../clientApi';
-import { PostInteracaoRaCommand } from '../commands/concreteCommands';
-import { SimuladorService } from '../commands/receivers';
+import { useApi } from '../hooks/useApi';
+import { SimuladorService } from '../lib/services';
 import { useModal } from '../hooks/useModal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { json } from "stream/consumers";
 
-function ResultadoInteracaoRaModal(props: { onOk: () => void, data: components["schemas"]["RespostaSolicitacaoEmprestimo"] }) {
-  return <form className="flex flex-col border-2" onSubmit={props.onOk}>
-    {JSON.stringify(props.data)}
-    <div className="flex flex-row w-fill justify-between">
-      <button className="m-2"> Confirmar </button>
-    </div>
-  </form>
-}
 
 export function InteracaoRaDialog() {
   const client = useApi()
@@ -37,7 +29,27 @@ export function InteracaoRaDialog() {
 
   const [ra, setRA] = useState<number | "">("");
   const [bicicletario_id, setBicicletarioID] = useState(0);
-
+  const queryClient = useQueryClient();
+  const { mutate , data} = useMutation({
+    mutationFn: (data: components["schemas"]["RequesicaoEmprestimo"]) => {
+      return simuladorService.postInteracaoRa(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
+      queryClient.invalidateQueries({ queryKey: ["emprestimos"] });
+      setOpen(false);
+      console.log("result", data);
+      toast("Interação RA realizada com sucesso!",
+      {
+        description: JSON.stringify(data),
+        
+        action: {
+          label: "Ok", onClick: () => console.log("Ok"),
+        },
+        duration: 2000,
+      })
+    },
+  });
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (ra == "") {
@@ -46,20 +58,10 @@ export function InteracaoRaDialog() {
     }
     console.log("handleSubmit", ra, bicicletario_id);
 
-    const postInteracaoRaCommand = new PostInteracaoRaCommand(simuladorService, ra, bicicletario_id);
-
-    const result = await postInteracaoRaCommand.execute()
-    setOpen(false);
-    console.log("result", result);
-    toast("Interação RA realizada com sucesso!",
-      {
-        description: JSON.stringify(result),
-        
-        action: {
-          label: "Ok", onClick: () => console.log("Ok"),
-        },
-        duration: 2000,
-      })
+    mutate({
+      ra_aluno: ra,
+      bicicletario: bicicletario_id
+    });    
 
   }
 
@@ -78,7 +80,7 @@ export function InteracaoRaDialog() {
           </DialogHeader>
           <div className="grid gap-4 my-4">
             <div className="grid gap-3">
-              <Label htmlFor="ra">RA: </Label>
+              <Label htmlFor="ra">Codigo cartao: </Label>
               <Input
                 id="ra"
                 type="number"

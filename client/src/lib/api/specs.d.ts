@@ -938,50 +938,50 @@ export interface components {
     schemas: {
         AtualizacaoPonto: {
             /** Format: int32 */
-            bicicletario_id?: number;
+            bicicletario_id: number;
             /** Format: int32 */
-            ponto_id?: number;
-            status?: string;
+            ponto_id: number;
+            status: string;
         };
         AtualizarMantenedor: {
             /** Format: int32 */
-            id?: number;
-            nome?: string | null;
-            senha?: string | null;
-            cargo_id?: components["schemas"]["CargoId"];
+            id: number;
+            nome: string | null;
+            senha: string | null;
+            cargo_id: components["schemas"]["CargoId"];
         };
         Bicicleta: {
             /** Format: int32 */
-            id?: number;
-            bicicleta_patrimonio?: string;
-            status?: components["schemas"]["StatusBicicletaId"];
+            id: number;
+            bicicleta_patrimonio: string;
+            status: components["schemas"]["StatusBicicletaId"];
         };
         BicicletaPonto: {
             /** Format: int32 */
-            id?: number;
-            status?: components["schemas"]["StatusBicicletaId"];
-            bicicleta_patrimonio?: string;
+            id: number;
+            status: components["schemas"]["StatusBicicletaId"];
+            bicicleta_patrimonio: string;
             /** Format: int32 */
-            bicicletario?: number | null;
+            bicicletario: number | null;
             /** Format: int32 */
-            ponto?: number | null;
+            ponto: number | null;
         };
         Bicicletario: {
             /** Format: int32 */
-            id?: number;
+            id: number;
             /** Format: double */
-            localizacao_latitude?: number;
+            localizacao_latitude: number;
             /** Format: double */
-            localizacao_longitude?: number;
-            desativado?: boolean;
-            pontos?: components["schemas"]["BicicletarioPonto"][] | null;
+            localizacao_longitude: number;
+            desativado: boolean;
+            pontos: components["schemas"]["BicicletarioPonto"][] | null;
         };
         BicicletarioPonto: {
             /** Format: int32 */
-            ponto?: number;
-            status_ponto_id?: components["schemas"]["StatusPontoId"];
+            ponto: number;
+            status_ponto_id: components["schemas"]["StatusPontoId"];
             /** Format: int32 */
-            bicicleta?: number | null;
+            bicicleta: number | null;
         };
         /**
          * Format: int32
@@ -990,133 +990,133 @@ export interface components {
         CargoId: 1 | 2 | 3 | 4;
         Ciclista: {
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
         };
         Emprestimo: {
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
             /** Format: date-time */
-            emprestimo_inicio?: string;
+            emprestimo_inicio: string;
             /** Format: date-time */
-            emprestimo_fim?: string | null;
+            emprestimo_fim: string | null;
             /** Format: int32 */
-            bicicletario_id_devolvido?: number | null;
+            bicicletario_id_devolvido: number | null;
             /** Format: int32 */
-            bicicletario_id_tirado?: number;
+            bicicletario_id_tirado: number;
             /** Format: int32 */
-            bicicleta_id?: number;
+            bicicleta_id: number;
         };
         Mantenedor: {
             /** Format: int32 */
-            mantenedor_id?: number;
-            cargo?: components["schemas"]["CargoId"];
-            nome?: string;
-            senha?: string;
+            mantenedor_id: number;
+            cargo: components["schemas"]["CargoId"];
+            nome: string;
+            senha: string;
         };
         NovaPenalidadeManual: {
             /** Format: int32 */
-            mantenedor_id_aplicador?: number;
+            mantenedor_id_aplicador: number;
             /** Format: int32 */
-            tipo_penalidade_id?: number;
+            tipo_penalidade_id: number;
             /** Format: date-time */
-            penalidade_fim?: string | null;
+            penalidade_fim: string | null;
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
             /** Format: date-time */
-            emprestimo_inicio?: string;
-            detalhes?: string | null;
+            emprestimo_inicio: string;
+            detalhes: string | null;
         };
         NovoPonto: {
             /** Format: int32 */
-            bicicletario_id?: number;
+            bicicletario_id: number;
             /** Format: int32 */
-            ponto_id?: number;
-            status_ponto_id?: components["schemas"]["StatusPontoId"];
+            ponto_id: number;
+            status_ponto_id: components["schemas"]["StatusPontoId"];
         };
         PardonRequest: {
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
             /** Format: date-time */
-            pardon_inicio?: string;
-            justificativa?: string;
+            pardon_inicio: string;
+            justificativa: string;
         };
         Penalidade: {
             /** Format: date-time */
-            penalidade_inicio?: string;
+            penalidade_inicio: string;
             /** Format: date-time */
-            penalidade_fim?: string | null;
+            penalidade_fim: string | null;
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
             /** Format: date-time */
-            emprestimo_inicio?: string;
+            emprestimo_inicio: string;
             /** Format: int32 */
-            tipo_penalidade_id?: number;
-            detalhes?: string | null;
+            tipo_penalidade_id: number;
+            detalhes: string | null;
             /** Format: int32 */
-            mantenedor_id_aplicador?: number | null;
+            mantenedor_id_aplicador: number | null;
             /** Format: int32 */
-            mantenedor_id_perdoador?: number | null;
-            penalidade_automatica?: boolean;
-            motivacao_perdao?: string | null;
+            mantenedor_id_perdoador: number | null;
+            penalidade_automatica: boolean;
+            motivacao_perdao: string | null;
         };
         PontoInfo: {
             /** Format: int32 */
-            bicicletario?: number;
+            bicicletario: number;
             /** Format: int32 */
-            ponto?: number;
-            status_ponto?: components["schemas"]["StatusPontoId"];
+            ponto: number;
+            status_ponto: components["schemas"]["StatusPontoId"];
             /** Format: int32 */
-            bicicleta?: number | null;
-            status_bicicleta?: components["schemas"]["StatusBicicletaId"];
+            bicicleta: number | null;
+            status_bicicleta: components["schemas"]["StatusBicicletaId"];
         };
         PostBicicleta: {
-            bicicleta_patrimonio?: string;
-            status?: components["schemas"]["StatusBicicletaId"];
+            bicicleta_patrimonio: string;
+            status: components["schemas"]["StatusBicicletaId"];
         };
         RequesicaoEmprestimo: {
             /** Format: int32 */
-            bicicletario?: number;
+            bicicletario: number;
             /** Format: int32 */
-            ra_aluno?: number;
+            ra_aluno: number;
         };
         RequestCreateBicicletario: {
             /** Format: double */
-            latitude?: number;
+            latitude: number;
             /** Format: double */
-            longitude?: number;
+            longitude: number;
         };
         RequestDevolucao: {
             /** Format: int32 */
-            bicicleta_id?: number;
+            bicicleta_id: number;
             /** Format: int32 */
-            bicicletario_id?: number;
+            bicicletario_id: number;
             /** Format: int32 */
-            ponto_id?: number;
+            ponto_id: number;
         };
         RequestFecharEmprestimo: {
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
             /** Format: date-time */
-            emprestimo_inicio?: string;
-            perda_bicicleta?: boolean;
+            emprestimo_inicio: string;
+            perda_bicicleta: boolean;
         };
         RequestPerdoarPenalidade: {
             /** Format: int32 */
-            ciclista_ra?: number;
+            ciclista_ra: number;
             /** Format: date-time */
-            emprestimo_inicio?: string;
+            emprestimo_inicio: string;
             /** Format: date-time */
-            penalidade_inicio?: string;
+            penalidade_inicio: string;
             /** Format: int32 */
-            mantenedor_id_perdoador?: number;
-            motivacao_perdao?: string;
+            mantenedor_id_perdoador: number;
+            motivacao_perdao: string;
         };
         RespostaSolicitacaoEmprestimo: {
-            status?: components["schemas"]["StatusSolicitacoaEmprestimo"];
+            status: components["schemas"]["StatusSolicitacoaEmprestimo"];
             /** Format: int32 */
-            ponto?: number | null;
+            ponto: number | null;
             /** Format: int32 */
-            bicicleta?: number | null;
+            bicicleta: number | null;
         };
         /**
          * Format: int32
@@ -1135,9 +1135,9 @@ export interface components {
         StatusSolicitacoaEmprestimo: 1 | 2 | 3 | 4;
         TipoPenalidade: {
             /** Format: int32 */
-            tipo_penalidade_id?: number;
-            nome?: string;
-            descricao?: string;
+            tipo_penalidade_id: number;
+            nome: string;
+            descricao: string;
         };
     };
     responses: never;

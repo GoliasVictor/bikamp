@@ -19,37 +19,42 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import type { components } from "../lib/api/lastest";
 import { toast } from 'sonner';
-import { useApi } from '../clientApi';
-import { PatchDevolverBicicletaCommand, PutBicicletasCommand } from '../commands/concreteCommands';
-import { BicicletaService, SimuladorService } from '../commands/receivers';
-import { useModal } from '../hooks/useModal';
-import { json } from "stream/consumers";
+import { useApi } from '@/hooks/useApi';
 import { Edit } from "lucide-react";
-import { StatusBicicleta } from "@/lib/statusBicicleta";
+import { StatusBicicleta, StatusBicicletaEnum } from "@/lib/statusBicicleta";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { BicicletaService } from "@/lib/services";
 
 type Props = {
   bicicletaId: number;
-  default: { status: number, bicicleta_patrimonio: string };
-  onUpdated: () => void;
+  defaultValue: { status: number, bicicleta_patrimonio: string }; 
 };
 
-export function EditarBicicletaDialog({bicicletaId, default: defaultValue, onUpdated }: Props) {
-  const client = useApi()
-  const bicicletaService = new BicicletaService(client);
+export function EditarBicicletaDialog(props: Props) {
   const [open, setOpen] = useState(false);
-
-  const [status, setStatus] = useState<number>(defaultValue.status);
+  let {bicicletaId, defaultValue: defaultValue } = props
+  const [status, setStatus] = useState<StatusBicicletaEnum>(defaultValue.status);
   const [bicicleta_patrimonio, setPatrimonio] = useState(defaultValue.bicicleta_patrimonio);
-
+  const queryClient = useQueryClient();
+  const api = useApi()
+  const bicicletaService = new BicicletaService(api);
+  
+  const { mutate } = useMutation({
+    mutationFn: ( data: { id: number, status: StatusBicicletaEnum, bicicleta_patrimonio: string } ) => {
+      return bicicletaService.putBicicleta(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
+    },
+  })
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-     
-
-    const command = new PutBicicletasCommand(bicicletaService, bicicletaId, status, bicicleta_patrimonio);
-
-    const result = await command.execute()
+    mutate({
+      id: bicicletaId,
+      status: status,
+      bicicleta_patrimonio: bicicleta_patrimonio
+    })
     setOpen(false);
     toast("Editado a bicicleta com sucesso!",
       {        
@@ -58,7 +63,6 @@ export function EditarBicicletaDialog({bicicletaId, default: defaultValue, onUpd
         },
         duration: 2000,
       })
-    onUpdated();
   }
 
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
-import type { components } from "../lib/api/lastest"; 
-import { useApi } from '../clientApi';
+import type { components } from "../lib/api/specs"; 
+import { useApi } from '../hooks/useApi';
 import { useParams } from 'react-router';
 type Bicicleta = components["schemas"]["Bicicleta"];
 
