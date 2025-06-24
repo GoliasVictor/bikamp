@@ -24,7 +24,7 @@ export function InteracaoRaDialog() {
   const [open, setOpen] = useState(false);
 
   const [ra, setRA] = useState<number | "">("");
-  const [bicicletario_id, setBicicletarioID] = useState(0);
+  const [bicicletario_id, setBicicletarioID] = useState<number | "">("");
   const queryClient = useQueryClient();
   const { mutate , data} = useMutation({
     mutationFn: (data: components["schemas"]["RequesicaoEmprestimo"]) => {
@@ -33,6 +33,7 @@ export function InteracaoRaDialog() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
       queryClient.invalidateQueries({ queryKey: ["emprestimos"] });
+      queryClient.invalidateQueries({ queryKey: ["penalidades"] });
       setOpen(false);
       console.log("result", data);
       toast("Interação RA realizada com sucesso!",
@@ -52,11 +53,15 @@ export function InteracaoRaDialog() {
       alert("Por favor, insira um RA válido.");
       return;
     }
+    if (bicicletario_id == "") {
+      alert("Por favor, insira um ID de bicicletário válido.");
+      return;
+    }
     console.log("handleSubmit", ra, bicicletario_id);
 
     mutate({
-      ra_aluno: ra,
-      bicicletario: bicicletario_id
+      ra_aluno: Number(ra),
+      bicicletario: Number(bicicletario_id)
     });    
 
   }
@@ -82,7 +87,7 @@ export function InteracaoRaDialog() {
                 type="number"
                 required
                 value={ra}
-                onChange={(e) => setRA(Number(e.target.value))}
+                onChange={(e) => setRA(e.target.value as number | "")}
                 style={{ width: "100%" }}
               />
             </div>
@@ -93,7 +98,7 @@ export function InteracaoRaDialog() {
                 type="number"
                 required
                 value={bicicletario_id}
-                onChange={(e) => setBicicletarioID(Number(e.target.value))}
+                onChange={(e) => setBicicletarioID(e.target.value as number | "")}
                 style={{ width: "100%" }}
               />
             </div>

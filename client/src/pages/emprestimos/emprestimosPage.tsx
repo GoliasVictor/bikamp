@@ -12,8 +12,7 @@ export default function EmprestimosPage() {
     queryKey: ["emprestimos"],
     queryFn: async () => {
       return emprestimoService.getEmprestimos();
-    },
-    staleTime: 1000 * 60 * 5 // 5 minutes
+    }
   });
   if (isLoading) {
     return <div>Loading...</div>

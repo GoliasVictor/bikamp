@@ -112,11 +112,17 @@ export class SimuladorService {
 
   async postInteracaoRa(data: { bicicletario: number, ra_aluno: number }): Promise<any> {
     const request = await this.client.POST("/api-bicicletario/emprestimos", { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
     return request.data;
   }
 
   async patchDevolverBicicleta(data: RequestDevolucao): Promise<any> {
     const request = await this.client.PATCH("/api-bicicletario/ponto/bicicleta", { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
     return request.data;
   }
 }
@@ -136,6 +142,9 @@ export class PenalidadeService {
   }
   async postPenalidade(data: components["schemas"]["NovaPenalidadeManual"]): Promise<any> {
     const request = await this.client.POST(`/penalidades/manual`, { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
     return request.data;
   }
 }

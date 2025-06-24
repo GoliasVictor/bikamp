@@ -30,6 +30,7 @@ import { NavLink } from "react-router"
 import { useQuery } from '@tanstack/react-query';
 import { useApi } from "@/hooks/useApi"
 import { TipoPenalidadeService } from "@/lib/services"
+import { PenalidadeNovaDialog } from "./penalidadeNovaDialog"
  
 
 export type Penalidade = components["schemas"]["Penalidade"]
@@ -69,7 +70,7 @@ export const columns: ColumnDef<Penalidade>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("emprestimo_inicio")).toLocaleString()}</div>,
+    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("emprestimo_inicio")).toLocaleString("br")}</div>,
   },
   {
     accessorKey: "penalidade_inicio",
@@ -84,7 +85,7 @@ export const columns: ColumnDef<Penalidade>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("penalidade_inicio")).toLocaleString()}</div>,
+    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("penalidade_inicio")).toLocaleString("br")}</div>,
   },
   {
     accessorKey: "tipo_penalidade_id",
@@ -166,12 +167,7 @@ export default function PenalidadesTable({ data}: { data: any  }) {
     <div className="flex items-center justify-center ">
       <div className="w-min flex-col">
         <div className="flex items-center justify-end py-4">
-          <Button variant="link">
-            <NavLink to="/penalidades/novo" className="flex items-center">
-              <SquareArrowOutUpRight className="mr-2 h-4 w-4" />
-              Nova Penalidade
-            </NavLink>
-          </Button>
+          <PenalidadeNovaDialog />
         </div>
         <div className="rounded-md border">
           <Table>

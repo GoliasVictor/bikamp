@@ -25,9 +25,9 @@ export function DevolverBicicletaDialog() {
   const simuladorService = new SimuladorService(client);
   const [open, setOpen] = useState(false);
 
-  const [bicicletaId, setBicicletaId] = useState<number>(0);
-  const [bicicletario_id, setBicicletarioId] = useState(0);
-  const [pontoId, setPontoId] = useState<number>(0);
+  const [bicicletaId, setBicicletaId] = useState<number| "">("");
+  const [bicicletario_id, setBicicletarioId] = useState<number | "">("");
+  const [pontoId, setPontoId] = useState<number | "">(""); 
   const { mutate, data } = useMutation({
     mutationFn: (data: components["schemas"]["RequestDevolucao"]) => {
       return simuladorService.patchDevolverBicicleta(data);
@@ -47,6 +47,10 @@ export function DevolverBicicletaDialog() {
   });
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (bicicletaId === "" || bicicletario_id === "" || pontoId === "") {
+      toast.error("Por favor, preencha todos os campos.");
+      return;
+    }
     mutate({
       bicicleta_id: bicicletaId,
       bicicletario_id: bicicletario_id,
@@ -75,7 +79,7 @@ export function DevolverBicicletaDialog() {
                 type="number"
                 required
                 value={bicicletaId}
-                onChange={(e) => setBicicletaId(Number(e.target.value))}
+                onChange={(e) => setBicicletaId(e.target.value as number | "")}
                 style={{ width: "100%" }}
               />
             </div>
@@ -86,7 +90,7 @@ export function DevolverBicicletaDialog() {
                 type="number"
                 required
                 value={bicicletario_id}
-                onChange={(e) => setBicicletarioId(Number(e.target.value))}
+                onChange={(e) => setBicicletarioId(e.target.value as number | "")}
                 style={{ width: "100%" }}
               />
             </div>
@@ -97,7 +101,7 @@ export function DevolverBicicletaDialog() {
                 type="number"
                 required
                 value={pontoId}
-                onChange={(e) => setPontoId(Number(e.target.value))}
+                onChange={(e) => setPontoId(e.target.value as number | "")}
                 style={{ width: "100%" }}
               />
             </div>
