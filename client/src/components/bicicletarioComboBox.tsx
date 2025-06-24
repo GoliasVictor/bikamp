@@ -1,19 +1,20 @@
 import { useApi } from "@/hooks/useApi";
-import { TipoPenalidadeService } from "@/lib/services";
+import { BicicletariosService } from "@/lib/services";
 import { ComboBox } from "@/components/ui/combo-box";
 import { useQuery } from '@tanstack/react-query';
 
-export default function TipoPenalidadeComboBox(props: {
+export default function BicicletarioComboBox(props: {
   value: number | null,
   onChange: (emprestimo_inicio: number | null) => void,
+  id?: string
 }) {
   const client = useApi();
   const value = props.value?.toString() || ""
-  const service = new TipoPenalidadeService(client);
-  const { data: tipos } = useQuery({
-    queryKey: ["tipos-penalidade"],
+  const service = new BicicletariosService(client);
+  const { data } = useQuery({
+    queryKey: ["bicicletarios"],
     queryFn: async () => {
-      return service.getTiposPenalidade();
+      return service.getBicicletarios();
     },
   });
   function handleChange(idStr: string) {
@@ -22,14 +23,15 @@ export default function TipoPenalidadeComboBox(props: {
     props.onChange(Number(idStr));
   }
   
-  const idsTipos = tipos?.map(e  => e.tipo_penalidade_id.toString()) || []; 
+  const idsTipos = data?.map(e => e.id.toString()) || [];
   
   return (<ComboBox
     value={value}
-    valueToView={(v) => tipos?.find(t => t.tipo_penalidade_id == Number(v))?.nome || ""}
+    valueToView={(v) => data?.find(t => t.id == Number(v))?.id.toString() || ""}
     onChange={handleChange}
     values={idsTipos}
     disabled={idsTipos.length == 0}
-    placeholder="Selecione um tipo de penalidade"
+    placeholder="Selecione um bicicletário"
+    id={props.id}
   />)
 } 

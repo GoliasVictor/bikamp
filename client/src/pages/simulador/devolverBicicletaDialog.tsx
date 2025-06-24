@@ -17,6 +17,9 @@ import { useApi } from '@/hooks/useApi';
 import { useMutation } from '@tanstack/react-query';
 import { SimuladorService } from '@/lib/services';
 import { components } from "@/lib/api/specs";
+import BicicletarioComboBox from "@/components/bicicletarioComboBox";
+import BicicletaComboBox from "@/components/bicicletaComboBox";
+import BicicletarioPontoComboBox from "@/components/bicicletarioPontoComboBox";
 
 
 
@@ -25,9 +28,9 @@ export function DevolverBicicletaDialog() {
   const simuladorService = new SimuladorService(client);
   const [open, setOpen] = useState(false);
 
-  const [bicicletaId, setBicicletaId] = useState<number| "">("");
-  const [bicicletario_id, setBicicletarioId] = useState<number | "">("");
-  const [pontoId, setPontoId] = useState<number | "">(""); 
+  const [bicicletaId, setBicicletaId] = useState<number| null>(null);
+  const [bicicletario_id, setBicicletarioId] = useState<number | null>(null);
+  const [pontoId, setPontoId] = useState<number | null>(null); 
   const { mutate, data } = useMutation({
     mutationFn: (data: components["schemas"]["RequestDevolucao"]) => {
       return simuladorService.patchDevolverBicicleta(data);
@@ -47,7 +50,7 @@ export function DevolverBicicletaDialog() {
   });
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (bicicletaId === "" || bicicletario_id === "" || pontoId === "") {
+    if (bicicletaId === null || bicicletario_id === null || pontoId === null) {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
@@ -74,35 +77,27 @@ export function DevolverBicicletaDialog() {
           <div className="grid gap-4 my-4">
             <div className="grid gap-3">
               <Label htmlFor="bicicleta_id">Bicicleta: </Label>
-              <Input
-                id="bicicleta_id"
-                type="number"
-                required
+              <BicicletaComboBox
                 value={bicicletaId}
-                onChange={(e) => setBicicletaId(e.target.value as number | "")}
-                style={{ width: "100%" }}
+                onChange={setBicicletaId}
+                id="bicicleta_id"
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="bicicletario">Bicicletário: </Label>
-              <Input
-                id="bicicletario"
-                type="number"
-                required
+              <BicicletarioComboBox
                 value={bicicletario_id}
-                onChange={(e) => setBicicletarioId(e.target.value as number | "")}
-                style={{ width: "100%" }}
+                  onChange={(value) => setBicicletarioId(value)}
+                  id="bicicletario"
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="ponto_id">Ponto: </Label>
-              <Input
-                id="ponto_id"
-                type="number"
-                required
+              <BicicletarioPontoComboBox
+                bicicletarioId={bicicletario_id}
                 value={pontoId}
-                onChange={(e) => setPontoId(e.target.value as number | "")}
-                style={{ width: "100%" }}
+                onChange={(value) => setPontoId(value)}
+                id="ponto_id"
               />
             </div>
           </div>

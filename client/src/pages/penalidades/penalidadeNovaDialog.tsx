@@ -28,6 +28,7 @@ import { Plus, PlusIcon } from "lucide-react";
 import EmprestimoCiclistaComboBox from "@/pages/penalidades/emprestimoCiclistaComboBox";
 import TipoPenalidadeComboBox from "./penalidadeTipoComboBox";
 import { Textarea } from "@/components/ui/textarea";
+import CiclistaComboBox from "@/components/ciclistaComboBox";
 
 type NovaPenalidade = components["schemas"]["NovaPenalidadeManual"]
 
@@ -38,7 +39,7 @@ export function PenalidadeNovaDialog() {
   const [open, setOpen] = useState(false);
 
   const [mantenedorIdStr, setMantenedorIdStr] = useState("");
-  const [ciclista_ra, setCiclistaRa] = useState<number | "">(0);
+  const [ciclista_ra, setCiclistaRa] = useState<number | null>(null);
   const [detalhes, setDetalhes] = useState("");
   const [tipo_penalidade_id, setTipoPenalidadeId] = useState<null | number>(null)
   const [emprestimo_inicio, setEmprestimoInicio] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export function PenalidadeNovaDialog() {
       toast.error("Identificação deve ser um número válido.");
       return;
     }
-    if (ciclista_ra === "" || ciclista_ra <= 0) {
+    if (ciclista_ra === null || ciclista_ra <= 0) {
       toast.error("RA do ciclista deve ser um número válido.");
       return;
     }
@@ -97,7 +98,7 @@ export function PenalidadeNovaDialog() {
           Aplicar penalidade manual
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] min-w-sm w-min">
+      <DialogContent className="min-w-sm w-min">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Criar Mantenedor</DialogTitle>
@@ -120,20 +121,17 @@ export function PenalidadeNovaDialog() {
             <div className="flex flex-row gap-3">
               <div className="grid gap-3">
                 <Label htmlFor="ciclista_ra">RA do ciclista: </Label>
-                <Input
+                <CiclistaComboBox
                   id="ciclista_ra"
-                  type="number"
-                  required
                   value={ciclista_ra}
-                  onChange={(e) => setCiclistaRa(e.target.value as number | "")}
-                  style={{ width: "100%" }}
+                  onChange={setCiclistaRa}
                 />
               </div>
               <div className="grid gap-3 text-left">
                 <Label>
                   Hora Emprestimo:
                 </Label>
-                <EmprestimoCiclistaComboBox value={emprestimo_inicio} onChange={setEmprestimoInicio} ciclista_ra={ciclista_ra == "" ? null : ciclista_ra} />
+                <EmprestimoCiclistaComboBox value={emprestimo_inicio} onChange={setEmprestimoInicio} ciclista_ra={ciclista_ra} />
               </div>
 
             </div>
@@ -142,7 +140,7 @@ export function PenalidadeNovaDialog() {
               <Label>
                 Tipo de penalidade:
               </Label>
-              <TipoPenalidadeComboBox value={tipo_penalidade_id} onChange={setTipoPenalidadeId} ciclista_ra={ciclista_ra == "" ? null : ciclista_ra} />
+              <TipoPenalidadeComboBox value={tipo_penalidade_id} onChange={setTipoPenalidadeId} />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="duracao">Duração (dias): </Label>

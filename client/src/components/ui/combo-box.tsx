@@ -21,7 +21,7 @@ import {
 
  
 
-export function ComboBox(props : {value : string, onChange: (value: string) => void, valueToView: (value: string) => string, values: string[], disabled: boolean , placeholder : string } ) {
+export function ComboBox(props : {id?: string,value : string, onChange: (value: string) => void, valueToView: (value: string) => string, values: string[], disabled: boolean , placeholder : string } ) {
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -33,7 +33,8 @@ export function ComboBox(props : {value : string, onChange: (value: string) => v
           role="combobox"
           type="button"
           aria-expanded={open}
-          className="w-min"
+          className="w-full justify-between "
+          id={props.id}
         >
           {props.value   
             ? props.valueToView(props.value)
