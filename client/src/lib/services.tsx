@@ -120,3 +120,34 @@ export class SimuladorService {
     return request.data;
   }
 }
+
+export class PenalidadeService {
+  private client: ReturnType<typeof useApi>
+
+  constructor(client: ReturnType<typeof useApi>) {
+    this.client = client;
+  }
+
+  async getPenalidades(): Promise<components["schemas"]["Penalidade"][]> {
+    return (await this.client.GET("/penalidades")).data ?? []  
+  }
+  async putPenalidade(data: components["schemas"]["RequestPerdoarPenalidade"]): Promise<any> {
+    return this.client.PATCH(`/penalidades`, { body: data });
+  }
+  async postPenalidade(data: components["schemas"]["NovaPenalidadeManual"]): Promise<any> {
+    const request = await this.client.POST(`/penalidades/manual`, { body: data });
+    return request.data;
+  }
+}
+
+export class TipoPenalidadeService {
+  private client: ReturnType<typeof useApi>
+
+  constructor(client: ReturnType<typeof useApi>) {
+    this.client = client;
+  }
+
+  async getTiposPenalidade(): Promise<components["schemas"]["TipoPenalidade"][]> {
+    return (await this.client.GET("/tipo-penalidade")).data ?? []
+  }
+}

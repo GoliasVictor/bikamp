@@ -155,7 +155,7 @@ export default function BicicletasTable({ data}: { data: any  }) {
   })
 
   return (
-    <div className="w-full">
+    <div className="w-min">
       <div className="flex items-center justify-between  py-4">
         <Select onValueChange={
           (str) =>
