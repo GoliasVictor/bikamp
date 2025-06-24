@@ -9,22 +9,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { useApi } from '@/hooks/useApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { EmprestimosService, MantenedorService, PenalidadeService } from '@/lib/services';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { PenalidadeService } from '@/lib/services';
 import { components } from "@/lib/api/specs";
-import { Plus, PlusIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import EmprestimoCiclistaComboBox from "@/pages/penalidades/emprestimoCiclistaComboBox";
 import TipoPenalidadeComboBox from "./penalidadeTipoComboBox";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,7 +40,7 @@ export function PenalidadeNovaDialog() {
 
 
   const { mutate } = useMutation({
-    mutationFn: (data: components["schemas"]["NovaPenalidadeManual"]) => {
+    mutationFn: (data: NovaPenalidade) => {
       return service.postPenalidade(data);
     },
     onSuccess: () => {

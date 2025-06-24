@@ -1,5 +1,4 @@
 import { useApi } from "@/hooks/useApi";
-import {  BicicletaService } from "@/lib/services";
 import { ComboBox } from "@/components/ui/combo-box";
 import { useQuery } from '@tanstack/react-query';
 

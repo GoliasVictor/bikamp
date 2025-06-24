@@ -12,7 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, SquareArrowOutUpRight } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -25,7 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { components } from "@/lib/api/specs"
-import { NavLink } from "react-router"
+
 
 import { useQuery } from '@tanstack/react-query';
 import { useApi } from "@/hooks/useApi"
@@ -137,7 +137,7 @@ export default function PenalidadesTable({ data}: { data: any  }) {
   const api = useApi()
   const service = new TipoPenalidadeService(api)
   
-  const { data: tiposPenalidades, isLoading, error } = useQuery({
+  const { data: tiposPenalidades } = useQuery({
     queryKey: ["tipos-penalidade"], 
     queryFn: async () => await service.getTiposPenalidade()
   })

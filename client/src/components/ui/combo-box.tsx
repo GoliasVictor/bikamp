@@ -44,7 +44,7 @@ export function ComboBox(props : {id?: string,value : string, onChange: (value: 
       </PopoverTrigger>
       <PopoverContent className="w-3xs h-40 p-0">
         <Command filter={
-          (v, search, keywords) => {            
+          (v, search, _keywords) => {            
             return props.valueToView(v).toLocaleLowerCase().includes(search.toLowerCase())  ? 1 : 0
           }
         }>
