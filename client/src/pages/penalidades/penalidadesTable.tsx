@@ -36,12 +36,25 @@ export type Penalidade = components["schemas"]["Penalidade"]
 
 export const columns: ColumnDef<Penalidade>[] = [
   {
+    accessorKey: "penalidade_id",
+    header:  ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Identificador
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    filterFn: 'includesString',
+  },
+
+  {
     accessorKey: "ciclista_ra",
     header: "RA",
     filterFn: 'includesString',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("ciclista_ra")}</div>
-    ),
   },
   {
     accessorKey: "emprestimo_inicio",
@@ -86,7 +99,7 @@ export const columns: ColumnDef<Penalidade>[] = [
       )
       return (
         <div>
-          {tipoPenalidade ? tipoPenalidade.descricao : "Desconhecido"}
+          {tipoPenalidade ? tipoPenalidade.nome : "Desconhecido"}
         </div>
       )
     }
@@ -97,12 +110,11 @@ export const columns: ColumnDef<Penalidade>[] = [
     cell: ({ row }) => {
       const penalidadeFim = row.original.penalidade_fim
       const mantenedorId = row.original.mantenedor_id_perdoador
-
       return (
         <div className="capitalize">
-          {penalidadeFim
+          { !penalidadeFim || (new Date(penalidadeFim) < new Date(Date.now()))
             ? (
-              mantenedorId ? "Fechada (Perdoada)" : "Fechada"
+              mantenedorId ? "Perdoada" : "Fechada"
             )
             : "Aberta"}
         </div>

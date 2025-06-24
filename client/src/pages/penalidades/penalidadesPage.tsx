@@ -22,7 +22,7 @@ export default function PenalidadesPage() {
 
   return (
     <>
-      <PenalidadesTable data={penalidades?.filter(p => p.penalidade_fim == null)}/>
+      <PenalidadesTable data={penalidades}/>
       
     </>
   );

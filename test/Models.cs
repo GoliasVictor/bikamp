@@ -68,6 +68,7 @@ record Emprestimo (
     public IPrimaryKey getPk() => new PK(ciclista_ra, emprestimo_inicio);
 };
 record Penalidade (
+    int penalidade_id,
     DateTime penalidade_inicio,
     int ciclista_ra, 
     DateTime emprestimo_inicio,
@@ -80,11 +81,9 @@ record Penalidade (
     string? motivacao_perdao
 ) : Tabela {
     public record PK ( 
-        DateTime penalidade_inicio, 
-        int ciclista_ra, 
-        DateTime emprestimo_inicio
+        int penalidade_id
     ) : IPrimaryKey<Penalidade>;
 
-    public IPrimaryKey getPk() => new PK(penalidade_inicio, ciclista_ra, emprestimo_inicio);
+    public IPrimaryKey getPk() => new PK(penalidade_id);
 }
 

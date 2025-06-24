@@ -7,6 +7,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
 {
     private readonly IDbConnection _conn = conn;
     public record Penalidade(
+        int penalidade_id,
         DateTime penalidade_inicio,
         DateTime? penalidade_fim,
         int ciclista_ra,
@@ -24,6 +25,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
         using IDbTransaction tran = _conn.BeginTransaction();
         var result = await tran.QueryAsync<Penalidade>(
             @"SELECT 
+                penalidade_id,
                 penalidade_inicio,
                 penalidade_fim,
                 ciclista_ra,
@@ -48,7 +50,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
         string? detalhes
     );
     [HttpPost("manual")]
-    public async Task<ActionResult> Post(NovaPenalidadeManual penalidade)
+    public async Task<ActionResult<int>> Post(NovaPenalidadeManual penalidade)
     {
         DateTime penalidade_inicio = DateTime.Now;
         if (penalidade.penalidade_fim < penalidade_inicio)
@@ -87,8 +89,12 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
             return Conflict("Emprestimo indicado não existe");
         if (!tipoExiste)
             return Conflict("Não existe nenhum tipo de penalidade com o id indicado em 'tipo_penalidade_id'");
+        int next_id = await tran.QuerySingleAsync<int>(
+            @"SELECT COALESCE(MAX(penalidade_id), 0) + 1 FROM penalidade"
+        );
         await tran.ExecuteAsync(
             @"INSERT INTO penalidade (  
+                penalidade_id,
                 penalidade_inicio, 
                 penalidade_fim,
                 ciclista_ra,
@@ -99,6 +105,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
                 mantenedor_id_aplicador
             ) 
             VALUES (
+                @penalidade_id,
                 @penalidade_inicio,
                 @penalidade_fim,
                 @ciclista_ra,
@@ -110,6 +117,7 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
             )",
             new
             {
+                penalidade_id = next_id,
                 penalidade_inicio = penalidade_inicio,
                 mantenedor_id_aplicador = penalidade.mantenedor_id_aplicador,
                 tipo_penalidade_id = penalidade.tipo_penalidade_id,
@@ -120,12 +128,10 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
             }
         );
         tran.Commit();
-        return Ok();
+        return Ok(next_id);
     }
     public record RequestPerdoarPenalidade(
-        int ciclista_ra,
-        DateTime emprestimo_inicio,
-        DateTime penalidade_inicio,
+        int penalidade_id,
         int mantenedor_id_perdoador,
         string motivacao_perdao
     );
@@ -154,14 +160,10 @@ public class PenalidaesController(IDbConnection conn) : ControllerBase
             SET 
                 mantenedor_id_perdoador = @mantenedor_id_perdoador,
                 motivacao_perdao = @motivacao_perdao 
-            WHERE ciclista_ra = @ciclista_ra 
-              and penalidade_inicio = @penalidade_inicio
-              and emprestimo_inicio = @penalidade_inicio;",
+            WHERE penalidade_id = @penalidade_id;",
             new
             {
-                ciclista_ra = request.ciclista_ra,
-                emprestimo_inicio = request.emprestimo_inicio,
-                penalidade_inicio = request.penalidade_inicio,
+                penalidade_id = request.penalidade_id,
                 mantenedor_id_perdoador = request.mantenedor_id_perdoador,
                 motivacao_perdao = request.motivacao_perdao
             }
