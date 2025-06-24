@@ -63,14 +63,14 @@ export function DevolverBicicletaDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Devolver Bicicleta</Button>
+        <Button>Encaixar Bicicleta</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Simulação devolução de bicicleta</DialogTitle>
+            <DialogTitle>Simulação encaixe de bicicleta</DialogTitle>
             <DialogDescription>
-              Indique o id da bicicleta e o bicicletario em que a bicicleta sera devolvida.
+              Indique o id da bicicleta e o bicicletario em que a bicicleta foi encaixada.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 my-4">

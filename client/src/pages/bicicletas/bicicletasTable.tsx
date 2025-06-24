@@ -32,7 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatusBicicleta } from "@/lib/statusBicicleta"
-import { EditarBicicletaDialog } from "@/pages/bicicleta/editarBicicletaDialog"
+import { EditarBicicletaDialog } from "@/pages/bicicletas/editarBicicletaDialog"
 import { NovaBicicletaDialog } from "@/pages/bicicletas/novaBicicletaDialog"
 
 

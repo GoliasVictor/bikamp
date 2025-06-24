@@ -147,6 +147,14 @@ export class PenalidadeService {
     }
     return request.data;
   }
+  async perdoarPenalidade(data: components["schemas"]["RequestPerdoarPenalidade"]): Promise<any> {
+    const request = await this.client.PATCH(`/penalidades`, { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
+    return request.data;
+  }
+  
 }
 
 export class TipoPenalidadeService {

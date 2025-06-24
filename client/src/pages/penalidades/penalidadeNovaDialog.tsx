@@ -22,6 +22,7 @@ import EmprestimoCiclistaComboBox from "@/pages/penalidades/emprestimoCiclistaCo
 import TipoPenalidadeComboBox from "./penalidadeTipoComboBox";
 import { Textarea } from "@/components/ui/textarea";
 import CiclistaComboBox from "@/components/ciclistaComboBox";
+import { useAuth } from "@/hooks/useAuth";
 
 type NovaPenalidade = components["schemas"]["NovaPenalidadeManual"]
 
@@ -31,7 +32,8 @@ export function PenalidadeNovaDialog() {
   const service = new PenalidadeService(client);
   const [open, setOpen] = useState(false);
 
-  const [mantenedorIdStr, setMantenedorIdStr] = useState("");
+  const user = useAuth();
+  const mantenedorId = user?.user?.mantenedor_id!;
   const [ciclista_ra, setCiclistaRa] = useState<number | null>(null);
   const [detalhes, setDetalhes] = useState("");
   const [tipo_penalidade_id, setTipoPenalidadeId] = useState<null | number>(null)
@@ -51,11 +53,6 @@ export function PenalidadeNovaDialog() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const mantenedorId = parseInt(mantenedorIdStr);
-    if (isNaN(mantenedorId)) {
-      toast.error("Identificação deve ser um número válido.");
-      return;
-    }
     if (ciclista_ra === null || ciclista_ra <= 0) {
       toast.error("RA do ciclista deve ser um número válido.");
       return;
@@ -78,7 +75,7 @@ export function PenalidadeNovaDialog() {
       detalhes: detalhes == "" ? null : detalhe,
       tipo_penalidade_id: tipo_penalidade_id,
       emprestimo_inicio: emprestimo_inicio,
-      mantenedor_id_aplicador: Number(mantenedorIdStr),
+      mantenedor_id_aplicador: mantenedorId,
       penalidade_fim: (new Date(Date.now() + duracaoDias * 24 * 60 * 60 * 1000)).toISOString()
     });
   }
@@ -94,23 +91,13 @@ export function PenalidadeNovaDialog() {
       <DialogContent className="min-w-sm w-min">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Criar Mantenedor</DialogTitle>
+            <DialogTitle>Aplicar penalidade manualmente</DialogTitle>
             <DialogDescription>
-              Insira os dados do novo mantenedor.
+              Insira os dados da penalidade.
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 my-4">
-            <div className="grid gap-3">
-              <Label htmlFor="mantenedor_id">Identificador Mantenador: </Label>
-              <Input
-                id="mantenedor_id"
-                type="number"
-                required
-                value={mantenedorIdStr}
-                onChange={(e) => setMantenedorIdStr(e.target.value)}
-              />
-            </div>
             <div className="flex flex-row gap-3">
               <div className="grid gap-3">
                 <Label htmlFor="ciclista_ra">RA do ciclista: </Label>

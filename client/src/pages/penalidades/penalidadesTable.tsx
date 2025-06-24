@@ -12,7 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -31,6 +31,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useApi } from "@/hooks/useApi"
 import { TipoPenalidadeService } from "@/lib/services"
 import { PenalidadeNovaDialog } from "./penalidadeNovaDialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { PerdoarPenalidadeDialog } from "./perdoarPenalidadeDialog"
  
 
 export type Penalidade = components["schemas"]["Penalidade"]
@@ -113,7 +115,7 @@ export const columns: ColumnDef<Penalidade>[] = [
       const mantenedorId = row.original.mantenedor_id_perdoador
       return (
         <div className="capitalize">
-          { !penalidadeFim || (new Date(penalidadeFim) < new Date(Date.now()))
+          { !penalidadeFim || (new Date(penalidadeFim) < new Date(Date.now())) || row.original.mantenedor_id_perdoador
             ? (
               mantenedorId ? "Perdoada" : "Fechada"
             )
@@ -121,6 +123,30 @@ export const columns: ColumnDef<Penalidade>[] = [
         </div>
       )
     }
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const penalidade = row.original
+      return (
+        <>
+          { (penalidade.penalidade_fim && (new Date(penalidade.penalidade_fim) >= new Date(Date.now()))) && (<DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <PerdoarPenalidadeDialog penalidadeId={row.original.penalidade_id} />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>)}
+        </>
+      )
+    },
   },
 
 

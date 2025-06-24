@@ -6,7 +6,8 @@ import { useLocalStorage } from "./useLocalStorage";
 const AuthContext = createContext<AuthContextData | null>(null);
 type UserData = {
 	user_login: string ,
-  jwtToken: string 
+  jwtToken: string, 
+  mantenedor_id: number,
 }
 type AuthContextData = {
   user : UserData | null

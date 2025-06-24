@@ -1,18 +1,35 @@
 import { FormEventHandler, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import MantenedorComboBox from "@/components/mantenedorComboBox";
 //import { useApi } from '../clientApi';
+import { useQuery } from '@tanstack/react-query';
+import { useApi } from "@/hooks/useApi";
+import { toast } from "sonner";
 
 export const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [mantenedorId, setMantenedorId] = useState<number| null>(null);
   const { login, logout, user } = useAuth()!;
-   //const api = useApi();
-
+  //const api = useApi();
+  const client = useApi();
+  const { data , isLoading} = useQuery({
+    queryKey: ["mantenedores"],
+    queryFn: async () => {
+      return (await client.GET("/mantenedores")).data
+    },
+  });
   const handleLogin: FormEventHandler = async (e) => {
     e.preventDefault();
+    if (!mantenedorId) {
+      toast.error("Por favor, selecione um mantenedor.");
+      return;
+    }
     await login({
-      user_login: username,
-      jwtToken: "undefined"!
+      user_login: data?.find(t => t.mantenedor_id == mantenedorId)?.nome || "Convidado",
+      jwtToken: "undefined"!,
+      mantenedor_id: mantenedorId
     });
   };
 
@@ -31,7 +48,9 @@ export const LoginPage = () => {
     //.catch(function (error) {
     //  console.log(error);
     //});
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="p-4 max-w-md mx-auto">
       <p className="mb-8 text-center text-lg">
@@ -39,39 +58,35 @@ export const LoginPage = () => {
       </p>
 
       {!user?.user_login ? (
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="flex items-center gap-3">
-            <label htmlFor="username" className="w-20">Usuário:</label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-[200px] p-2 border border-gray-300 rounded"
-            />
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <label htmlFor="password" className="w-20">Senha:</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-[200px] p-2 border border-gray-300 rounded"
-            />
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="w-20"></div>
-            <button 
-              type="submit" 
-              className="w-[200px] p-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
+        <Card>
+          <CardHeader>
+            <CardTitle>
               Login
-            </button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+          <div className="grid gap-4 my-4">
+            <div className="grid gap-3">
+              <Label htmlFor="username">Usuário:</Label>
+              <MantenedorComboBox
+                value={mantenedorId}
+                onChange={setMantenedorId}
+              />
+            </div>
           </div>
-        </form>
+   
+          
+          <div className="flex items-center justify-end gap-3">
+            <Button type="submit" >
+              Login
+            </Button>
+          </div>
+          </form>
+        
+          </CardContent>
+        </Card>
+          
       ) : (
         <div className="flex justify-center">
           <button 
