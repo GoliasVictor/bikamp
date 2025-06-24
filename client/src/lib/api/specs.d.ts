@@ -720,7 +720,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": number;
+                        "application/json": number;
+                        "text/json": number;
+                    };
                 };
             };
         };
@@ -1041,6 +1045,8 @@ export interface components {
             justificativa: string;
         };
         Penalidade: {
+            /** Format: int32 */
+            penalidade_id: number;
             /** Format: date-time */
             penalidade_inicio: string;
             /** Format: date-time */
@@ -1102,11 +1108,7 @@ export interface components {
         };
         RequestPerdoarPenalidade: {
             /** Format: int32 */
-            ciclista_ra: number;
-            /** Format: date-time */
-            emprestimo_inicio: string;
-            /** Format: date-time */
-            penalidade_inicio: string;
+            penalidade_id: number;
             /** Format: int32 */
             mantenedor_id_perdoador: number;
             motivacao_perdao: string;

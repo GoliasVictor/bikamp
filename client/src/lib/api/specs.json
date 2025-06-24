@@ -807,7 +807,27 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
           }
         }
       }
@@ -1323,6 +1343,10 @@
       "Penalidade": {
         "type": "object",
         "properties": {
+          "penalidade_id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "penalidade_inicio": {
             "type": "string",
             "format": "date-time"
@@ -1471,17 +1495,9 @@
       "RequestPerdoarPenalidade": {
         "type": "object",
         "properties": {
-          "ciclista_ra": {
+          "penalidade_id": {
             "type": "integer",
             "format": "int32"
-          },
-          "emprestimo_inicio": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "penalidade_inicio": {
-            "type": "string",
-            "format": "date-time"
           },
           "mantenedor_id_perdoador": {
             "type": "integer",
