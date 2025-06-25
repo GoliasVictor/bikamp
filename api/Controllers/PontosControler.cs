@@ -99,7 +99,7 @@ public class PontosController(IDbConnection conn) : ControllerBase
         tran.Commit();
         return Ok();
     }
-    public record AtualizacaoPonto(int bicicletario_id, int ponto_id, string status);
+    public record AtualizacaoPonto(int bicicletario_id, int ponto_id, StatusPontoId status);
 
     [HttpPatch("")]
     public async Task<ActionResult> Patch(AtualizacaoPonto ponto)
@@ -108,7 +108,7 @@ public class PontosController(IDbConnection conn) : ControllerBase
         await tran.ExecuteAsync(
             @"UPDATE ponto 
             SET 
-                  status = @status 
+                  status_ponto_id = @status 
             WHERE bicicletario_id = @bicicletario_id and ponto_id = @ponto_id;",
             ponto);
         tran.Commit();

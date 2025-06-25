@@ -54,8 +54,12 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
         }
         
         if(request.perda_bicicleta){
+            int next_id = await tran.QuerySingleAsync<int>(
+                @"SELECT COALESCE(MAX(penalidade_id), 0) + 1 FROM penalidade"
+            );
             await tran.ExecuteAsync(
                 @"INSERT INTO penalidade(
+                    penalidade_id,
                     penalidade_inicio, 
                     ciclista_ra, 
                     emprestimo_inicio, 
@@ -64,6 +68,7 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
                     penalidade_fim
                 ) 
                 VALUES (
+                    @penalidade_id
                     now(),
                     @ciclista_ra,
                     @emprestimo_inicio,
@@ -77,6 +82,7 @@ public class EmprestimosController(IDbConnection conn) : ControllerBase
                 ",
                 new
                 {
+                    penalidade_id = next_id,
                     bicicleta_id = bicicleta_id,
                     ciclista_ra = request.ciclista_ra, 
                     emprestimo_inicio = request.emprestimo_inicio,

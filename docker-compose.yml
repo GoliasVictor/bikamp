@@ -38,8 +38,10 @@ services:
   db:
     container_name: "bikamp_bd"
     image: mysql
+    command: [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--max-allowed-packet=67108864" ]
     profiles: [all, server, test, db]
     environment:
+      LANG: C.UTF-8
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: bikamp    
       MYSQL_USER: api

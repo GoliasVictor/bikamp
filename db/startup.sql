@@ -40,6 +40,7 @@ CREATE TABLE status_bicicleta (
 
 CREATE TABLE bicicleta (
 	bicicleta_id INT NOT NULL PRIMARY KEY,
+	bicicleta_patrimonio varchar(8) NOT NULL,
 	status_bicicleta_id INT NOT NULL,
 	FOREIGN KEY (status_bicicleta_id ) REFERENCES status_bicicleta(status_bicicleta_id)
 );
@@ -75,6 +76,7 @@ CREATE TABLE emprestimo (
 );
 
 CREATE TABLE penalidade (
+	penalidade_id INT NOT NULL PRIMARY KEY,
 	penalidade_inicio DATETIME NOT NULL,
 	ciclista_ra INT NOT NULL,
 	emprestimo_inicio DATETIME NOT NULL,
@@ -85,7 +87,6 @@ CREATE TABLE penalidade (
 	mantenedor_id_aplicador INT NULL,
 	mantenedor_id_perdoador INT NULL,
 	motivacao_perdao TEXT NULL,
-	PRIMARY KEY (ciclista_ra, penalidade_inicio, emprestimo_inicio),
 	FOREIGN KEY (ciclista_ra) REFERENCES ciclista(ciclista_ra),
 	FOREIGN KEY (ciclista_ra, emprestimo_inicio) REFERENCES emprestimo(ciclista_ra, emprestimo_inicio),
 	FOREIGN KEY (tipo_penalidade_id) REFERENCES tipo_penalidade(tipo_penalidade_id),
