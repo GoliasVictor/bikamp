@@ -16,14 +16,10 @@ import type { components } from "../../lib/api/specs";
 import { toast } from 'sonner';
 import { useApi } from '../../hooks/useApi';
 import { SimuladorService } from '../../lib/services';
-import { useModal } from '../../hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { json } from "stream/consumers";
-
 
 export function InteracaoRaDialog() {
   const client = useApi()
-  const modal = useModal()
   const simuladorService = new SimuladorService(client);
   const [open, setOpen] = useState(false);
 

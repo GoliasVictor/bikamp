@@ -1070,7 +1070,7 @@
             "format": "int32"
           },
           "status": {
-            "type": "string"
+            "$ref": "#/components/schemas/StatusPontoId"
           }
         },
         "additionalProperties": false

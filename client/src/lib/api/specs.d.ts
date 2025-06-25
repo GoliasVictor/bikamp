@@ -941,7 +941,7 @@ export interface components {
             bicicletario_id: number;
             /** Format: int32 */
             ponto_id: number;
-            status: string;
+            status: components["schemas"]["StatusPontoId"];
         };
         AtualizarMantenedor: {
             /** Format: int32 */

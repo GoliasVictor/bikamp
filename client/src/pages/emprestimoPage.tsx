@@ -16,7 +16,7 @@ function EmprestimoPage() {
 
   const mantenedorService = new EmprestimosService(client);
   const { data: emprestimo, error, isLoading } = useQuery({
-    queryKey: ["emprestimos"],
+    queryKey: ["emprestimos", { ra, date}],
     queryFn: async () => {
       const emprestimos = await mantenedorService.getEmprestimos()
       const emp = emprestimos.find((e) => {
