@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from 'sonner';
@@ -17,6 +16,9 @@ import { useApi } from '@/hooks/useApi';
 import { useMutation } from '@tanstack/react-query';
 import { SimuladorService } from '@/lib/services';
 import { components } from "@/lib/api/specs";
+import BicicletarioComboBox from "@/components/bicicletarioComboBox";
+import BicicletaComboBox from "@/components/bicicletaComboBox";
+import BicicletarioPontoComboBox from "@/components/bicicletarioPontoComboBox";
 
 
 
@@ -25,9 +27,9 @@ export function DevolverBicicletaDialog() {
   const simuladorService = new SimuladorService(client);
   const [open, setOpen] = useState(false);
 
-  const [bicicletaId, setBicicletaId] = useState<number>(0);
-  const [bicicletario_id, setBicicletarioId] = useState(0);
-  const [pontoId, setPontoId] = useState<number>(0);
+  const [bicicletaId, setBicicletaId] = useState<number| null>(null);
+  const [bicicletario_id, setBicicletarioId] = useState<number | null>(null);
+  const [pontoId, setPontoId] = useState<number | null>(null); 
   const { mutate, data } = useMutation({
     mutationFn: (data: components["schemas"]["RequestDevolucao"]) => {
       return simuladorService.patchDevolverBicicleta(data);
@@ -47,6 +49,10 @@ export function DevolverBicicletaDialog() {
   });
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (bicicletaId === null || bicicletario_id === null || pontoId === null) {
+      toast.error("Por favor, preencha todos os campos.");
+      return;
+    }
     mutate({
       bicicleta_id: bicicletaId,
       bicicletario_id: bicicletario_id,
@@ -57,48 +63,40 @@ export function DevolverBicicletaDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Devolver Bicicleta</Button>
+        <Button>Encaixar Bicicleta</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Simulação devolução de bicicleta</DialogTitle>
+            <DialogTitle>Simulação encaixe de bicicleta</DialogTitle>
             <DialogDescription>
-              Indique o id da bicicleta e o bicicletario em que a bicicleta sera devolvida.
+              Indique o id da bicicleta e o bicicletario em que a bicicleta foi encaixada.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 my-4">
             <div className="grid gap-3">
               <Label htmlFor="bicicleta_id">Bicicleta: </Label>
-              <Input
-                id="bicicleta_id"
-                type="number"
-                required
+              <BicicletaComboBox
                 value={bicicletaId}
-                onChange={(e) => setBicicletaId(Number(e.target.value))}
-                style={{ width: "100%" }}
+                onChange={setBicicletaId}
+                id="bicicleta_id"
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="bicicletario">Bicicletário: </Label>
-              <Input
-                id="bicicletario"
-                type="number"
-                required
+              <BicicletarioComboBox
                 value={bicicletario_id}
-                onChange={(e) => setBicicletarioId(Number(e.target.value))}
-                style={{ width: "100%" }}
+                  onChange={(value) => setBicicletarioId(value)}
+                  id="bicicletario"
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="ponto_id">Bicicletário: </Label>
-              <Input
-                id="ponto_id"
-                type="number"
-                required
+              <Label htmlFor="ponto_id">Ponto: </Label>
+              <BicicletarioPontoComboBox
+                bicicletarioId={bicicletario_id}
                 value={pontoId}
-                onChange={(e) => setPontoId(Number(e.target.value))}
-                style={{ width: "100%" }}
+                onChange={(value) => setPontoId(value)}
+                id="ponto_id"
               />
             </div>
           </div>

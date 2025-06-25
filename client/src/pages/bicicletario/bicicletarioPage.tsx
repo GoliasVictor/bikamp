@@ -5,9 +5,9 @@ import { BicicletariosService } from '@/lib/services';
 import { Navigate, useParams } from 'react-router';
 import { useState } from 'react';
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import PontosTable from '@/components/tables/pontosTable';
+import PontosTable from '@/pages/bicicletario/pontosTable';
 import { Button } from '@/components/ui/button';
-import { PontoNovoDialog } from '@/components/dialogs/pontoNovoDialog';
+import { PontoNovoDialog } from '@/pages/bicicletario/pontoNovoDialog';
 import { Trash } from 'lucide-react';
 import {
   Alert,

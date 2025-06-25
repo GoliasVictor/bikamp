@@ -32,8 +32,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatusBicicleta } from "@/lib/statusBicicleta"
-import { EditarBicicletaDialog } from "@/components/dialogs/editarBicicletaDialog"
-import { NovaBicicletaDialog } from "@/components/dialogs/novaBicicletaDialog"
+import { EditarBicicletaDialog } from "@/pages/bicicletas/editarBicicletaDialog"
+import { NovaBicicletaDialog } from "@/pages/bicicletas/novaBicicletaDialog"
 
 
 
@@ -155,7 +155,7 @@ export default function BicicletasTable({ data}: { data: any  }) {
   })
 
   return (
-    <div className="w-full">
+    <div className="w-min">
       <div className="flex items-center justify-between  py-4">
         <Select onValueChange={
           (str) =>

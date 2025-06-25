@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { useApi } from '../../hooks/useApi';
 import { SimuladorService } from '../../lib/services';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import BicicletarioComboBox from "@/components/bicicletarioComboBox";
 
 export function InteracaoRaDialog() {
   const client = useApi()
@@ -24,7 +25,7 @@ export function InteracaoRaDialog() {
   const [open, setOpen] = useState(false);
 
   const [ra, setRA] = useState<number | "">("");
-  const [bicicletario_id, setBicicletarioID] = useState(0);
+  const [bicicletario_id, setBicicletarioId] = useState<number | null>(null);
   const queryClient = useQueryClient();
   const { mutate , data} = useMutation({
     mutationFn: (data: components["schemas"]["RequesicaoEmprestimo"]) => {
@@ -33,6 +34,7 @@ export function InteracaoRaDialog() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bicicletas"] });
       queryClient.invalidateQueries({ queryKey: ["emprestimos"] });
+      queryClient.invalidateQueries({ queryKey: ["penalidades"] });
       setOpen(false);
       console.log("result", data);
       toast("Interação RA realizada com sucesso!",
@@ -52,11 +54,15 @@ export function InteracaoRaDialog() {
       alert("Por favor, insira um RA válido.");
       return;
     }
+    if (bicicletario_id == null) {
+      alert("Por favor, insira um ID de bicicletário válido.");
+      return;
+    }
     console.log("handleSubmit", ra, bicicletario_id);
 
     mutate({
-      ra_aluno: ra,
-      bicicletario: bicicletario_id
+      ra_aluno: Number(ra),
+      bicicletario: Number(bicicletario_id)
     });    
 
   }
@@ -82,19 +88,16 @@ export function InteracaoRaDialog() {
                 type="number"
                 required
                 value={ra}
-                onChange={(e) => setRA(Number(e.target.value))}
+                onChange={(e) => setRA(e.target.value as number | "")}
                 style={{ width: "100%" }}
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="bicicletario">Bicicletário: </Label>
-              <Input
-                id="bicicletario"
-                type="number"
-                required
-                value={bicicletario_id}
-                onChange={(e) => setBicicletarioID(Number(e.target.value))}
-                style={{ width: "100%" }}
+              <BicicletarioComboBox
+                  value={bicicletario_id}
+                  onChange={(value) => setBicicletarioId(value)}
+                  id="bicicletario"
               />
             </div>
           </div>

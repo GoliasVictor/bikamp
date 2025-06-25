@@ -66,7 +66,8 @@ const Navbar1 = ({
     { url: "/bicicletarios", title : "Bicicletarios"},
     { url: "/emprestimos"  , title : "Empréstimos"},
     { url: "/mantenedores" , title : "Mantenedores"},
-    { url: "/simulador"    , title : "Simulador Bicicletário"},
+    { url: "/penalidades"  , title: "Penalidades"},
+    { url: "/simulador"    , title: "Simulador Bicicletário" },
   ],
   auth = {
     login: { title: "Login", url: "/login" },

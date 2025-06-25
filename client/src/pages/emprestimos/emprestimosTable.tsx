@@ -81,7 +81,7 @@ export const columns: ColumnDef<Emprestimo>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("emprestimo_inicio")).toUTCString()}</div>,
+    cell: ({ row }) => <div className="lowercase left">{new Date(row.getValue("emprestimo_inicio")).toLocaleString("br")}</div>,
   },
   {
     accessorKey: "bicicleta_id",
@@ -104,7 +104,7 @@ export const columns: ColumnDef<Emprestimo>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase left">{row.getValue("emprestimo_fim") ? new Date(row.getValue("emprestimo_fim")).toUTCString() : ""}</div>,
+    cell: ({ row }) => <div className="lowercase left">{row.getValue("emprestimo_fim") ? new Date(row.getValue("emprestimo_fim")).toLocaleString("br") : ""}</div>,
   },
   {
     accessorKey: "bicicletario_id_devolvido",
@@ -151,7 +151,7 @@ export default function EmprestimosTable({ data }: { data : any }) {
   })
 
   return (
-    <div className="w-full">
+    <div>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter ra..."

@@ -80,9 +80,9 @@ public class ApiBicicletarioControllerTest : IDisposable
                 new(167846, emprestimo3Start, null          , 1, null, 3),
             ],
             penalidades: [
-                new(emprestimo1PenalidadeStart, 285258 , emprestimo1Start, 1, true , emprestimo1PenalidadeFim, null, 1, null, null),
-                new(emprestimo2PenalidadeStart, 253793 , emprestimo2Start, 1, true , emprestimo2PenalidadeFim, null, 1, null, null),
-                new(emprestimo3PenalidadeStart, 167846 , emprestimo3Start, 2, false, null                    , null, 1, null, null)
+                new(1, emprestimo1PenalidadeStart, 285258 , emprestimo1Start, 1, true , emprestimo1PenalidadeFim, null, 1, null, null),
+                new(2, emprestimo2PenalidadeStart, 253793 , emprestimo2Start, 1, true , emprestimo2PenalidadeFim, null, 1, null, null),
+                new(3, emprestimo3PenalidadeStart, 167846 , emprestimo3Start, 2, false, null                    , null, 1, null, null)
             ],
             bicicletas: [
                 new(1,"CJ0CNQ", 1),

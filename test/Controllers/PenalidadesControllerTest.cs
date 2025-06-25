@@ -14,6 +14,7 @@ public class PenalidadesControllerTest : IDisposable
 
     List<PenalidaesController.Penalidade> penalidades = [
                     new(
+                        1,
                         penalidade_inicio: new DateTime(2025, 04, 02, 22, 14, 09),
                         penalidade_fim: null,
                         ciclista_ra: 222222,
@@ -70,6 +71,7 @@ public class PenalidadesControllerTest : IDisposable
             ciclistas: [.. ciclistas],
             bicicletarios: [.. bicicletarios],
             penalidades: [.. penalidades.Select(p => new Penalidade(
+                p.penalidade_id,
                 p.penalidade_inicio,
                 p.ciclista_ra,
                 p.emprestimo_inicio,
@@ -115,7 +117,7 @@ public class PenalidadesControllerTest : IDisposable
 
         var result = await controller.Post(new PenalidaesController.NovaPenalidadeManual(mantenedor_id_aplicador, tipo_penalidade_id, penalidade_fim, ciclista_ra, emprestimo_inicio, detalhes));
 
-        Assert.IsType<UnprocessableEntityObjectResult>(result);
+        Assert.IsType<UnprocessableEntityObjectResult>(result.Result);
     }
 
 
@@ -128,7 +130,7 @@ public class PenalidadesControllerTest : IDisposable
 
         var result = await controller.Post(new PenalidaesController.NovaPenalidadeManual(mantenedor_id_aplicador, tipo_penalidade_id, null, ciclista_ra, emprestimo_inicio, null));
 
-        Assert.IsType<ConflictObjectResult>(result);
+        Assert.IsType<ConflictObjectResult>(result.Result);
     }
 
     [Theory]
@@ -140,7 +142,7 @@ public class PenalidadesControllerTest : IDisposable
 
         var result = await controller.Post(new PenalidaesController.NovaPenalidadeManual(mantenedor_id_aplicador, tipo_penalidade_id, null, ciclista_ra, emprestimo_inicio, null));
 
-        Assert.IsType<ConflictObjectResult>(result);
+        Assert.IsType<ConflictObjectResult>(result.Result);
     }
 
     [Theory]
@@ -153,7 +155,7 @@ public class PenalidadesControllerTest : IDisposable
 
         var result = await controller.Post(new PenalidaesController.NovaPenalidadeManual(mantenedor_id_aplicador, tipo_penalidade_id, null, ciclista_ra, emprestimo_inicio, null));
 
-        Assert.IsType<ConflictObjectResult>(result);
+        Assert.IsType<ConflictObjectResult>(result.Result);
     }
 
     [Theory]
@@ -167,7 +169,7 @@ public class PenalidadesControllerTest : IDisposable
 
         var result = await controller.Post(new PenalidaesController.NovaPenalidadeManual(mantenedor_id_aplicador, tipo_penalidade_id, null, ciclista_ra, emprestimo_inicio, null));
 
-        Assert.IsType<OkResult>(result);
+        Assert.IsType<OkObjectResult>(result.Result);
     }
 
     #endregion

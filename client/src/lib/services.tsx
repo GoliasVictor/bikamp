@@ -112,11 +112,59 @@ export class SimuladorService {
 
   async postInteracaoRa(data: { bicicletario: number, ra_aluno: number }): Promise<any> {
     const request = await this.client.POST("/api-bicicletario/emprestimos", { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
     return request.data;
   }
 
   async patchDevolverBicicleta(data: RequestDevolucao): Promise<any> {
     const request = await this.client.PATCH("/api-bicicletario/ponto/bicicleta", { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
     return request.data;
+  }
+}
+
+export class PenalidadeService {
+  private client: ReturnType<typeof useApi>
+
+  constructor(client: ReturnType<typeof useApi>) {
+    this.client = client;
+  }
+
+  async getPenalidades(): Promise<components["schemas"]["Penalidade"][]> {
+    return (await this.client.GET("/penalidades")).data ?? []  
+  }
+  async putPenalidade(data: components["schemas"]["RequestPerdoarPenalidade"]): Promise<any> {
+    return this.client.PATCH(`/penalidades`, { body: data });
+  }
+  async postPenalidade(data: components["schemas"]["NovaPenalidadeManual"]): Promise<any> {
+    const request = await this.client.POST(`/penalidades/manual`, { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
+    return request.data;
+  }
+  async perdoarPenalidade(data: components["schemas"]["RequestPerdoarPenalidade"]): Promise<any> {
+    const request = await this.client.PATCH(`/penalidades`, { body: data });
+     if (request.error) {
+      throw Error((request as any).error) 
+    }
+    return request.data;
+  }
+  
+}
+
+export class TipoPenalidadeService {
+  private client: ReturnType<typeof useApi>
+
+  constructor(client: ReturnType<typeof useApi>) {
+    this.client = client;
+  }
+
+  async getTiposPenalidade(): Promise<components["schemas"]["TipoPenalidade"][]> {
+    return (await this.client.GET("/tipo-penalidade")).data ?? []
   }
 }
